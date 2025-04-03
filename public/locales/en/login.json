@@ -9,5 +9,12 @@
     "passwordPlaceholder": "Enter your password",
     "rememberMe": "Remember Me",
     "forgotPassword": "Forgot Password?",
-    "loginButton": "Login"
+    "loginButton": "Login",
+    "forgotPasswordTitle": "Forgot your password?",
+    "forgotPasswordDescription": "To reset your password, enter the email address ",
+    "forgotPasswordDescription2":"you use to sign in to this website.",
+    "emailLabel": "Email",
+    "emailPlaceholder": "Enter your email address",
+    "sendButton": "Send",
+    "forgotUsername": "Forgot your username?"
 }

@@ -9,5 +9,12 @@
   "passwordPlaceholder": "Geben Sie Ihr Passwort ein",
   "rememberMe": "Angemeldet bleiben",
   "forgotPassword": "Passwort vergessen?",
-  "loginButton": "Einloggen"
+  "loginButton": "Einloggen",
+  "forgotPasswordTitle": "Passwort vergessen?",
+  "forgotPasswordDescription": "Um Ihr Passwort zurückzusetzen, geben Sie die E-Mail-Adresse ein, ",
+  "forgotPasswordDescription2":"die Sie für die Anmeldung auf dieser Website verwenden.",
+  "emailLabel": "E-Mail",
+  "emailPlaceholder": "Geben Sie Ihre E-Mail-Adresse ein",
+  "sendButton": "Senden",
+  "forgotUsername": "Benutzername vergessen?"
 }
