@@ -1,0 +1,13 @@
+{
+    "toTheHomePage": "Til hjemmesiden",
+    "title": "EC POWER SERVICE DATABASE",
+    "description1": "Indtast dit brugernavn og din ",
+    "description2": "adgangskode for at logge ind på din konto",
+    "username": "Brugernavn",
+    "usernamePlaceholder":"Indtast dit brugernavn",
+    "password": "Adgangskode",
+    "passwordPlaceholder": "Indtast din adgangskode",
+    "rememberMe": "Husk mig",
+    "forgotPassword": "Glemt adgangskode?",
+    "loginButton": "Log ind"
+}

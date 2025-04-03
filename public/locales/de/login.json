@@ -1,0 +1,13 @@
+{
+  "toTheHomePage": "Zur Startseite",
+  "title": "EC POWER SERVICE-DATENBANK",
+  "description1": "Geben Sie Ihren Benutzernamen und Ihr ",
+  "description2":"Passwort ein, um sich anzumelden",
+  "username": "Benutzername",
+  "usernamePlaceholder":"Geben Sie Ihren Benutzernamen ein",
+  "password": "Passwort",
+  "passwordPlaceholder": "Geben Sie Ihr Passwort ein",
+  "rememberMe": "Angemeldet bleiben",
+  "forgotPassword": "Passwort vergessen?",
+  "loginButton": "Einloggen"
+}
