@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from "react";
+import { useTheme } from "@/app/dashboard/page"; 
 
 interface InstallationData {
   number: string;
@@ -10,7 +11,8 @@ interface InstallationData {
   selected: boolean;
 }
 
-const ResponsiveInstallationTable: React.FC = () => {
+const InstallationTable: React.FC = () => {
+  const { darkMode } = useTheme();
   const [installations, setInstallations] = useState<InstallationData[]>([
     {
       number: "78022",
@@ -64,21 +66,19 @@ const ResponsiveInstallationTable: React.FC = () => {
 
   const toggleSelection = (index: number) => {
     const updatedInstallations = [...installations];
-    updatedInstallations[index].selected =
-      !updatedInstallations[index].selected;
+    updatedInstallations[index].selected = !updatedInstallations[index].selected;
     setInstallations(updatedInstallations);
   };
 
   return (
-    <div className="w-full">
-      <div className="hidden md:block">
+    <div className={`${darkMode ? 'bg-gray-800 text-white' : 'bg-white'} py-2 px-4 rounded-lg shadow-sm transition-colors duration-300`}>      
+      {/* Desktop View */}
+      <div className="w-full overflow-x-auto hidden md:block">
         <table className="w-full border-separate border-spacing-y-2">
           <thead>
-            <tr className="text-gray-700">
+            <tr className={darkMode ? 'text-gray-300' : 'text-gray-700'}>
               <th className="text-left px-4 py-2 font-medium">Number</th>
-              <th className="text-left px-4 py-2 font-medium">
-                Installation Name
-              </th>
+              <th className="text-left px-4 py-2 font-medium">Installation Name</th>
               <th className="text-left px-4 py-2 font-medium">Address</th>
               <th className="text-left px-4 py-2 font-medium">Postal Code</th>
               <th className="text-left px-4 py-2 font-medium">City</th>
@@ -87,14 +87,14 @@ const ResponsiveInstallationTable: React.FC = () => {
           </thead>
           <tbody>
             {installations.map((installation, index) => (
-              <tr key={index} className="bg-white shadow-sm">
+              <tr key={index} className={`${darkMode ? 'bg-gray-700' : 'bg-white'} shadow-sm`}>
                 <td className="px-4 py-4 rounded-l-lg">
                   <div className="flex items-center">
                     <input
                       type="checkbox"
                       checked={installation.selected}
                       onChange={() => toggleSelection(index)}
-                      className="mr-3 h-5 w-5 rounded border-gray-300"
+                      className={`mr-3 h-5 w-5 rounded cursor-pointer ${darkMode ? 'bg-gray-600 border-gray-500' : 'border-gray-300'}`}
                     />
                     {installation.number}
                   </div>
@@ -104,35 +104,7 @@ const ResponsiveInstallationTable: React.FC = () => {
                 <td className="px-4 py-4">{installation.postalCode}</td>
                 <td className="px-4 py-4">{installation.city}</td>
                 <td className="px-4 py-4 rounded-r-lg">
-                  <div className="flex justify-center">
-                    <div className="w-8 h-6 relative">
-                      <svg viewBox="0 0 32 24" className="w-8 h-6">
-                        <rect width="32" height="24" fill="#BF0A30" />
-                        <rect y="2" width="32" height="2" fill="white" />
-                        <rect y="6" width="32" height="2" fill="white" />
-                        <rect y="10" width="32" height="2" fill="white" />
-                        <rect y="14" width="32" height="2" fill="white" />
-                        <rect y="18" width="32" height="2" fill="white" />
-                        <rect y="22" width="32" height="2" fill="white" />
-                        <rect width="16" height="13" fill="#002868" />
-                        <g fill="white">
-                          <circle cx="4" cy="3" r="1" />
-                          <circle cx="8" cy="3" r="1" />
-                          <circle cx="12" cy="3" r="1" />
-                          <circle cx="6" cy="5" r="1" />
-                          <circle cx="10" cy="5" r="1" />
-                          <circle cx="4" cy="7" r="1" />
-                          <circle cx="8" cy="7" r="1" />
-                          <circle cx="12" cy="7" r="1" />
-                          <circle cx="6" cy="9" r="1" />
-                          <circle cx="10" cy="9" r="1" />
-                          <circle cx="4" cy="11" r="1" />
-                          <circle cx="8" cy="11" r="1" />
-                          <circle cx="12" cy="11" r="1" />
-                        </g>
-                      </svg>
-                    </div>
-                  </div>
+                <img src="/flag.png" alt="Country Flag" className="w-8 h-6" />
                 </td>
               </tr>
             ))}
@@ -143,55 +115,46 @@ const ResponsiveInstallationTable: React.FC = () => {
       {/* Mobile View */}
       <div className="md:hidden space-y-4">
         {installations.map((installation, index) => (
-          <div key={index} className="bg-white p-4 rounded-lg shadow-sm">
+          <div 
+            key={index} 
+            className={`${darkMode ? 'bg-gray-700' : 'bg-white'} p-4 rounded-lg shadow-sm`}
+          >
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center">
                 <input
                   type="checkbox"
                   checked={installation.selected}
                   onChange={() => toggleSelection(index)}
-                  className="mr-3 h-5 w-5 rounded border-gray-300"
+                  className={`mr-3 h-5 w-5 rounded ${darkMode ? 'bg-gray-600 border-gray-500' : 'border-gray-300'}`}
                 />
-                <span className="font-medium">{installation.number}</span>
+                <span className="font-medium">#{installation.number}</span>
               </div>
               <div className="w-8 h-6">
-                <svg viewBox="0 0 32 24" className="w-8 h-6">
-                  <rect width="32" height="24" fill="#BF0A30" />
-                  <rect y="2" width="32" height="2" fill="white" />
-                  <rect y="6" width="32" height="2" fill="white" />
-                  <rect y="10" width="32" height="2" fill="white" />
-                  <rect y="14" width="32" height="2" fill="white" />
-                  <rect y="18" width="32" height="2" fill="white" />
-                  <rect y="22" width="32" height="2" fill="white" />
-                  <rect width="16" height="13" fill="#002868" />
-                  <g fill="white">
-                    {/* Simplified stars pattern */}
-                    <circle cx="4" cy="3" r="1" />
-                    <circle cx="8" cy="3" r="1" />
-                    <circle cx="12" cy="3" r="1" />
-                    <circle cx="6" cy="5" r="1" />
-                    <circle cx="10" cy="5" r="1" />
-                    <circle cx="4" cy="7" r="1" />
-                    <circle cx="8" cy="7" r="1" />
-                    <circle cx="12" cy="7" r="1" />
-                    <circle cx="6" cy="9" r="1" />
-                    <circle cx="10" cy="9" r="1" />
-                    <circle cx="4" cy="11" r="1" />
-                    <circle cx="8" cy="11" r="1" />
-                    <circle cx="12" cy="11" r="1" />
-                  </g>
-                </svg>
+              <img src="/flag.png" alt="Country Flag" className="w-8 h-6" />
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-y-2 text-sm">
-              <div className="text-gray-500">Installation Name:</div>
-              <div>{installation.name}</div>
-              <div className="text-gray-500">Address:</div>
-              <div>{installation.address}</div>
-              <div className="text-gray-500">Postal Code:</div>
-              <div>{installation.postalCode}</div>
-              <div className="text-gray-500">City:</div>
-              <div>{installation.city}</div>
+            
+            <div className="grid grid-cols-1 gap-2">
+              <div>
+                <span className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>Installation Name</span>
+                <p className="mt-1">{installation.name}</p>
+              </div>
+              
+              <div>
+                <span className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>Address</span>
+                <p className="mt-1">{installation.address}</p>
+              </div>
+              
+              <div className="flex space-x-4">
+                <div className="flex-1">
+                  <span className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>Postal Code</span>
+                  <p className="mt-1">{installation.postalCode}</p>
+                </div>
+                <div className="flex-1">
+                  <span className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>City</span>
+                  <p className="mt-1">{installation.city}</p>
+                </div>
+              </div>
             </div>
           </div>
         ))}
@@ -200,4 +163,4 @@ const ResponsiveInstallationTable: React.FC = () => {
   );
 };
 
-export default ResponsiveInstallationTable;
+export default InstallationTable;
