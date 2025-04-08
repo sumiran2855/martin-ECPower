@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { FaDesktop } from "react-icons/fa";
-import { useTheme } from "@/app/dashboard/page"; 
+import { useTheme } from "@/app/dashboard/layout"; 
 
 interface SystemStatusCardProps {
   count: string;

@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { useTheme } from "@/app/dashboard/page"; 
+import { useTheme } from "@/app/dashboard/layout"; 
 
 interface InstallationData {
   number: string;

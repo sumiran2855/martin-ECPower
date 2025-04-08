@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { FaHandshake } from "react-icons/fa6";
-import { useTheme } from "@/app/dashboard/page"; 
+import { useTheme } from "@/app/dashboard/layout"; 
 import DealerItem from "@/component/cards/dealerItemCards";
 
 

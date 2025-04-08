@@ -3,7 +3,7 @@ import React from "react";
 import SystemStatusCard from "./systemStatus";
 import Dealer from "./dealer";
 import InstallationTable from "./InstallationTable";
-import { useTheme } from "@/app/dashboard/page";
+import { useTheme } from "@/app/dashboard/layout";
 
 const Dashboard: React.FC = () => {
   const { darkMode } = useTheme();

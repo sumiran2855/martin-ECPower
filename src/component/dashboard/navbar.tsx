@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import { useTranslation } from "react-i18next";
 import { Menu, X, Search, Sun, Moon } from "lucide-react";
-import { useTheme } from "@/app/dashboard/page";
+import { useTheme } from "@/app/dashboard/layout";
 import LanguageSwitcher from "../languageSwitcher";
 
 export default function Navbar({ toggleSidebar, sidebarOpen }: any) {

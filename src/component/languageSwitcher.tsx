@@ -1,6 +1,6 @@
 "use client";
 import { useTranslation } from "react-i18next";
-import { useTheme } from "@/app/dashboard/page"; 
+import { useTheme } from "@/app/dashboard/layout"; 
 
 const LanguageSwitcher = () => {
   const { i18n } = useTranslation();

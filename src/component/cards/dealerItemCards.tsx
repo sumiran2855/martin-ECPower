@@ -3,7 +3,7 @@ import React from "react";
 import { FaHandshake } from "react-icons/fa6";
 import { FiPlus } from "react-icons/fi";
 import { HiUserCircle } from "react-icons/hi";
-import { useTheme } from "@/app/dashboard/page"; 
+import { useTheme } from "@/app/dashboard/layout"; 
 interface DealerItemProps {
   name: string;
   expanded?: boolean;
