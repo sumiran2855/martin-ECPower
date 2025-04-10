@@ -1,78 +1,67 @@
 "use client";
 import React, { useState } from "react";
 import { useTheme } from "@/app/dashboard/layout";
-import { Server } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { List } from "lucide-react";
+import RegistrationVisitTest from "./visit-test";
 
 interface InstallationData {
   name: string;
   id: string;
-  calls: string;
   selected: boolean;
 }
 
-const UnitTest: React.FC = () => {
-  const router = useRouter();
+const RegistrationOfVisites: React.FC = () => {
   const { darkMode } = useTheme();
+  const [Registration, setRegistration] = useState(false);
   const [installations, setInstallations] = useState<InstallationData[]>([
     {
-      name: "XRGI-25",
-      id: "Nybrogade 2 1203",
-      calls: "1000-2999",
+      name: "XRGI-25 CARB test / OR35041",
+      id: "1979599994",
       selected: false,
     },
     {
-      name: "XRGI-25",
-      id: "Nybrogade 2 1203",
-      calls: "1000-2999",
+      name: "XRGI-25 CARB test / OR35041",
+      id: "1979599994",
       selected: false,
     },
     {
-      name: "XRGI-25",
-      id: "Nybrogade 2 1203",
-      calls: "1000-2999",
+      name: "XRGI-25 CARB test / OR35041",
+      id: "1979599994",
       selected: false,
     },
     {
-      name: "XRGI-25",
-      id: "Nybrogade 2 1203",
-      calls: "1000-2999",
+      name: "XRGI-25 CARB test / OR35041",
+      id: "1979599994",
       selected: false,
     },
     {
-      name: "XRGI-25",
-      id: "Nybrogade 2 1203",
-      calls: "1000-2999",
+      name: "XRGI-25 CARB test / OR35041",
+      id: "1979599994",
       selected: false,
     },
     {
-      name: "XRGI-25",
-      id: "Nybrogade 2 1203",
-      calls: "1000-2999",
+      name: "XRGI-25 CARB test / OR35041",
+      id: "1979599994",
       selected: false,
     },
     {
-      name: "XRGI-25",
-      id: "Nybrogade 2 1203",
-      calls: "1000-2999",
+      name: "XRGI-25 CARB test / OR35041",
+      id: "1979599994",
       selected: false,
     },
     {
-      name: "XRGI-25",
-      id: "Nybrogade 2 1203",
-      calls: "1000-2999",
+      name: "XRGI-25 CARB test / OR35041",
+      id: "1979599994",
       selected: false,
     },
     {
-      name: "XRGI-25",
-      id: "Nybrogade 2 1203",
-      calls: "1000-2999",
+      name: "XRGI-25 CARB test / OR35041",
+      id: "1979599994",
       selected: false,
     },
     {
-      name: "XRGI-25",
-      id: "Nybrogade 2 1203",
-      calls: "1000-2999",
+      name: "XRGI-25 CARB test / OR35041",
+      id: "1979599994",
       selected: false,
     },
   ]);
@@ -90,18 +79,15 @@ const UnitTest: React.FC = () => {
         darkMode ? "bg-gray-800 text-white" : "bg-white"
       } py-2 px-4 rounded-lg shadow-sm transition-colors duration-300`}
     >
-      <div className="flex items-center my-4">
-        <Server className="text-blue-500 mr-2 text-xl" />
-        <h1 className="text-2xl font-medium">Unit List</h1>
+      {!Registration ? (
+        <>
+      <div className="flex flex-col md:flex-row md:justify-between md:items-center my-4">
+        <div className="flex items-center">
+        
+          <List className="text-blue-500 mr-2 text-xl" />
+          <h1 className="text-2xl font-medium">Visit list</h1>
+        </div>
       </div>
-      <p
-        className={`text-sm mb-8 ml-8 ${
-          darkMode ? "text-gray-400" : "text-gray-700"
-        }`}
-      >
-        To see status, production and consumption for the current year, please
-        choose a system from the list below
-      </p>
       {/* Desktop View */}
       <div className="w-full overflow-x-auto hidden md:block">
         <table className="w-full border-separate border-spacing-y-2 mb-3">
@@ -111,17 +97,14 @@ const UnitTest: React.FC = () => {
                 darkMode ? "text-gray-300" : "text-gray-700"
               }`}
             >
-              <th className="text-left px-4 py-2 font-medium">
-                XRGI® system name
-              </th>
               <th className="text-left px-4 py-2 font-medium">XRGI®-ID</th>
               <th className="text-left px-4 py-2 font-medium">
-                Most recent calls
+                XRGI® system name
               </th>
               <th></th>
             </tr>
           </thead>
-          <tbody onClick={() => router.push("/dashboard/xrgi/unit-list/units")}>
+          <tbody>
             {installations.map((installation, index) => (
               <tr
                 key={index}
@@ -139,12 +122,11 @@ const UnitTest: React.FC = () => {
                           : "border-gray-300"
                       }`}
                     />
-                    {installation.name}
+                    {installation.id}
                   </div>
                 </td>
-                <td className="px-4 py-4">{installation.id}</td>
-                <td className="px-4 py-4">{installation.calls}</td>
-                <td className="px-4 py-3 text-right text-blue-500 cursor-pointer">
+                <td className="px-4 py-4">{installation.name}</td>
+                <td onClick={()=>setRegistration(true)} className="px-4 py-3 text-right text-blue-500 cursor-pointer">
                   &gt;
                 </td>
               </tr>
@@ -157,7 +139,6 @@ const UnitTest: React.FC = () => {
       <div className="md:hidden space-y-4">
         {installations.map((installation, index) => (
           <div
-            onClick={() => router.push("/dashboard/xrgi/unit-list/units")}
             key={index}
             className={`${
               darkMode ? "bg-gray-700" : "bg-white"
@@ -173,11 +154,9 @@ const UnitTest: React.FC = () => {
                     darkMode ? "bg-gray-600 border-gray-500" : "border-gray-300"
                   }`}
                 />
-                <span className="font-medium">#{installation.name}</span>
+                <span className="font-medium">#{installation.id}</span>
               </div>
-              <div className="w-8 h-6">
-                <img src="/flag.png" alt="Country Flag" className="w-8 h-6" />
-              </div>
+              <div onClick={()=>setRegistration(true)} className="text-blue-500 cursor-pointer">&gt;</div>
             </div>
 
             <div className="grid grid-cols-1 gap-2">
@@ -202,25 +181,15 @@ const UnitTest: React.FC = () => {
                 </span>
                 <p className="mt-1">{installation.id}</p>
               </div>
-
-              <div className="flex space-x-4">
-                <div className="flex-1">
-                  <span
-                    className={`text-xs ${
-                      darkMode ? "text-gray-400" : "text-gray-500"
-                    }`}
-                  >
-                    Most recent calls
-                  </span>
-                  <p className="mt-1">{installation.calls}</p>
-                </div>
-              </div>
             </div>
           </div>
         ))}
       </div>
+      </>):(
+         <RegistrationVisitTest onCancel={() => setRegistration(false)} />
+      )}
     </div>
   );
 };
 
-export default UnitTest;
+export default RegistrationOfVisites;

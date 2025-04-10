@@ -52,6 +52,7 @@ export default function Navbar({ toggleSidebar, sidebarOpen }: any) {
                 alt="EC Power Logo"
                 width={60}
                 height={50}
+                priority
               />
             </div>
           </div>
@@ -118,6 +119,7 @@ export default function Navbar({ toggleSidebar, sidebarOpen }: any) {
                 width={35}
                 height={35}
                 className="rounded-full object-cover"
+                priority
               />
               <div className="text-sm hidden md:block">
                 <p className="font-bold">EC POWER</p>
@@ -185,6 +187,7 @@ export default function Navbar({ toggleSidebar, sidebarOpen }: any) {
                 width={35}
                 height={35}
                 className="rounded-full object-cover"
+                priority
               />
               <div className="text-sm">
                 <p className="font-bold">EC POWER</p>

@@ -1,67 +1,79 @@
 "use client";
 import React, { useState } from "react";
 import { useTheme } from "@/app/dashboard/layout";
-import { Gauge, FilePlus2, Edit, Trash2 } from "lucide-react";
+import { ChevronRight, List } from "lucide-react";
 import CreateTest from "./create-test";
+import ParkingSystemForm from "./ParkingSystemForm";
 
 interface InstallationData {
   name: string;
   id: string;
+  until?:string;
   selected: boolean;
 }
 
-const RegistrationOfTests: React.FC = () => {
+const AddToWaitlist: React.FC = () => {
   const { darkMode } = useTheme();
   const [creating, setCreating] = useState(false);
   const [installations, setInstallations] = useState<InstallationData[]>([
     {
       name: "XRGI-25 CARB test / OR35041",
       id: "1979599994",
+      until:"-",
       selected: false,
     },
     {
       name: "XRGI-25 CARB test / OR35041",
       id: "1979599994",
+      until:"-",
       selected: false,
     },
     {
       name: "XRGI-25 CARB test / OR35041",
       id: "1979599994",
+      until:"-",
       selected: false,
     },
     {
       name: "XRGI-25 CARB test / OR35041",
       id: "1979599994",
+      until:"-",
       selected: false,
     },
     {
       name: "XRGI-25 CARB test / OR35041",
       id: "1979599994",
+      until:"-",
       selected: false,
     },
     {
       name: "XRGI-25 CARB test / OR35041",
       id: "1979599994",
+      until:"-",
       selected: false,
     },
     {
       name: "XRGI-25 CARB test / OR35041",
       id: "1979599994",
+      until:"-",
       selected: false,
     },
     {
       name: "XRGI-25 CARB test / OR35041",
       id: "1979599994",
+      until:"-",
       selected: false,
     },
     {
       name: "XRGI-25 CARB test / OR35041",
       id: "1979599994",
+      until:"-",
       selected: false,
     },
     {
       name: "XRGI-25 CARB test / OR35041",
       id: "1979599994",
+      until:"-",
       selected: false,
     },
   ]);
@@ -83,35 +95,10 @@ const RegistrationOfTests: React.FC = () => {
         <>
           <div className="flex flex-col md:flex-row md:justify-between md:items-center my-4">
             <div className="flex items-center">
-              <Gauge className="text-blue-500 mr-2 text-xl" />
-              <h1 className="text-2xl font-medium">List of tests</h1>
-            </div>
-            <div className="flex items-center mt-4 md:mt-0 space-x-2 mr-4">
-              <button
-                onClick={() => setCreating(true)}
-                className="flex items-center text-sm text-blue-500 hover:text-blue-700 transition-colors cursor-pointer"
-              >
-                <FilePlus2 className="w-5 h-5 mr-1" />
-                <span>Create test</span>
-              </button>
-              <button className="flex items-center text-sm text-blue-500 hover:text-blue-700 transition-colors ml-4 cursor-pointer">
-                <Edit className="w-5 h-5 mr-1" />
-                <span>Correct test</span>
-              </button>
-              <button className="flex items-center text-sm text-blue-500 hover:text-blue-700 transition-colors ml-4 cursor-pointer">
-                <Trash2 className="w-5 h-5 mr-1" />
-                <span>Delete test</span>
-              </button>
+              <List className="text-blue-500 mr-2 text-xl" />
+              <h1 className="text-2xl font-medium">List of systems in waiting position</h1>
             </div>
           </div>
-          <p
-            className={`text-sm mb-8 ml-8 ${
-              darkMode ? "text-gray-400" : "text-gray-700"
-            }`}
-          >
-            Is the system equipped with any non-standard components, this should
-            be registered here
-          </p>
           {/* Desktop View */}
           <div className="w-full overflow-x-auto hidden md:block">
             <table className="w-full border-separate border-spacing-y-2 mb-3">
@@ -125,7 +112,8 @@ const RegistrationOfTests: React.FC = () => {
                   <th className="text-left px-4 py-2 font-medium">
                     XRGI® system name
                   </th>
-                  <th></th>
+                  <th className="text-left px-4 py-2 font-medium">Until</th>
+                  <th className="text-right"></th>
                 </tr>
               </thead>
               <tbody>
@@ -136,7 +124,7 @@ const RegistrationOfTests: React.FC = () => {
                       darkMode ? "bg-gray-700" : "bg-white"
                     } shadow-sm`}
                   >
-                    <td className="px-4 py-4 rounded-l-lg">
+                    <td className="px-4 py-2 rounded-l-lg">
                       <div className="flex items-center">
                         <input
                           type="checkbox"
@@ -151,9 +139,10 @@ const RegistrationOfTests: React.FC = () => {
                         {installation.id}
                       </div>
                     </td>
-                    <td className="px-4 py-4">{installation.name}</td>
-                    <td className="px-4 py-3 text-right text-blue-500 cursor-pointer">
-                      &gt;
+                    <td className="px-4 py-2">{installation.name}</td>
+                    <td className="px-4 py-2 text-left">{installation.until}</td>
+                    <td onClick={()=> setCreating(true)} className="px-4 py-3 text-right text-blue-500 cursor-pointer">
+                    &gt;
                     </td>
                   </tr>
                 ))}
@@ -184,7 +173,7 @@ const RegistrationOfTests: React.FC = () => {
                     />
                     <span className="font-medium">#{installation.id}</span>
                   </div>
-                  <div className="text-blue-500 cursor-pointer">&gt;</div>
+                  <div onClick={()=> setCreating(true)}  className="text-blue-500 cursor-pointer">&gt;</div>
                 </div>
 
                 <div className="grid grid-cols-1 gap-2">
@@ -215,10 +204,10 @@ const RegistrationOfTests: React.FC = () => {
           </div>
         </>
       ) : (
-        <CreateTest onCancel={() => setCreating(false)} />
+        <ParkingSystemForm onCancel={() => setCreating(false)} />
       )}
     </div>
   );
 };
 
-export default RegistrationOfTests;
+export default AddToWaitlist;
