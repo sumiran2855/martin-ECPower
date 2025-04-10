@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   Home,
   BarChart2,
@@ -28,35 +28,17 @@ export default function Sidebar({
   isMobile,
 }: any) {
   const pathname = usePathname();
+  const router = useRouter();
   const { darkMode } = useTheme();
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<string | null>(null);
-
-  useEffect(() => {
-    for (const item of menuItems) {
-      if (item.subItems) {
-        for (const subItem of item.subItems) {
-          if (pathname.startsWith(subItem.path)) {
-            setActiveTab(item.name);
-            setOpenDropdown(item.name);
-            return;
-          }
-        }
-      } else if (item.path && pathname === item.path) {
-        setActiveTab(item.name);
-        setOpenDropdown(null);
-        return;
-      }
-    }
-    setActiveTab(null);
-    setOpenDropdown(null);
-  }, [pathname]);
 
   const menuItems: MenuItem[] = [
     { name: "Home", icon: <Home size={20} />, path: "/dashboard" },
     {
       name: "XRGI®",
       icon: <PanelsLeftBottom />,
+      path: "/dashboard/xrgi", 
       subItems: [
         { name: "Unit list", path: "/dashboard/xrgi/unit-list" },
         { name: "Add to waitlist", path: "/dashboard/xrgi/add-to-waitlist" },
@@ -82,6 +64,32 @@ export default function Sidebar({
     },
   ];
 
+  useEffect(() => {
+    for (const item of menuItems) {
+      if (item.subItems) {
+        if (pathname === item.path) {
+          setActiveTab(item.name);
+          setOpenDropdown(item.name);
+          return;
+        }
+
+        for (const subItem of item.subItems) {
+          if (pathname.startsWith(subItem.path)) {
+            setActiveTab(item.name);
+            setOpenDropdown(item.name);
+            return;
+          }
+        }
+      } else if (item.path && pathname === item.path) {
+        setActiveTab(item.name);
+        setOpenDropdown(null);
+        return;
+      }
+    }
+    setActiveTab(null);
+    setOpenDropdown(null);
+  }, [pathname]);
+
   return (
     <>
       {isMobile && sidebarOpen && (
@@ -95,8 +103,8 @@ export default function Sidebar({
         className={`${
           darkMode ? "bg-gray-800 text-white" : "bg-blue-900 text-white"
         } w-64 h-full fixed top-20 left-0 z-20 transition-all duration-300 ease-in-out
-          ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
-          ${!isMobile ? "md:translate-x-0" : ""}`}
+        ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
+        ${!isMobile ? "md:translate-x-0" : ""}`}
       >
         {isMobile && (
           <button
@@ -110,8 +118,8 @@ export default function Sidebar({
         <nav className="py-4">
           <ul>
             {menuItems.map((item, index) => {
-              const isParentActive =
-                item.name === activeTab;
+              const isParentActive = item.name === activeTab;
+              const isOpen = openDropdown === item.name;
 
               return (
                 <li key={index} className="relative px-4 my-1">
@@ -119,14 +127,14 @@ export default function Sidebar({
                     <>
                       <button
                         onClick={() => {
-                          setOpenDropdown(
-                            openDropdown === item.name ? null : item.name
-                          );
                           setActiveTab(item.name);
+                          setOpenDropdown(item.name);
+                          router.push(item.path || "#");
+                          if (isMobile) setSidebarOpen(false);
                         }}
                         className={`flex justify-between items-center w-full py-3 px-4 rounded-lg transition cursor-pointer ${
                           isParentActive
-                            ? "bg-white text-blue-900 font-medium"
+                            ? "bg-white text-blue-900 font-medium border-l-4 border-yellow-400"
                             : "text-white hover:bg-blue-800"
                         }`}
                       >
@@ -137,11 +145,11 @@ export default function Sidebar({
                         <ChevronDown
                           size={18}
                           className={`transition-transform ${
-                            openDropdown === item.name ? "rotate-180" : ""
+                            isOpen ? "rotate-180" : ""
                           }`}
                         />
                       </button>
-                      {openDropdown === item.name && (
+                      {isOpen && (
                         <ul className="mt-1 bg-white text-blue-900 rounded-lg overflow-hidden">
                           {item.subItems.map((subItem, subIndex) => {
                             const isSubActive = pathname.startsWith(subItem.path);

@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { useTheme } from "@/app/dashboard/layout";
 import { Gauge, FilePlus2, Edit, Trash2 } from "lucide-react";
-import CreateTest from "./create-test";
+import CreateTest from "./forms/create-test";
 
 interface InstallationData {
   name: string;

@@ -2,8 +2,8 @@
 import React, { useState } from "react";
 import { useTheme } from "@/app/dashboard/layout";
 import { ChevronRight, List } from "lucide-react";
-import CreateTest from "./create-test";
-import ParkingSystemForm from "./ParkingSystemForm";
+import CreateTest from "./forms/create-test";
+import ParkingSystemForm from "./forms/ParkingSystemForm";
 
 interface InstallationData {
   name: string;

@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { useTheme } from "@/app/dashboard/layout";
 import { List } from "lucide-react";
-import RegistrationVisitTest from "./visit-test";
+import RegistrationVisitTest from "./forms/visit-test";
 
 interface InstallationData {
   name: string;
