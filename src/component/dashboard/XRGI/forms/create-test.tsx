@@ -81,7 +81,11 @@ const CreateTestForm: React.FC<CreateTestFormProps> = ({
       <div className="flex justify-start gap-3">
         <button
           onClick={onCancel}
-          className="px-7 py-2 border border-gray-300 bg-white rounded-md text-sm text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer"
+          className={`px-7 py-2 border border-gray-300 rounded-md ${
+            darkMode
+              ? "text-gray-200 hover:bg-gray-700"
+              : "text-gray-700 hover:bg-gray-50"
+          }  transition-colors cursor-pointer`}
         >
           Cancel
         </button>

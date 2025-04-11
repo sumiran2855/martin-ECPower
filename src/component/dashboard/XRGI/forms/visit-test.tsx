@@ -22,7 +22,7 @@ const RegistrationVisitTest: React.FC<CreateTestFormProps> = ({
         <div className="text-blue-500 flex-shrink-0">
           <NotebookPen />
         </div>
-        <h2 className="text-lg sm:text-xl font-bold text-blue-900">
+        <h2 className={`${darkMode ? 'text-gray-200': 'text-blue-900'} text-lg sm:text-xl font-bold`}>
           Registration of Visit
         </h2>
       </div>
@@ -39,17 +39,17 @@ const RegistrationVisitTest: React.FC<CreateTestFormProps> = ({
         Fields marked with <span className="text-red-500">*</span> are required
       </p>
 
-      <div className="bg-white p-4 sm:p-6 rounded-lg border border-gray-200 mb-6 shadow">
-        <p className="text-base font-medium text-gray-800">{testId}</p>
+      <div className={`${darkMode ? 'bg-gray-800': 'bg-white'}  p-4 sm:p-6 rounded-lg border border-gray-200 mb-6 shadow`}>
+        <p className={`${darkMode ? 'text-gray-200': 'text-gray-800'} text-base font-medium`}>{testId}</p>
         <div className="mt-6">
-          <label className="block mb-1 text-sm font-medium text-gray-700">
+          <label className={`${darkMode ? 'text-gray-200': 'text-gray-700'} block mb-1 text-sm font-medium`}>
             Description <span className="text-red-500">*</span>
           </label>
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             rows={6}
-            className="w-full p-2 border border-gray-300 rounded-md text-gray-700 focus:outline-none focus:ring-1 focus:ring-blue-500 resize-none"
+            className={`${darkMode ? 'text-gray-200 border-gray-300 focus:ring-white': 'border-gray-300 text-gray-700 focus:ring-blue-500'} w-full p-2 border rounded-md focus:outline-none focus:ring-1 resize-none`}
             placeholder="Enter test description"
           ></textarea>
         </div>
@@ -58,7 +58,11 @@ const RegistrationVisitTest: React.FC<CreateTestFormProps> = ({
       <div className="flex justify-start gap-3">
         <button
           onClick={onCancel}
-          className="px-7 py-2 border border-gray-300 bg-white rounded-md text-sm text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer"
+          className={`px-7 py-2 border border-gray-300 rounded-md ${
+            darkMode
+              ? "text-gray-200 hover:bg-gray-700"
+              : "text-gray-700 hover:bg-gray-50"
+          }  transition-colors cursor-pointer`}
         >
           Cancel
         </button>

@@ -27,7 +27,7 @@ export default function ContactTab({
       } p-6 mb-6`}
     >
       <div className="flex justify-between items-center mb-6">
-        <p className="text-gray-700">Fill in the contact information.</p>
+        <p className={`${darkMode ? "text-gray-200" : "text-gray-700"}`}>Fill in the contact information.</p>
         <button
           onClick={handleSave}
           className="bg-blue-900 text-white rounded-md px-6 py-2 font-medium hover:bg-blue-800 cursor-pointer"
