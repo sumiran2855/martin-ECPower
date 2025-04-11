@@ -34,7 +34,7 @@ export default function Navbar({ toggleSidebar, sidebarOpen }: any) {
   return (
     <nav
       className={`w-full fixed top-0 z-50 shadow-md transition-colors duration-300 ${
-        darkMode ? "bg-gray-900 text-white" : "bg-white text-gray-900"
+        darkMode ? "bg-gray-800 text-white" : "bg-white text-gray-900"
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
