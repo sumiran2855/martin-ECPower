@@ -1,6 +1,5 @@
 "use client";
 import { useState, useEffect, createContext, useContext } from "react";
-import { usePathname } from "next/navigation";
 import Navbar from "@/component/dashboard/navbar";
 import Sidebar from "@/component/dashboard/sidebar";
 
@@ -43,12 +42,15 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   return (
     <ThemeContext.Provider value={{ darkMode, toggleDarkMode }}>
       <div className={`h-screen flex flex-col ${darkMode ? 'dark' : ''}`}>
+      <div className="fixed top-0 left-0 right-0 z-50">
         <Navbar toggleSidebar={() => setSidebarOpen(!sidebarOpen)} sidebarOpen={sidebarOpen} />
-        <div className="flex flex-1 mt-20 bg-gray-100 dark:bg-gray-900">
+        </div>
+        <div className="flex flex-1 pt-20 bg-gray-100 dark:bg-gray-900 h-full">
           <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} isMobile={isMobile} />
           <main 
             className={`flex-1 overflow-x-hidden overflow-y-auto p-6 bg-gray-100 dark:bg-gray-900 transition-all duration-300 
               ${sidebarOpen ? 'md:ml-64' : ''} ${darkMode ? 'dark' : ''}`}
+              style={{ height: "calc(100vh - 80px)" }}
           >
             {children}
           </main>

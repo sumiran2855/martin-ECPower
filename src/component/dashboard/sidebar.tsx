@@ -49,7 +49,12 @@ export default function Sidebar({
     {
       name: "Regular Service",
       icon: <BarChart2 size={20} />,
-      path: "/service",
+      path: "/dashboard/service",
+      subItems: [
+        { name: "Service Report", path: "/dashboard/service/service-report" },
+        { name: "Service Overview", path: "/dashboard/service/service-overview" },
+        { name: "surveillance", path: "/dashboard/service/surveillance" },
+      ],
     },
     {
       name: "Statistics",

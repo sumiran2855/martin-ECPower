@@ -1,6 +1,4 @@
 "use client";
-
-// pages/index.tsx
 import { useState } from "react";
 import { useTheme } from "@/app/dashboard/layout";
 import { NotebookPen } from "lucide-react";
@@ -60,7 +58,7 @@ export default function XRGIForm() {
       <div className={`${darkMode ? 'bg-gray-800' : 'bg-gray-50'} rounded-lg shadow`}>
         <div className="max-w-7xl mx-auto px-4 py-6">
           <div className={`${darkMode ? 'text-gray-200' : 'text-blue-900'} mb-6 flex items-center`}>
-            <div className=" mr-2">
+            <div className="mr-2">
               <NotebookPen />
             </div>
             <h1 className="text-2xl font-bold">Edit XRGI®</h1>
