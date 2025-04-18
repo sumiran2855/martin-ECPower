@@ -59,9 +59,14 @@ export default function Sidebar({
     {
       name: "Statistics",
       icon: <ChartSpline size={20} />,
-      path: "/statistics",
+      path: "/dashboard/statistics",
+      subItems: [
+        { name: "Operational analysis", path: "/dashboard/statistics/operational-analysis" },
+        { name: "Alarmstop per week", path: "/dashboard/statistics/alarmstop-per-week" },
+        { name: "Get extracts", path: "/dashboard/statistics/get-extracts" },
+      ],
     },
-    { name: "Online manual", icon: <FileText size={20} />, path: "/manual" },
+    { name: "Online manual", icon: <FileText size={20} />, path: "/dashboard/online-manual" },
     {
       name: "Properties",
       icon: <TableProperties size={20} />,
