@@ -115,12 +115,6 @@ export default function ContactTab({
         >
           Previous Step
         </button>
-        <button
-          onClick={handleNext}
-          className={`${darkMode ? 'text-gray-200 hover:bg-gray-700': 'text-blue-900 hover:bg-gray-100'} border border-gray-300 rounded-md px-6 py-2  font-medium cursor-pointer`}
-        >
-          Next Step
-        </button>
       </div>
     </div>
   );

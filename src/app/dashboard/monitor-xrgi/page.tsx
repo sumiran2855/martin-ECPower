@@ -1,9 +1,7 @@
 import MonitorXRGI from '@/component/dashboard/MonitorXRGI/MonitorXRGI';
 import type { NextPage } from 'next';
 
-
-
-const Home: NextPage = () => {
+const Monitor_XRGI: NextPage = () => {
   return (
     <div>
         <MonitorXRGI />
@@ -11,4 +9,4 @@ const Home: NextPage = () => {
   );
 };
 
-export default Home;
+export default Monitor_XRGI;

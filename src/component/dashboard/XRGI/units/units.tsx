@@ -8,7 +8,6 @@ import StatusCard from "./statusCard";
 import BarChart from "./Barchart";
 import ConfigRow from "./configRow";
 import ServiceLogEntry from "./serviceLog";
-import GaugeComponent from "react-gauge-component";
 
 const XRGIDashboard = () => {
   const { darkMode } = useTheme();
@@ -58,51 +57,6 @@ const XRGIDashboard = () => {
       </CollapsibleSection>
 
       <CollapsibleSection title="ECP Gold">
-        {/* <ServiceContactTable
-          contacts={[
-            {
-              values: {
-                serviceContract: { label: "Name", value: "Per Madsen" },
-                bookkeeping: {
-                  label: "Name",
-                  value: "Philip Sørensen / Eva Müller",
-                },
-              },
-            },
-            {
-              values: {
-                serviceContract: { label: "Phone", value: "+45 61 41 61 00" },
-                bookkeeping: { label: "Phone", value: "+45 45 91 61 00" },
-              },
-            },
-            {
-              values: {
-                serviceContract: {
-                  label: "Email",
-                  value: (
-                    <a
-                      href="mailto:account@ecpower.dk"
-                      className="text-blue-700 underline break-all"
-                    >
-                      account@ecpower.dk
-                    </a>
-                  ),
-                },
-                bookkeeping: {
-                  label: "Email",
-                  value: (
-                    <a
-                      href="mailto:servicecontract@ecpower.dk"
-                      className="text-blue-700 underline break-all"
-                    >
-                      servicecontract@ecpower.dk
-                    </a>
-                  ),
-                },
-              },
-            },
-          ]}
-        /> */}
         <ServiceContactTable
           systemInfo={{}}
           dealerInfo={{
