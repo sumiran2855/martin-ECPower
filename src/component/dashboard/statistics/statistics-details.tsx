@@ -41,7 +41,7 @@ export default function StatisticsDetail({selectedInstallation,goBack }: Props) 
         See system statistics {selectedInstallation.name}
       </p>
 
-      <div className="p-8 bg-gray-50 dark:bg-gray-700 rounded-lg">
+      <div className={`p-8 ${darkMode ? 'bg-gray-800' : 'bg-gray-50'} rounded-lg`}>
         <p className="font-normal mb-4">
           Please note: Both date and hour must be set
         </p>

@@ -154,7 +154,7 @@ export default function CallDetails({
       } py-2 px-4 rounded-lg shadow-sm transition-colors duration-300`}
     >
       <div className="p-4">
-        <div className="flex items-center text-blue-900 dark:text-blue-400 font-medium mb-4">
+        <div   className={`flex items-center font-medium mb-4 ${darkMode ? 'text-gray-200' : 'text-blue-900'}`}>
           <List className="mr-2 text-xl w-6 h-6" />
           <h1 className="text-2xl font-medium">Call details</h1>
         </div>
@@ -167,7 +167,7 @@ export default function CallDetails({
         </p>
       </div>
 
-      <div className="flex flex-wrap gap-4 mb-6 p-4 bg-yellow-50 border-1 border-yellow-400 dark:bg-gray-900 rounded-lg">
+      <div  className={`flex flex-wrap gap-4 mb-6 p-4 rounded-lg border-1 ${ darkMode ? 'bg-gray-900 border-yellow-400' : 'bg-yellow-50 border-yellow-400' }`}>
         <div className="flex flex-col items-center md:mx-6 cursor-pointer"  onClick={() => setHeatDistributorModal(true)}>
           <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center mb-1">
             <div className="w-8 h-8 bg-blue-900 dark:bg-blue-500 rounded-md flex items-center justify-center">
@@ -209,21 +209,21 @@ export default function CallDetails({
       <div className="rounded-lg shadow md:p-6">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
         <div className="flex flex-row gap-4">
-          <div className="text-sm text-gray-800 dark:text-gray-400 font-medium">
+          <div className={`text-sm font-medium ${darkMode ? 'text-gray-400' : 'text-gray-800'}`}>
             Time of call:
           </div>
           <div className="text-sm ">{details.timeOfCall}</div>
         </div>
 
         <div className="flex flex-row gap-4">
-          <div className="text-sm text-gray-800 dark:text-gray-400 font-medium">
+          <div className={`text-sm font-medium ${darkMode ? 'text-gray-400' : 'text-gray-800'}`}>
             Attempted redials:
           </div>
           <div className="text-sm">{details.attemptedRedials}</div>
         </div>
 
         <div className="flex flex-row gap-4">
-          <div className="text-sm text-gray-800 dark:text-gray-400 font-medium">
+          <div className={`text-sm font-medium ${darkMode ? 'text-gray-400' : 'text-gray-800'}`}>
             Software validated:
           </div>
           <div className="text-sm">{details.softwareValidated}</div>
@@ -233,7 +233,7 @@ export default function CallDetails({
       {/* Main content - Operation status and System status */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
-          <h2 className="font-medium text-blue-900 dark:text-blue-400 mb-3">
+          <h2 className={`font-medium ${darkMode ? 'text-blue-400':'text-blue-900'} mb-3`}>
             Operation status
           </h2>
           <div className="space-y-3">
@@ -341,7 +341,7 @@ export default function CallDetails({
         </div>
 
         <div>
-          <h2 className="font-medium text-blue-900 dark:text-blue-400 mb-3">
+          <h2 className={`font-medium ${darkMode ? 'text-blue-400':'text-blue-900'} mb-3`}>
             System status
           </h2>
           <div className="space-y-3">
@@ -491,16 +491,18 @@ export default function CallDetails({
                 </span>
               ) : (
                 <button
-                  key={`page-${page}`}
-                  onClick={() => goToPage(Number(page))}
-                  className={`px-3 py-1 border border-gray-300 dark:border-gray-600 rounded-md text-sm ${
-                    currentPage === page
-                      ? "bg-blue-50 dark:bg-blue-900 border-blue-300 dark:border-blue-700"
-                      : "hover:bg-gray-100 dark:hover:bg-gray-700"
-                  }`}
-                >
-                  {page}
-                </button>
+                key={`page-${page}`}
+                onClick={() => goToPage(Number(page))}
+                className={`px-3 py-1 border rounded-md text-sm ${
+                  currentPage === page
+                    ? ` ${
+                        darkMode ? 'border-blue-700 bg-blue-900' : 'border-blue-300 bg-blue-50'
+                      }`
+                    : `${darkMode ? 'hover:bg-gray-700 border-gray-600' : 'hover:bg-gray-100 border-gray-300'}`
+                }`}
+              >
+                {page}
+              </button>
               )
             )}
 

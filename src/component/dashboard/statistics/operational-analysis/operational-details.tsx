@@ -48,7 +48,7 @@ export default function OperationalDetail({selectedInstallation,goBack }: Props)
         To generate the operational analysis please enter dates and wait for the result
       </p>
 
-      <div className="p-8 bg-gray-50 dark:bg-gray-700 rounded-lg">
+      <div className={`p-8 ${darkMode ? 'bg-gray-800' : 'bg-gray-50'} rounded-lg`}>
         <p className="font-normal mb-4">
           Please note: Both date and hour must be set
         </p>

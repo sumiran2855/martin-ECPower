@@ -1,12 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useTheme } from "@/app/dashboard/layout";
-import {
-  HelpCircle,
-  ChevronLeft,
-  ChevronRight,
-  FilePen,
-} from "lucide-react";
+import { HelpCircle, ChevronLeft, ChevronRight, FilePen } from "lucide-react";
 
 interface ServiceCode {
   id: number;
@@ -121,7 +116,7 @@ export default function OnlineManual() {
       } py-2 px-4 rounded-lg shadow-sm transition-colors duration-300`}
     >
       <div className="p-4 flex items-center">
-        <div className="flex items-center text-blue-900 dark:text-blue-400 my-4">
+        <div className={`flex items-center ${darkMode ? 'text-blue-400' : 'text-blue-900'} my-4`}>
           <HelpCircle className="w-6 h-6 mr-2" />
           <h2 className="text-2xl font-medium">Online manual - Service code</h2>
         </div>
@@ -146,7 +141,7 @@ export default function OnlineManual() {
             {currentCodes.map((item) => (
               <tr
                 key={item.id}
-                className=" hover:bg-gray-100 dark:hover:bg-gray-700 rounded shadow my-1"
+                className={`${darkMode ? 'hover:bg-gray-700 ':'hover:bg-gray-100'} rounded shadow my-1`}
               >
                 <td className="p-4 text-sm ">
                   <span className={`${getTextColor(item.type)}`}>
@@ -178,7 +173,7 @@ export default function OnlineManual() {
             className={`px-3 py-1 border border-gray-300 dark:border-gray-600 rounded-md flex items-center text-sm ${
               currentPage === 1
                 ? "opacity-50 cursor-not-allowed"
-                : "hover:bg-gray-100 dark:hover:bg-gray-700"
+                : `${darkMode ? "hover:bg-gray-700" : "hover:bg-gray-100"}`
             }`}
           >
             <ChevronLeft className="w-4 h-4 mr-1" /> Previous
@@ -195,8 +190,12 @@ export default function OnlineManual() {
                 onClick={() => goToPage(Number(page))}
                 className={`px-3 py-1 border border-gray-300 dark:border-gray-600 rounded-md text-sm ${
                   currentPage === page
-                    ? "bg-blue-50 dark:bg-blue-900 border-blue-300 dark:border-blue-700"
-                    : "hover:bg-gray-100 dark:hover:bg-gray-700"
+                    ? `${
+                        darkMode
+                          ? "bg-blue-900 border-blue-700"
+                          : "bg-blue-50 border-blue-300"
+                      }`
+                    : `${darkMode ? "hover:bg-gray-700" : "hover:bg-gray-100"}`
                 }`}
               >
                 {page}
@@ -210,7 +209,7 @@ export default function OnlineManual() {
             className={`px-3 py-1 border border-gray-300 dark:border-gray-600 rounded-md flex items-center text-sm ${
               currentPage === totalPages
                 ? "opacity-50 cursor-not-allowed"
-                : "hover:bg-gray-100 dark:hover:bg-gray-700"
+                : `${darkMode ? "hover:bg-gray-700" : "hover:bg-gray-100"}`
             }`}
           >
             Next <ChevronRight className="w-4 h-4 ml-1" />
@@ -219,7 +218,9 @@ export default function OnlineManual() {
         <div className="ml-6 flex items-center">
           <span className="mr-2 text-sm">Show</span>
           <select
-            className="border border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded-md px-2 py-1 text-sm"
+            className={`"border ${
+              darkMode ? "border-gray-600 bg-gray-700" : "border-gray-300"
+            }  rounded-md px-2 py-1 text-sm`}
             value={itemsPerPage}
             onChange={(e) => {
               setItemsPerPage(Number(e.target.value));

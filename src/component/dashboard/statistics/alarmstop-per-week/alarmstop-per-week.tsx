@@ -187,8 +187,9 @@ export default function Alarmstop_per_week() {
         onClick={() => goToPage(1)}
         className={`px-2 py-1 border ${
           currentPage === 1
-            ? "bg-blue-50 border-blue-500 dark:bg-blue-900 dark:border-blue-400"
-            : "border-gray-300 dark:border-gray-600"
+            ? `${darkMode ? 'border-blue-400 bg-blue-900 ' : 'border-blue-500 bg-blue-50 '}`
+            : `${darkMode ? 'border-gray-600' : 'border-gray-300'}`
+
         } rounded-md text-sm`}
       >
         1
@@ -207,7 +208,7 @@ export default function Alarmstop_per_week() {
           onClick={() => goToPage(i)}
           className={`px-2 py-1 border ${
             currentPage === i
-              ? "bg-blue-50 border-blue-500 dark:bg-blue-900 dark:border-blue-400"
+              ? `${darkMode ? 'bg-blue-900 border-blue-400':'bg-blue-50 border-blue-500'} `
               : "border-gray-300 dark:border-gray-600"
           } rounded-md text-sm hidden sm:block`}
         >
@@ -261,7 +262,7 @@ export default function Alarmstop_per_week() {
       } py-2 px-4 rounded-lg shadow-sm transition-colors duration-300`}
     >
       <div className="p-4">
-        <div className="flex items-center text-blue-900 dark:text-blue-400 font-medium mb-4">
+        <div className={`flex items-center ${darkMode ? 'text-gray-200': 'text-blue-900'} font-medium mb-4`}>
         <List className="mr-2 text-xl w-7 h-7"/>
         <h1 className="text-2xl font-medium">See calls for the system</h1>
         </div>
@@ -291,7 +292,7 @@ export default function Alarmstop_per_week() {
           <div
             key={index}
             onClick={() => handleCallClick(call)}
-            className="grid grid-cols-12 gap-1 px-4 py-4 items-center text-sm hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer"
+            className={`grid grid-cols-12 gap-1 px-4 py-4 items-center text-sm ${darkMode ? 'hover:bg-gray-700':'hover:bg-gray-100'} cursor-pointer`}
           >
             <div className="col-span-2 md:col-span-2">{call.time}</div>
             <div
@@ -343,7 +344,11 @@ export default function Alarmstop_per_week() {
           <select
             value={itemsPerPage}
             onChange={(e) => handleItemsPerPageChange(Number(e.target.value))}
-            className="border border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded-md px-2 py-1 text-sm"
+            className={`border rounded-md px-2 py-1 text-sm ${
+              darkMode
+                ? 'border-gray-600 bg-gray-700 text-white'
+                : 'border-gray-300 bg-white text-black'
+            }`}
           >
             <option value={10}>10</option>
             <option value={20}>20</option>
