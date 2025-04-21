@@ -1,26 +1,42 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { useTranslation } from "react-i18next";
-import { Menu, X, Search, Sun, Moon } from "lucide-react";
+import { Menu, X, Search, Sun, Moon, LogOut, Settings, User } from "lucide-react";
 import { useTheme } from "@/app/dashboard/layout";
 import LanguageSwitcher from "../languageSwitcher";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function Navbar({ toggleSidebar, sidebarOpen }: any) {
   const { t } = useTranslation();
+  const router = useRouter();
   const { darkMode, toggleDarkMode } = useTheme();
   const [searchQuery, setSearchQuery] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
+  const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Searching for:", searchQuery);
   };
 
+  const toggleProfileDropdown = () => {
+    setProfileDropdownOpen(!profileDropdownOpen);
+  };
+
   useEffect(() => {
-    const handleClickOutside = (event: any) => {
-      const target = event.target;
-      if (menuOpen && !target.closest("nav")) {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current && 
+        !dropdownRef.current.contains(event.target as Node) &&
+        !(event.target as Element).closest('.profile-trigger')
+      ) {
+        setProfileDropdownOpen(false);
+      }
+      
+      if (menuOpen && !(event.target as Element).closest("nav")) {
         setMenuOpen(false);
       }
     };
@@ -29,7 +45,12 @@ export default function Navbar({ toggleSidebar, sidebarOpen }: any) {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [menuOpen]);
+  }, [menuOpen, profileDropdownOpen]);
+
+  const handleLogout =()=>{
+    localStorage.clear();
+    router.push('/login')
+  }
 
   return (
     <nav
@@ -37,7 +58,7 @@ export default function Navbar({ toggleSidebar, sidebarOpen }: any) {
         darkMode ? "bg-gray-800 text-white" : "bg-white text-gray-900"
       }`}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
           <div className="flex items-center">
             <button
@@ -112,21 +133,69 @@ export default function Navbar({ toggleSidebar, sidebarOpen }: any) {
               </div>
             </div>
 
-            <div className="flex items-center space-x-3 ml-auto cursor-pointer">
-              <Image
-                src="/White_Border.png"
-                alt="User Avatar"
-                width={35}
-                height={35}
-                className="rounded-full object-cover"
-                priority
-              />
-              <div className="text-sm hidden md:block">
-                <p className="font-bold">EC POWER</p>
-                <p className={darkMode ? "text-gray-400" : "text-gray-500"}>
-                  Martin
-                </p>
+            <div className="relative">
+              <div 
+                onClick={toggleProfileDropdown}
+                className="flex items-center space-x-3 ml-auto cursor-pointer profile-trigger"
+              >
+                <Image
+                  src="/White_Border.png"
+                  alt="User Avatar"
+                  width={35}
+                  height={35}
+                  className="rounded-full object-cover"
+                  priority
+                />
+                <div className="text-sm hidden md:block">
+                  <p className="font-bold">EC POWER</p>
+                  <p className={darkMode ? "text-gray-400" : "text-gray-500"}>
+                    Martin
+                  </p>
+                </div>
               </div>
+              
+              {profileDropdownOpen && (
+                <div 
+                  ref={dropdownRef}
+                  className={`absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 z-50
+                    ${darkMode ? "bg-gray-800 border border-gray-700" : "bg-white border border-gray-200"}`}
+                >
+                  <div className="px-4 py-2 md:hidden">
+                    <p className="font-bold">EC POWER</p>
+                    <p className={darkMode ? "text-gray-400" : "text-gray-500"}>
+                      Martin
+                    </p>
+                  </div>
+                  <Link
+                    href="#"
+                    className={`flex items-center px-4 py-2 text-sm ${
+                      darkMode ? "hover:bg-gray-700 text-gray-200" : "hover:bg-gray-100 text-gray-700"
+                    }`}
+                  >
+                    <User className="mr-2 h-4 w-4" />
+                    Profile
+                  </Link>
+                  <Link
+                    href="#"
+                    className={`flex items-center px-4 py-2 text-sm ${
+                      darkMode ? "hover:bg-gray-700 text-gray-200" : "hover:bg-gray-100 text-gray-700"
+                    }`}
+                  >
+                    <Settings className="mr-2 h-4 w-4" />
+                    Settings
+                  </Link>
+                  <Link
+                    onClick={handleLogout}
+                    href="/login"
+                    className={`flex items-center px-4 py-2 text-sm ${
+                      darkMode ? "hover:bg-gray-700 text-gray-200" : "hover:bg-gray-100 text-gray-700"
+                    }`}
+                  >
+                    <LogOut className="mr-2 h-4 w-4" />
+                    Logout
+                  </Link>
+                </div>
+              )}
             </div>
 
             <div className="md:hidden">
@@ -180,22 +249,6 @@ export default function Navbar({ toggleSidebar, sidebarOpen }: any) {
               <LanguageSwitcher />
             </div>
 
-            <div className="flex items-center space-x-3 py-2">
-              <Image
-                src="/White_Border.png"
-                alt="User Avatar"
-                width={35}
-                height={35}
-                className="rounded-full object-cover"
-                priority
-              />
-              <div className="text-sm">
-                <p className="font-bold">EC POWER</p>
-                <p className={darkMode ? "text-gray-400" : "text-gray-500"}>
-                  Martin
-                </p>
-              </div>
-            </div>
           </div>
         </div>
       )}

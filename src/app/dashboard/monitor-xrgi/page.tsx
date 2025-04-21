@@ -1,3 +1,5 @@
+"use client"
+import withAuth from '@/component/auth/withAuth';
 import MonitorXRGI from '@/component/dashboard/MonitorXRGI/MonitorXRGI';
 import type { NextPage } from 'next';
 
@@ -9,4 +11,4 @@ const Monitor_XRGI: NextPage = () => {
   );
 };
 
-export default Monitor_XRGI;
+export default withAuth(Monitor_XRGI);

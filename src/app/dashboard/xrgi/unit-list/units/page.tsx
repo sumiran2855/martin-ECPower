@@ -1,8 +1,9 @@
 "use client";
+import withAuth from "@/component/auth/withAuth";
 import { useTheme } from "../../../layout";
 import Units from "@/component/dashboard/XRGI/units/units";
 
-export default function EachUnit() {
+function EachUnit() {
   const { darkMode } = useTheme();
   return (
     <div className={`h-full ${darkMode ? "dark" : ""}`}>
@@ -10,3 +11,5 @@ export default function EachUnit() {
     </div>
   );
 }
+
+export default withAuth(EachUnit);

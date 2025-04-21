@@ -1,8 +1,9 @@
 "use client";
 import StatisticList from "@/component/dashboard/statistics/statistics";
 import { useTheme } from "../layout";
+import withAuth from "@/component/auth/withAuth";
 
-export default function StatisticsList() {
+function StatisticsList() {
   const { darkMode } = useTheme();
   return (
     <div className={`h-full ${darkMode ? "dark" : ""}`}>
@@ -10,3 +11,5 @@ export default function StatisticsList() {
     </div>
   );
 }
+
+export default withAuth(StatisticsList);

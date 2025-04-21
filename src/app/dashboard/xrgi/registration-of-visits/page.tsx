@@ -1,8 +1,9 @@
 "use client";
+import withAuth from "@/component/auth/withAuth";
 import { useTheme } from "../../layout";
 import RegistrationOfVisites from "@/component/dashboard/XRGI/registeration-of-visits";
 
-export default function RegistrationOfVisite() {
+function RegistrationOfVisite() {
   const { darkMode } = useTheme();
   return (
     <div className={`h-full ${darkMode ? "dark" : ""}`}>
@@ -10,3 +11,5 @@ export default function RegistrationOfVisite() {
     </div>
   );
 }
+
+export default withAuth(RegistrationOfVisite);

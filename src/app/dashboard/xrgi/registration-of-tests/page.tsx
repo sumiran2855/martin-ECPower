@@ -1,8 +1,9 @@
 "use client";
+import withAuth from "@/component/auth/withAuth";
 import { useTheme } from "../../layout";
 import RegistrationOfTests from "@/component/dashboard/XRGI/registration-of-test";
 
-export default function RegistrationOfTest() {
+function RegistrationOfTest() {
   const { darkMode } = useTheme();
   return (
     <div className={`h-full ${darkMode ? "dark" : ""}`}>
@@ -10,3 +11,5 @@ export default function RegistrationOfTest() {
     </div>
   );
 }
+
+export default withAuth(RegistrationOfTest)

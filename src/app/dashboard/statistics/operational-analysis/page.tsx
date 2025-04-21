@@ -1,8 +1,9 @@
 "use client";
 import OperationalAnalysis from "@/component/dashboard/statistics/operational-analysis/operational-analysis";
 import { useTheme } from "../../layout";
+import withAuth from "@/component/auth/withAuth";
 
-export default function Operational_Analysis() {
+function Operational_Analysis() {
   const { darkMode } = useTheme();
   return (
     <div className={`h-full ${darkMode ? "dark" : ""}`}>
@@ -10,3 +11,5 @@ export default function Operational_Analysis() {
     </div>
   );
 }
+
+export default withAuth(Operational_Analysis);

@@ -1,8 +1,9 @@
 "use client";
 import AlarmstopPerWeek from "@/component/dashboard/statistics/alarmstop-per-week/alarmstop-per-week";
 import { useTheme } from "../../layout";
+import withAuth from "@/component/auth/withAuth";
 
-export default function Alarmstop_per_week() {
+function Alarmstop_per_week() {
   const { darkMode } = useTheme();
   return (
     <div className={`h-full ${darkMode ? "dark" : ""}`}>
@@ -10,3 +11,5 @@ export default function Alarmstop_per_week() {
     </div>
   );
 }
+
+export default withAuth(Alarmstop_per_week);

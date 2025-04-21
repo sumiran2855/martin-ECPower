@@ -1,8 +1,9 @@
 "use client";
 import Home from "@/component/dashboard/Home/home";
 import { useTheme } from "./layout";
+import withAuth from "@/component/auth/withAuth";
 
-export default function Dashboard() {
+function Dashboard() {
   const { darkMode } = useTheme();
 
   return (
@@ -11,3 +12,5 @@ export default function Dashboard() {
     </div>
   );
 }
+
+export default withAuth(Dashboard)

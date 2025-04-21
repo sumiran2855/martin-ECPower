@@ -1,8 +1,12 @@
+"use client"
+import withAuth from "@/component/auth/withAuth";
 import Services from "@/component/dashboard/Services/regular-services";
-export default function RegularServices() {
+function RegularServices() {
   return (
     <div>
       <Services />
     </div>
   );
 }
+
+export default withAuth(RegularServices);

@@ -1,8 +1,12 @@
+"use client"
+import withAuth from "@/component/auth/withAuth";
 import OnlineManual from "@/component/dashboard/online-manual/manual";
-export default function Online_Manual() {
+function Online_Manual() {
   return (
     <div>
       <OnlineManual />
     </div>
   );
 }
+
+export default withAuth(Online_Manual);

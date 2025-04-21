@@ -1,3 +1,5 @@
+"use client"
+import withAuth from '@/component/auth/withAuth';
 import AdminSystem from '@/component/dashboard/admin-system/admin-system';
 import type { NextPage } from 'next';
 
@@ -9,4 +11,4 @@ const Admin_system: NextPage = () => {
   );
 };
 
-export default Admin_system;
+export default withAuth(Admin_system);

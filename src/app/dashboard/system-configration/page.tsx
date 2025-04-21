@@ -1,8 +1,12 @@
+'use client'
+import withAuth from "@/component/auth/withAuth";
 import SystemConfig from "@/component/dashboard/SystemConfig/systemConfig";
-export default function SystemCongigration() {
+function SystemCongigration() {
   return (
     <div>
       <SystemConfig />
     </div>
   );
 }
+
+export default withAuth(SystemCongigration);

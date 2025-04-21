@@ -1,22 +1,97 @@
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { useTranslation } from "react-i18next";
+"use client";
 
-export default function login({ setForgotPassword }: any) {
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { login } from "@/controller/auth-controller";
+import { useAlerts } from "../alert";
+import { getCookie, removeCookie, setCookie } from "@/utils/cookies";
+
+export default function login_page({ setForgotPassword }: any) {
+  const router = useRouter();
   const { t } = useTranslation("login");
+  const { addAlert, AlertList } = useAlerts();
+  const searchParams = useSearchParams();
+  const reason = searchParams.get("reason");
+
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
-  const router = useRouter();
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+
+  useEffect(() => {
+    if (reason === "unauthorized") {
+      addAlert({
+        type: "warning",
+        message: "Please log in to access the dashboard.",
+        showIcon:true
+      });
+    } else if (reason === "invalidToken") {
+      addAlert({
+        type: "error",
+        message: "Invalid or expired token. Please log in again.",
+        showIcon:true
+      });
+    } else if (reason === "sessionExpired") {
+      addAlert({
+        type: "info",
+        message: "Session expired. Please log in again.",
+        showIcon:true
+      });
+    }
+  }, [reason,addAlert]);
+
+  useEffect(() => {
+    const savedEmail = localStorage.getItem("rememberedEmail");
+    const savedPassword = localStorage.getItem("rememberedPassword");
+    if (savedEmail && savedPassword) {
+      setUsername(savedEmail);
+      setPassword(atob(savedPassword));
+      setRememberMe(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    const savedEmail = getCookie("rememberedEmail");
+    const savedPassword = getCookie("rememberedPassword");
+    if (savedEmail && savedPassword) {
+      setUsername(savedEmail);
+      setPassword(atob(savedPassword)); 
+      setRememberMe(true);
+    }
+  }, []);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Here, you can add authentication logic
-    router.push("/dashboard"); 
+    const result = await login(username, password);
+    if (result.success) {
+      if (rememberMe) {
+        setCookie("rememberedEmail", username,1); 
+        setCookie("rememberedPassword", btoa(password),1);
+      } else {
+        removeCookie("rememberedEmail");
+        removeCookie("rememberedPassword");
+      }
+      router.push("/dashboard");
+      addAlert({
+        type: "success",
+        message: "login successfully..!",
+        showIcon:true
+      });
+    } else{
+      addAlert({
+        type: "error",
+        message: "Login failed..!.",
+        showIcon:true
+      });
+    }
   };
   return (
     <>
       <div className="hidden md:flex md:w-1/4 lg:w-1/6 bg-[#f3f5f8] h-full flex-col justify-center items-center p-4 mt-9">
+      <AlertList/>
         <div className="bg-blue-900 p-6 rounded-t-lg flex justify-center w-full">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -74,6 +149,8 @@ export default function login({ setForgotPassword }: any) {
                 id="username"
                 name="username"
                 placeholder={t("usernamePlaceholder")}
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
                 className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
@@ -88,6 +165,8 @@ export default function login({ setForgotPassword }: any) {
                   id="password"
                   name="password"
                   placeholder={t("passwordPlaceholder")}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
                 <button
