@@ -4,8 +4,7 @@ import { useState } from "react";
 
 interface InstallationData {
   name: string;
-  id: string;
-  calls: string;
+  xrgiID: string;
   selected: boolean;
 }
 
@@ -38,7 +37,7 @@ export default function OperationalDetail({selectedInstallation,goBack }: Props)
           darkMode ? "text-gray-400" : "text-gray-700"
         }`}
       >
-        See system statistics {selectedInstallation.name}
+        See system statistics {selectedInstallation.xrgiID} / {selectedInstallation.name}
       </p>
       <p
         className={`text-sm mb-4 ml-8 ${

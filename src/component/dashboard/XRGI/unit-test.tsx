@@ -1,88 +1,73 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useTheme } from "@/app/dashboard/layout";
 import { Server } from "lucide-react";
 import { useRouter } from "next/navigation";
-
-interface InstallationData {
-  name: string;
-  id: string;
-  calls: string;
-  selected: boolean;
-}
+import { get_Facility, InstallationData } from "@/helper/facilityHelper";
+import Pagination from "@/component/Pagination";
+import ECPowerLoader from "@/component/loader";
 
 const UnitTest: React.FC = () => {
   const router = useRouter();
   const { darkMode } = useTheme();
-  const [installations, setInstallations] = useState<InstallationData[]>([
-    {
-      name: "XRGI-25",
-      id: "Nybrogade 2 1203",
-      calls: "1000-2999",
-      selected: false,
-    },
-    {
-      name: "XRGI-25",
-      id: "Nybrogade 2 1203",
-      calls: "1000-2999",
-      selected: false,
-    },
-    {
-      name: "XRGI-25",
-      id: "Nybrogade 2 1203",
-      calls: "1000-2999",
-      selected: false,
-    },
-    {
-      name: "XRGI-25",
-      id: "Nybrogade 2 1203",
-      calls: "1000-2999",
-      selected: false,
-    },
-    {
-      name: "XRGI-25",
-      id: "Nybrogade 2 1203",
-      calls: "1000-2999",
-      selected: false,
-    },
-    {
-      name: "XRGI-25",
-      id: "Nybrogade 2 1203",
-      calls: "1000-2999",
-      selected: false,
-    },
-    {
-      name: "XRGI-25",
-      id: "Nybrogade 2 1203",
-      calls: "1000-2999",
-      selected: false,
-    },
-    {
-      name: "XRGI-25",
-      id: "Nybrogade 2 1203",
-      calls: "1000-2999",
-      selected: false,
-    },
-    {
-      name: "XRGI-25",
-      id: "Nybrogade 2 1203",
-      calls: "1000-2999",
-      selected: false,
-    },
-    {
-      name: "XRGI-25",
-      id: "Nybrogade 2 1203",
-      calls: "1000-2999",
-      selected: false,
-    },
-  ]);
+  const [installations, setInstallations] = useState<InstallationData[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [paginatedInstallations, setPaginatedInstallations] = useState<InstallationData[]>([]);
+  const [totalPages, setTotalPages] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const maxVisible = 10;
 
-  const toggleSelection = (index: number) => {
-    const updatedInstallations = [...installations];
-    updatedInstallations[index].selected =
-      !updatedInstallations[index].selected;
-    setInstallations(updatedInstallations);
-  };
+  useEffect(() => {
+    const getFacility = async () => {
+      try {
+        setLoading(true);
+        const facilities = await get_Facility();
+        setInstallations(facilities);
+      } catch (error) {
+        console.error("Error fetching facilities:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    getFacility();
+  }, []);
+
+    useEffect(() => {
+      const calculatedTotalPages = Math.ceil(installations.length / itemsPerPage);
+      setTotalPages(calculatedTotalPages);
+  
+      if (currentPage > calculatedTotalPages) {
+        setCurrentPage(calculatedTotalPages || 1);
+      }
+  
+      const startIndex = (currentPage - 1) * itemsPerPage;
+      const endIndex = startIndex + itemsPerPage;
+      setPaginatedInstallations(installations.slice(startIndex, endIndex));
+    }, [currentPage, itemsPerPage, installations]);
+  
+    const toggleSelection = (index: number) => {
+      const globalIndex = (currentPage - 1) * itemsPerPage + index;
+      const updatedInstallations = [...installations];
+      updatedInstallations[globalIndex].selected =
+        !updatedInstallations[globalIndex].selected;
+      setInstallations(updatedInstallations);
+    };
+  
+    const goToPage = (page: number) => {
+      if (page >= 1 && page <= totalPages) {
+        setCurrentPage(page);
+      }
+    };
+  
+    const handleItemsPerPageChange = (value: number) => {
+      setItemsPerPage(value);
+      setCurrentPage(1);
+    };
+
+    if (loading) {
+      return <ECPowerLoader size="md" isVisible={true} />;
+    }
 
   return (
     <div
@@ -94,56 +79,52 @@ const UnitTest: React.FC = () => {
         <Server className="text-blue-500 mr-2 text-xl" />
         <h1 className="text-2xl font-medium">Unit List</h1>
       </div>
+
       <p
-        className={`text-sm mb-8 ml-8 ${
+        className={`text-sm mb-6 ml-8 ${
           darkMode ? "text-gray-400" : "text-gray-700"
         }`}
       >
         To see status, production and consumption for the current year, please
         choose a system from the list below
       </p>
+
       {/* Desktop View */}
-      <div className="w-full overflow-x-auto hidden md:block">
-        <table className="w-full border-separate border-spacing-y-2 mb-3">
+      <div className="w-full overflow-x-auto hidden md:block mb-4">
+        <table className="w-full border-separate border-spacing-y-2">
           <thead>
             <tr
-              className={`rounded-l-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 ${
+              className={`rounded-l-lg bg-gray-200 dark:bg-gray-700 ${
                 darkMode ? "text-gray-300" : "text-gray-700"
               }`}
             >
-              <th className="text-left px-4 py-2 font-medium">
-                XRGI® system name
-              </th>
               <th className="text-left px-4 py-2 font-medium">XRGI®-ID</th>
-              <th className="text-left px-4 py-2 font-medium">
-                Most recent calls
-              </th>
+              <th className="text-left px-4 py-2 font-medium">XRGI® system name</th>
+              <th className="text-left px-4 py-2 font-medium">Most recent calls</th>
               <th></th>
             </tr>
           </thead>
           <tbody onClick={() => router.push("/dashboard/xrgi/unit-list/units")}>
-            {installations.map((installation, index) => (
+            {paginatedInstallations.map((installation, index) => (
               <tr
                 key={index}
                 className={`${darkMode ? "bg-gray-700" : "bg-white"} shadow-sm`}
               >
-                <td className="px-4 py-4 rounded-l-lg">
+                <td className="px-4 py-3 rounded-l-lg">
                   <div className="flex items-center">
                     <input
                       type="checkbox"
                       checked={installation.selected}
                       onChange={() => toggleSelection(index)}
                       className={`mr-3 h-5 w-5 rounded cursor-pointer ${
-                        darkMode
-                          ? "bg-gray-600 border-gray-500"
-                          : "border-gray-300"
+                        darkMode ? "bg-gray-600 border-gray-500" : "border-gray-300"
                       }`}
                     />
-                    {installation.name}
+                    {installation.xrgiID}
                   </div>
                 </td>
-                <td className="px-4 py-4">{installation.id}</td>
-                <td className="px-4 py-4">{installation.calls}</td>
+                <td className="px-4 py-3">{installation.name}</td>
+                <td className="px-4 py-3">-</td>
                 <td className="px-4 py-3 text-right text-blue-500 cursor-pointer">
                   &gt;
                 </td>
@@ -155,10 +136,10 @@ const UnitTest: React.FC = () => {
 
       {/* Mobile View */}
       <div className="md:hidden space-y-4">
-        {installations.map((installation, index) => (
+        {paginatedInstallations.map((installation, index) => (
           <div
-            onClick={() => router.push("/dashboard/xrgi/unit-list/units")}
             key={index}
+            onClick={() => router.push("/dashboard/xrgi/unit-list/units")}
             className={`${
               darkMode ? "bg-gray-700" : "bg-white"
             } p-4 rounded-lg shadow-sm`}
@@ -173,7 +154,7 @@ const UnitTest: React.FC = () => {
                     darkMode ? "bg-gray-600 border-gray-500" : "border-gray-300"
                   }`}
                 />
-                <span className="font-medium">#{installation.name}</span>
+                <span className="font-medium">#{installation.xrgiID}</span>
               </div>
               <div className="w-8 h-6">
                 <img src="/flag.png" alt="Country Flag" className="w-8 h-6" />
@@ -187,9 +168,9 @@ const UnitTest: React.FC = () => {
                     darkMode ? "text-gray-400" : "text-gray-500"
                   }`}
                 >
-                  XRGI® system name
+                  XRGI®-ID
                 </span>
-                <p className="mt-1">{installation.name}</p>
+                <p className="mt-1">{installation.xrgiID}</p>
               </div>
 
               <div>
@@ -198,9 +179,9 @@ const UnitTest: React.FC = () => {
                     darkMode ? "text-gray-400" : "text-gray-500"
                   }`}
                 >
-                  XRGI®-ID
+                  XRGI® system name
                 </span>
-                <p className="mt-1">{installation.id}</p>
+                <p className="mt-1">{installation.name}</p>
               </div>
 
               <div className="flex space-x-4">
@@ -212,13 +193,23 @@ const UnitTest: React.FC = () => {
                   >
                     Most recent calls
                   </span>
-                  <p className="mt-1">{installation.calls}</p>
+                  <p className="mt-1">-</p>
                 </div>
               </div>
             </div>
           </div>
         ))}
       </div>
+      {/* Pagination Component */}
+      <Pagination
+        maxVisible={maxVisible}
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={goToPage}
+        itemsPerPage={itemsPerPage}
+        onItemsPerPageChange={handleItemsPerPageChange}
+        darkMode={darkMode}
+      />
     </div>
   );
 };

@@ -48,13 +48,18 @@ class AuthHelper {
         return { success: response.ok, data: blob as any };
       }
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || "Request failed");
+      if (contentType && contentType.includes("application/json")) {
+        const data = await response.json();
+        if (!response.ok) {
+          throw new Error(data.message || "Request failed");
+        }
+        return { success: true, data };
       }
 
-      return { success: true, data };
+      const text = await response.text();
+      console.error("Expected JSON but received:", text.slice(0, 300));
+      return { success: false, message: "Received non-JSON response" };
+
     } catch (error: any) {
       return { success: false, message: error.message };
     }

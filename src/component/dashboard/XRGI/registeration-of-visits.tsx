@@ -1,77 +1,73 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useTheme } from "@/app/dashboard/layout";
 import { List } from "lucide-react";
 import RegistrationVisitTest from "./forms/visit-test";
-
-interface InstallationData {
-  name: string;
-  id: string;
-  selected: boolean;
-}
+import { get_Facility, InstallationData } from "@/helper/facilityHelper";
+import Pagination from "@/component/Pagination";
+import ECPowerLoader from "@/component/loader";
 
 const RegistrationOfVisites: React.FC = () => {
   const { darkMode } = useTheme();
   const [Registration, setRegistration] = useState(false);
-  const [installations, setInstallations] = useState<InstallationData[]>([
-    {
-      name: "XRGI-25 CARB test / OR35041",
-      id: "1979599994",
-      selected: false,
-    },
-    {
-      name: "XRGI-25 CARB test / OR35041",
-      id: "1979599994",
-      selected: false,
-    },
-    {
-      name: "XRGI-25 CARB test / OR35041",
-      id: "1979599994",
-      selected: false,
-    },
-    {
-      name: "XRGI-25 CARB test / OR35041",
-      id: "1979599994",
-      selected: false,
-    },
-    {
-      name: "XRGI-25 CARB test / OR35041",
-      id: "1979599994",
-      selected: false,
-    },
-    {
-      name: "XRGI-25 CARB test / OR35041",
-      id: "1979599994",
-      selected: false,
-    },
-    {
-      name: "XRGI-25 CARB test / OR35041",
-      id: "1979599994",
-      selected: false,
-    },
-    {
-      name: "XRGI-25 CARB test / OR35041",
-      id: "1979599994",
-      selected: false,
-    },
-    {
-      name: "XRGI-25 CARB test / OR35041",
-      id: "1979599994",
-      selected: false,
-    },
-    {
-      name: "XRGI-25 CARB test / OR35041",
-      id: "1979599994",
-      selected: false,
-    },
-  ]);
+  const [installations, setInstallations] = useState<InstallationData[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [paginatedInstallations, setPaginatedInstallations] = useState<InstallationData[]>([]);
+  const [totalPages, setTotalPages] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const maxVisible = 10;
 
-  const toggleSelection = (index: number) => {
-    const updatedInstallations = [...installations];
-    updatedInstallations[index].selected =
-      !updatedInstallations[index].selected;
-    setInstallations(updatedInstallations);
-  };
+  useEffect(() => {
+    const getFacility = async () => {
+      try {
+        setLoading(true);
+        const facilities = await get_Facility();
+        setInstallations(facilities);
+      } catch (error) {
+        console.error("Error fetching facilities:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    getFacility();
+  }, []);
+
+    useEffect(() => {
+      const calculatedTotalPages = Math.ceil(installations.length / itemsPerPage);
+      setTotalPages(calculatedTotalPages);
+  
+      if (currentPage > calculatedTotalPages) {
+        setCurrentPage(calculatedTotalPages || 1);
+      }
+  
+      const startIndex = (currentPage - 1) * itemsPerPage;
+      const endIndex = startIndex + itemsPerPage;
+      setPaginatedInstallations(installations.slice(startIndex, endIndex));
+    }, [currentPage, itemsPerPage, installations]);
+  
+    const toggleSelection = (index: number) => {
+      const globalIndex = (currentPage - 1) * itemsPerPage + index;
+      const updatedInstallations = [...installations];
+      updatedInstallations[globalIndex].selected =
+        !updatedInstallations[globalIndex].selected;
+      setInstallations(updatedInstallations);
+    };
+  
+    const goToPage = (page: number) => {
+      if (page >= 1 && page <= totalPages) {
+        setCurrentPage(page);
+      }
+    };
+  
+    const handleItemsPerPageChange = (value: number) => {
+      setItemsPerPage(value);
+      setCurrentPage(1);
+    };
+
+    if (loading) {
+      return <ECPowerLoader size="md" isVisible={true} />;
+    }
 
   return (
     <div
@@ -105,7 +101,7 @@ const RegistrationOfVisites: React.FC = () => {
             </tr>
           </thead>
           <tbody>
-            {installations.map((installation, index) => (
+            {paginatedInstallations.map((installation, index) => (
               <tr
                 key={index}
                 className={`${darkMode ? "bg-gray-700" : "bg-white"} shadow-sm`}
@@ -122,7 +118,7 @@ const RegistrationOfVisites: React.FC = () => {
                           : "border-gray-300"
                       }`}
                     />
-                    {installation.id}
+                    {installation.xrgiID}
                   </div>
                 </td>
                 <td className="px-4 py-4">{installation.name}</td>
@@ -137,7 +133,7 @@ const RegistrationOfVisites: React.FC = () => {
 
       {/* Mobile View */}
       <div className="md:hidden space-y-4">
-        {installations.map((installation, index) => (
+        {paginatedInstallations.map((installation, index) => (
           <div
             key={index}
             className={`${
@@ -154,7 +150,7 @@ const RegistrationOfVisites: React.FC = () => {
                     darkMode ? "bg-gray-600 border-gray-500" : "border-gray-300"
                   }`}
                 />
-                <span className="font-medium">#{installation.id}</span>
+                <span className="font-medium">#{installation.xrgiID}</span>
               </div>
               <div onClick={()=>setRegistration(true)} className="text-blue-500 cursor-pointer">&gt;</div>
             </div>
@@ -179,12 +175,22 @@ const RegistrationOfVisites: React.FC = () => {
                 >
                   XRGI®-ID
                 </span>
-                <p className="mt-1">{installation.id}</p>
+                <p className="mt-1">{installation.xrgiID}</p>
               </div>
             </div>
           </div>
         ))}
       </div>
+      {/* Pagination Component */}
+      <Pagination
+        maxVisible={maxVisible}
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={goToPage}
+        itemsPerPage={itemsPerPage}
+        onItemsPerPageChange={handleItemsPerPageChange}
+        darkMode={darkMode}
+      />
       </>):(
          <RegistrationVisitTest onCancel={() => setRegistration(false)} />
       )}

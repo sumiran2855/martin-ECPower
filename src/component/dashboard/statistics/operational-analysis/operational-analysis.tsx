@@ -1,89 +1,70 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useTheme } from "@/app/dashboard/layout";
 import { FileChartLine } from "lucide-react";
 import OperationalDetail from "./operational-details";
-
-interface InstallationData {
-  name: string;
-  id: string;
-  calls: string;
-  selected: boolean;
-}
+import { get_Facility, InstallationData } from "@/helper/facilityHelper";
+import Pagination from "@/component/Pagination";
+import ECPowerLoader from "@/component/loader";
 
 const OperationalAnalysis: React.FC = () => {
   const { darkMode } = useTheme();
   const [showDetailsPage, setShowDetailsPage] = useState(false);
   const [selectedInstallation, setSelectedInstallation] = useState<InstallationData | null>(null);
-
-  const [installations, setInstallations] = useState<InstallationData[]>([
-    {
-      name: "XRGI-25 CARB test / OR35041",
-      id: "1979599994",
-      calls: "02-11-24 15:14",
-      selected: false,
-    },
-    {
-      name: "XRGI-25 CARB test / OR35041",
-      id: "1979599994",
-      calls: "02-11-24 15:14",
-      selected: false,
-    },
-    {
-      name: "XRGI-25 CARB test / OR35041",
-      id: "1979599994",
-      calls: "02-11-24 15:14",
-      selected: false,
-    },
-    {
-      name: "XRGI-25 CARB test / OR35041",
-      id: "1979599994",
-      calls: "02-11-24 15:14",
-      selected: false,
-    },
-    {
-      name: "XRGI-25 CARB test / OR35041",
-      id: "1979599994",
-      calls: "02-11-24 15:14",
-      selected: false,
-    },
-    {
-      name: "XRGI-25 CARB test / OR35041",
-      id: "1979599994",
-      calls: "02-11-24 15:14",
-      selected: false,
-    },
-    {
-      name: "XRGI-25 CARB test / OR35041",
-      id: "1979599994",
-      calls: "02-11-24 15:14",
-      selected: false,
-    },
-    {
-      name: "XRGI-25 CARB test / OR35041",
-      id: "1979599994",
-      calls: "02-11-24 15:14",
-      selected: false,
-    },
-    {
-      name: "XRGI-25 CARB test / OR35041",
-      id: "1979599994",
-      calls: "02-11-24 15:14",
-      selected: false,
-    },
-    {
-      name: "XRGI-25 CARB test / OR35041",
-      id: "1979599994",
-      calls: "02-11-24 15:14",
-      selected: false,
-    },
-  ]);
-
-  const toggleSelection = (index: number) => {
-    const updatedInstallations = [...installations];
-    updatedInstallations[index].selected = !updatedInstallations[index].selected;
-    setInstallations(updatedInstallations);
-  };
+  const [installations, setInstallations] = useState<InstallationData[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [paginatedInstallations, setPaginatedInstallations] = useState<InstallationData[]>([]);
+  const [totalPages, setTotalPages] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const maxVisible = 10;
+  
+  useEffect(() => {
+    const getFacility = async () => {
+      try {
+        setLoading(true);
+        const facilities = await get_Facility();
+        setInstallations(facilities);
+      } catch (error) {
+        console.error("Error fetching facilities:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    getFacility();
+  }, []);
+  
+      useEffect(() => {
+        const calculatedTotalPages = Math.ceil(installations.length / itemsPerPage);
+        setTotalPages(calculatedTotalPages);
+    
+        if (currentPage > calculatedTotalPages) {
+          setCurrentPage(calculatedTotalPages || 1);
+        }
+    
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+        setPaginatedInstallations(installations.slice(startIndex, endIndex));
+      }, [currentPage, itemsPerPage, installations]);
+    
+      const toggleSelection = (index: number) => {
+        const globalIndex = (currentPage - 1) * itemsPerPage + index;
+        const updatedInstallations = [...installations];
+        updatedInstallations[globalIndex].selected =
+          !updatedInstallations[globalIndex].selected;
+        setInstallations(updatedInstallations);
+      };
+    
+      const goToPage = (page: number) => {
+        if (page >= 1 && page <= totalPages) {
+          setCurrentPage(page);
+        }
+      };
+    
+      const handleItemsPerPageChange = (value: number) => {
+        setItemsPerPage(value);
+        setCurrentPage(1);
+      };
 
   const viewDetails = (installation: InstallationData) => {
     setSelectedInstallation(installation);
@@ -102,6 +83,10 @@ const OperationalAnalysis: React.FC = () => {
         goBack={goBack}
       />
     );
+  }
+
+  if (loading) {
+    return <ECPowerLoader size="md" isVisible={true} />;
   }
 
   return (
@@ -134,13 +119,13 @@ const OperationalAnalysis: React.FC = () => {
             </tr>
           </thead>
           <tbody>
-            {installations.map((installation, index) => (
+            {paginatedInstallations.map((installation, index) => (
               <tr
                 key={index}
                 className={`${darkMode ? "bg-gray-700" : "bg-white"} shadow-sm`}
                 onClick={() => viewDetails(installation)}
               >
-                <td className="px-4 py-4 rounded-l-lg">
+                <td className="px-4 py-3 rounded-l-lg">
                   <div className="flex items-center">
                     <input
                       type="checkbox"
@@ -153,11 +138,11 @@ const OperationalAnalysis: React.FC = () => {
                         darkMode ? "bg-gray-600 border-gray-500" : "border-gray-300"
                       }`}
                     />
-                    {installation.id}
+                    {installation.xrgiID}
                   </div>
                 </td>
-                <td className="px-4 py-4">{installation.name}</td>
-                <td className="px-4 py-4">{installation.calls}</td>
+                <td className="px-4 py-3">{installation.name}</td>
+                <td className="px-4 py-3">-</td>
                 <td className="px-4 py-3 text-right text-blue-500 cursor-pointer">
                   &gt;
                 </td>
@@ -169,7 +154,7 @@ const OperationalAnalysis: React.FC = () => {
 
       {/* Mobile List */}
       <div className="md:hidden space-y-4">
-        {installations.map((installation, index) => (
+        {paginatedInstallations.map((installation, index) => (
           <div
             onClick={() => viewDetails(installation)}
             key={index}
@@ -206,19 +191,29 @@ const OperationalAnalysis: React.FC = () => {
                 <span className={`text-xs ${darkMode ? "text-gray-400" : "text-gray-500"}`}>
                   XRGI®-ID
                 </span>
-                <p className="mt-1">{installation.id}</p>
+                <p className="mt-1">{installation.xrgiID}</p>
               </div>
 
               <div>
                 <span className={`text-xs ${darkMode ? "text-gray-400" : "text-gray-500"}`}>
                   Most recent calls
                 </span>
-                <p className="mt-1">{installation.calls}</p>
+                <p className="mt-1">-</p>
               </div>
             </div>
           </div>
         ))}
       </div>
+      {/* Pagination Component */}
+      <Pagination
+      maxVisible={maxVisible}
+      currentPage={currentPage}
+      totalPages={totalPages}
+      onPageChange={goToPage}
+      itemsPerPage={itemsPerPage}
+      onItemsPerPageChange={handleItemsPerPageChange}
+      darkMode={darkMode}
+      />
     </div>
   );
 };
