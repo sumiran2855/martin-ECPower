@@ -38,7 +38,7 @@ export default function Sidebar({
     {
       name: "XRGI®",
       icon: <PanelsLeftBottom />,
-      path: "/dashboard/xrgi", 
+      path: "/dashboard/xrgi/unit-list", 
       subItems: [
         { name: "Unit list", path: "/dashboard/xrgi/unit-list" },
         { name: "Add to waitlist", path: "/dashboard/xrgi/add-to-waitlist" },

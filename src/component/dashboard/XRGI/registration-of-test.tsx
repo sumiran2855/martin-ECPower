@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { useTheme } from "@/app/dashboard/layout";
 import { Gauge, FilePlus2, Edit, Trash2 } from "lucide-react";
 import CreateTest from "./forms/create-test";
+import { useRouter } from "next/navigation";
 
 interface InstallationData {
   name: string;
@@ -11,6 +12,7 @@ interface InstallationData {
 }
 
 const RegistrationOfTests: React.FC = () => {
+  const router = useRouter();
   const { darkMode } = useTheme();
   const [creating, setCreating] = useState(false);
   const [installations, setInstallations] = useState<InstallationData[]>([
@@ -94,7 +96,9 @@ const RegistrationOfTests: React.FC = () => {
                 <FilePlus2 className="w-5 h-5 mr-1" />
                 <span>Create test</span>
               </button>
-              <button className="flex items-center text-sm text-blue-500 hover:text-blue-700 transition-colors ml-4 cursor-pointer">
+              <button 
+                onClick={()=>router.push('/dashboard/xrgi/registration-of-tests/correct-test')}
+                className="flex items-center text-sm text-blue-500 hover:text-blue-700 transition-colors ml-4 cursor-pointer">
                 <Edit className="w-5 h-5 mr-1" />
                 <span>Correct test</span>
               </button>
