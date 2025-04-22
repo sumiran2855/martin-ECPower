@@ -94,7 +94,7 @@ const UnitTest: React.FC = () => {
         <table className="w-full border-separate border-spacing-y-2">
           <thead>
             <tr
-              className={`rounded-l-lg bg-gray-200 dark:bg-gray-700 ${
+              className={`rounded-l-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 ${
                 darkMode ? "text-gray-300" : "text-gray-700"
               }`}
             >

@@ -111,7 +111,9 @@ const OperationalAnalysis: React.FC = () => {
       <div className="w-full overflow-x-auto hidden md:block">
         <table className="w-full border-separate border-spacing-y-2 mb-3">
           <thead>
-            <tr className={`${darkMode ? "bg-gray-700 text-gray-300" : "bg-gray-200 text-gray-700"}`}>
+            <tr className={`rounded-l-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 ${
+                darkMode ? "text-gray-300" : "text-gray-700"
+              }`}>
               <th className="text-left px-4 py-2 font-medium">XRGI®-ID</th>
               <th className="text-left px-4 py-2 font-medium">XRGI® system name</th>
               <th className="text-left px-4 py-2 font-medium">Most recent calls</th>
