@@ -8,9 +8,27 @@ import StatusCard from "./statusCard";
 import BarChart from "./Barchart";
 import ConfigRow from "./configRow";
 import ServiceLogEntry from "./serviceLog";
+import { useState } from "react";
 
 const XRGIDashboard = () => {
   const { darkMode } = useTheme();
+  const [isOpen, setIsOpen] = useState(false);
+  const [selected, setSelected] = useState('Last 7 days');
+  
+  const options = [
+    'Last 7 days', 
+    'Last 1 month', 
+    'Last 6 months', 
+    'Last year',
+    'All time'
+  ];
+  
+  const toggleDropdown = () => setIsOpen(!isOpen);
+  
+  const selectOption = (option:string) => {
+    setSelected(option);
+    setIsOpen(false);
+  };
   return (
     <div
       className={`max-w-[1440px] mx-auto p-4 rounded-xl shadow ${
@@ -166,12 +184,45 @@ const XRGIDashboard = () => {
 
       <CollapsibleSection title="Status 2025">
         <div className={`${darkMode ? " bg-gray-800" : ""} mb-4 p-4`}>
-          <div className="flex items-center gap-2 mb-4">
-            <span className="text-sm font-medium">Last 7 days</span>
-            <ChevronDown size={16} />
+          <div className="relative gap-2 mb-4">
+            <button
+              onClick={toggleDropdown}
+              className={`flex items-center gap-2 px-3 py-2 cursor-pointer ${darkMode ? "bg-gray-800 hover:bg-gray-600":"bg-gray-100 hover:bg-gray-200"} rounded transition-colors`}
+              aria-haspopup="listbox"
+              aria-expanded={isOpen}
+            >
+              <span className="text-sm font-medium">{selected}</span>
+              <ChevronDown
+                size={16}
+                className={`transition-transform ${isOpen ? "rotate-180" : ""}`}
+              />
+            </button>
+
+            {isOpen && (
+              <ul
+                className={`absolute z-10 mt-1 w-40 ${darkMode ? "bg-gray-800":"bg-white"} shadow-lg rounded-md py-1 text-sm`}
+                role="listbox"
+              >
+                {options.map((option) => (
+                  <li
+                    key={option}
+                    onClick={() => selectOption(option)}
+                    className={`px-3 py-2 cursor-pointer ${darkMode ? "hover:bg-gray-700":"hover:bg-gray-100"} ${
+                      selected === option
+                        ? "bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400"
+                        : ""
+                    }`}
+                    role="option"
+                    aria-selected={selected === option}
+                  >
+                    {option}
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 px-3">
             <div className="space-y-2">
               <div className="grid grid-cols-2 gap-2">
                 <div className="text-sm">Latest update:</div>
@@ -213,7 +264,7 @@ const XRGIDashboard = () => {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 px-3">
             <div className="space-y-2">
               <div className="grid grid-cols-2 gap-2">
                 <div className="text-sm">Site elec. consumption:</div>

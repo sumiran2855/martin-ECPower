@@ -9,7 +9,7 @@ const BarChart: React.FC = () => {
   ];
 
   return (
-    <div className="mt-4">
+    <div className="mt-4 px-3">
       <div className="flex h-56 relative">
         <div className="flex flex-col justify-between text-xs text-gray-500 dark:text-gray-400 mr-2">
           <span>50</span>

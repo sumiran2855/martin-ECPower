@@ -1,7 +1,8 @@
 "use client";
 import { useState } from "react";
-import { Calendar, ChevronDown, NotebookPen } from "lucide-react";
+import { ChevronDown, NotebookPen } from "lucide-react";
 import { useTheme } from "@/app/dashboard/layout";
+import DatePicker from "@/component/DatePicker";
 
 interface ParkingSystemFormProps {
   onCancel: () => void;
@@ -18,7 +19,17 @@ const ParkingSystemForm: React.FC<ParkingSystemFormProps> = ({
   const [reason, setReason] = useState("Waiting for parts");
   const [cancelDate, setCancelDate] = useState("08-02-25 00:00");
   const [description, setDescription] = useState("");
-  const [isReasonDropdownOpen, setIsReasonDropdownOpen] = useState(false);
+
+  const reasonOptions = [
+    "Waiting for parts",
+    "Waiting for service",
+    "Waiting for customer",
+    "Ran out of diesel",
+    "Stopped calling",
+    "Complaint",
+    "Under installation",
+    "Other"
+  ];
 
   return (
     <div className="w-full max-w-4xl mx-auto px-4 py-6">
@@ -59,60 +70,25 @@ const ParkingSystemForm: React.FC<ParkingSystemFormProps> = ({
           >
             Select Reason <span className="text-red-500">*</span>
           </label>
-          <div className="relative">
-            <button
-              type="button"
-              className={`w-full md:w-72 px-4 py-2 text-left ${
-                darkMode ? "bg-gray-800" : "bg-white"
-              } border border-gray-300 rounded-md flex justify-between items-center cursor-pointer`}
-              onClick={() => setIsReasonDropdownOpen(!isReasonDropdownOpen)}
+          
+          <div className="relative w-full md:w-72">
+            <select
+              id="reason"
+              value={reason}
+              onChange={(e) => setReason(e.target.value)}
+              className={`w-full px-4 py-2 pr-10 appearance-none ${
+                darkMode ? "bg-gray-800 text-gray-200" : "bg-white text-gray-700"
+              } border border-gray-300 rounded-md focus:outline-none cursor-pointer`}
             >
-              <span>{reason}</span>
-              <ChevronDown />
-            </button>
-            {isReasonDropdownOpen && (
-              <div
-                className={`absolute z-10 w-full md:w-72 mt-1 ${
-                  darkMode ? "bg-gray-800" : "bg-white"
-                } border border-gray-300 rounded-md shadow-lg`}
-              >
-                <ul className="py-1 cursor-pointer">
-                  <li
-                    className={`${
-                      darkMode ? "hover:bg-gray-900" : "hover:bg-gray-100"
-                    } px-4 py-2 hover:bg-gray-100 cursor-pointer`}
-                    onClick={() => {
-                      setReason("Waiting for parts");
-                      setIsReasonDropdownOpen(false);
-                    }}
-                  >
-                    Waiting for parts
-                  </li>
-                  <li
-                    className={`${
-                      darkMode ? "hover:bg-gray-900" : "hover:bg-gray-100"
-                    } px-4 py-2 hover:bg-gray-100 cursor-pointer`}
-                    onClick={() => {
-                      setReason("Scheduled maintenance");
-                      setIsReasonDropdownOpen(false);
-                    }}
-                  >
-                    Scheduled maintenance
-                  </li>
-                  <li
-                    className={`${
-                      darkMode ? "hover:bg-gray-900" : "hover:bg-gray-100"
-                    } px-4 py-2 hover:bg-gray-100 cursor-pointer`}
-                    onClick={() => {
-                      setReason("Technical issue");
-                      setIsReasonDropdownOpen(false);
-                    }}
-                  >
-                    Technical issue
-                  </li>
-                </ul>
-              </div>
-            )}
+              {reasonOptions.map((option) => (
+                <option key={option} value={option}>
+                  {option}
+                </option>
+              ))}
+            </select>
+            <div className="absolute inset-y-0 right-0 flex items-center px-3 pointer-events-none">
+              <ChevronDown className={`h-5 w-5 ${darkMode ? "text-gray-400" : "text-gray-500"}`} />
+            </div>
           </div>
         </div>
 
@@ -125,18 +101,10 @@ const ParkingSystemForm: React.FC<ParkingSystemFormProps> = ({
           >
             Date of cancelling (No cancellations prior to this date)
           </label>
-          <div className="relative w-full md:w-72">
-            <input
-              type="text"
-              id="cancelDate"
-              value={cancelDate}
-              onChange={(e) => setCancelDate(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md pr-10"
-            />
-            <div className="absolute inset-y-0 right-0 flex items-center px-3 pointer-events-none">
-              <Calendar className="h-5 w-5 text-gray-400" />
-            </div>
-          </div>
+          <DatePicker 
+            selectedDate={cancelDate}
+            onDateChange={setCancelDate}
+          />
         </div>
 
         <div className="mb-6">
@@ -153,7 +121,9 @@ const ParkingSystemForm: React.FC<ParkingSystemFormProps> = ({
             rows={6}
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-md resize-none"
+            className={`w-full px-4 py-2 border border-gray-300 rounded-md resize-none ${
+              darkMode ? "bg-gray-800 text-gray-200" : "bg-white text-gray-700"
+            }`}
           ></textarea>
         </div>
 

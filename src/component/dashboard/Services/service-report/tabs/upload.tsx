@@ -1,18 +1,12 @@
 import { useTheme } from "@/app/dashboard/layout";
-import {
-  Calendar,
-  ChevronDown,
-  Clock9,
-  FileDiff,
-  Upload,
-  X,
-} from "lucide-react";
+import DatePicker from "@/component/DatePicker";
+import { ChevronDown, FileDiff, Upload, X } from "lucide-react";
 import { useState } from "react";
 
 export default function UploadReport() {
   const { darkMode } = useTheme();
-  const [creationDate, setCreationDate] = useState("04-02-2025");
-  const [deliveryDate, setDeliveryDate] = useState("04-02-2025");
+  const [creationDate, setCreationDate] = useState("08-02-25 00:00");
+  const [deliveryDate, setDeliveryDate] = useState("08-02-25 00:00");
   const [serviceType, setServiceType] = useState("");
   const [file, setFile] = useState<string | null>("File document name.pdf");
 
@@ -48,22 +42,10 @@ export default function UploadReport() {
             Creation date
           </label>
           <div className="relative">
-            <input
-              type="text"
-              value={creationDate}
-              onChange={(e) => setCreationDate(e.target.value)}
-              className={`w-full px-3 py-2 rounded-md 
-                ${
-                  darkMode
-                    ? "bg-gray-800 text-gray-200 border border-gray-600 placeholder-gray-400"
-                    : "bg-white text-gray-800 border border-gray-300 placeholder-gray-500"
-                }`}
-              placeholder="Enter start date"
-              required
+            <DatePicker
+              selectedDate={creationDate}
+              onDateChange={setCreationDate}
             />
-            <span className="absolute right-3 top-2">
-              <Clock9 className="w-5 h-5 text-gray-500 mt-1" />
-            </span>
           </div>
         </div>
 
@@ -76,22 +58,10 @@ export default function UploadReport() {
             Date of delivery <span className="text-red-500">*</span>
           </label>
           <div className="relative">
-            <input
-              type="text"
-              value={deliveryDate}
-              onChange={(e) => setDeliveryDate(e.target.value)}
-              className={`w-full px-3 py-2 rounded-md 
-                ${
-                  darkMode
-                    ? "bg-gray-800 text-gray-200 border border-gray-600 placeholder-gray-400"
-                    : "bg-white text-gray-800 border border-gray-300 placeholder-gray-500"
-                }`}
-              placeholder="Enter end date"
-              required
+            <DatePicker
+              selectedDate={deliveryDate}
+              onDateChange={setDeliveryDate}
             />
-            <span className="absolute right-3 top-2">
-              <Calendar className="w-5 h-5 text-gray-500 mt-1" />
-            </span>
           </div>
         </div>
 
@@ -114,10 +84,9 @@ export default function UploadReport() {
               }`}
               required
             >
-              <option value="">Select service type</option>
-              <option value="maintenance">Maintenance</option>
+              <option value="">Regular service</option>
               <option value="repair">Repair</option>
-              <option value="installation">Installation</option>
+              <option value="installation">Commissioning</option>
             </select>
             <span className="absolute right-3 top-2 pointer-events-none">
               <ChevronDown

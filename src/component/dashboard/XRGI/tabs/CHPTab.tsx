@@ -1,6 +1,6 @@
 "use client";
 import { useTheme } from "@/app/dashboard/layout";
-import { LockKeyhole } from "lucide-react";
+import { ChevronDown, LockKeyhole } from "lucide-react";
 
 type Props = {
   formData: any;
@@ -18,6 +18,31 @@ export default function CHPTab({
   handleNext,
 }: Props) {
   const { darkMode } = useTheme();
+
+  const objectTypeOptions = [
+    "Select customer group",
+    "Sheltered Accommodation",
+    "Residential Houses",
+    "Residential apartments",
+    "Camping",
+    "School",
+    "Other",
+    "ESCO",
+    "Central Heating",
+    "Amusement Park",
+    "Leisure",
+    "Hotel/Conference",
+    "Industrial & Commercial",
+    "Local Authority",
+    "Office",
+    "Central Government ",
+    "Care-Home",
+    "Restaurant",
+    "Student Accommodation",
+    "Health",
+    "University"
+  ];
+  
   return (
     <div
       className={`${
@@ -99,27 +124,16 @@ export default function CHPTab({
               onChange={handleInputChange}
               className={`${
                 darkMode ? "text-gray-200 bg-gray-800" : "text-gray-700"
-              } w-full border border-gray-300 rounded-md py-2 px-3 pr-10 appearance-none cursor-pointer`}
+              } w-full border border-gray-300 rounded-md py-2 px-3 pr-10 appearance-none cursor-pointer text-sm`}
             >
-              <option value="Others">Others</option>
-              <option value="Commercial">Commercial</option>
-              <option value="Residential">Residential</option>
+              {objectTypeOptions.map((option) => (
+                <option key={option} value={option}>
+                  {option}
+                </option>
+              ))}
             </select>
             <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5 text-gray-400"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M19 9l-7 7-7-7"
-                />
-              </svg>
+            <ChevronDown className="w-5 h-5 text-gray-500"/>
             </div>
           </div>
         </div>
@@ -140,26 +154,13 @@ export default function CHPTab({
               onChange={handleInputChange}
               className={`${
                 darkMode ? "text-gray-200 bg-gray-800" : "text-gray-700"
-              } w-full border border-gray-300 rounded-md py-2 px-3 pr-10 appearance-none cursor-pointer`}
+              } w-full border border-gray-300 rounded-md py-2 px-3 pr-10 appearance-none cursor-pointer text-sm`}
             >
-              <option value="EC- POWER-UDVIKLING">EC- POWER-UDVIKLING</option>
+              <option value="XRGI-25 CARB test">XRGI-25 CARB test</option>
               <option value="Other Installation">Other Installation</option>
             </select>
             <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5 text-gray-400"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M19 9l-7 7-7-7"
-                />
-              </svg>
+            <ChevronDown className="w-5 h-5 text-gray-500"/>
             </div>
           </div>
         </div>
