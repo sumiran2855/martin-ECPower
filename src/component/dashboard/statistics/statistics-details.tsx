@@ -1,12 +1,8 @@
 import { useTheme } from "@/app/dashboard/layout";
+import { InstallationData } from "@/helper/facilityHelper";
 import { Calendar, ChartNoAxesCombined } from "lucide-react";
 import { useState } from "react";
-
-interface InstallationData {
-  name: string;
-  xrgiID: string;
-  selected: boolean;
-}
+import Call_for_system from "./operational-analysis/call-for-system/call-for-system";
 
 interface Props {
     selectedInstallation: InstallationData;
@@ -17,9 +13,10 @@ export default function StatisticsDetail({selectedInstallation,goBack }: Props) 
   const { darkMode } = useTheme();
   const [fromDate, setFromDate] = useState("01-06-24 00:00");
   const [toDate, setToDate] = useState("02-06-25 00:00");
+  const [showGetData,setShowGetData] = useState(false);
 
   const handleGetData = () => {
-    console.log("Fetching data for date range:", fromDate, "to", toDate);
+    setShowGetData(true);
   };
   return (
     <div
@@ -27,6 +24,8 @@ export default function StatisticsDetail({selectedInstallation,goBack }: Props) 
         darkMode ? "bg-gray-800 text-white" : "bg-white"
       } py-2 px-4 rounded-lg shadow-sm transition-colors duration-300`}
     >
+      {!showGetData ? (
+        <>
       <div className="flex items-center my-4">
         <ChartNoAxesCombined className="text-blue-500 mr-2 text-xl" />
         <h1 className="text-2xl font-medium">Statistics</h1>
@@ -100,6 +99,10 @@ export default function StatisticsDetail({selectedInstallation,goBack }: Props) 
           </button>
         </div>
       </div>
+      </>
+      ) : (
+        <Call_for_system selectedInstallation={selectedInstallation}/>
+      )}
     </div>
   );
 }
