@@ -11,6 +11,7 @@ const AddToWaitlist: React.FC = () => {
   const { darkMode } = useTheme();
   const [creating, setCreating] = useState(false);
   const [installations, setInstallations] = useState<InstallationData[]>([]);
+  const [selectedInstallation, setSelectedInstallation] = useState<InstallationData | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [paginatedInstallations, setPaginatedInstallations] = useState<InstallationData[]>([]);
@@ -80,7 +81,9 @@ const AddToWaitlist: React.FC = () => {
           <div className="flex flex-col md:flex-row md:justify-between md:items-center my-4">
             <div className="flex items-center">
               <List className="text-blue-500 mr-2 text-xl" />
-              <h1 className="text-2xl font-medium">List of systems in waiting position</h1>
+              <h1 className="text-2xl font-medium">
+                List of systems in waiting position
+              </h1>
             </div>
           </div>
           {/* Desktop View */}
@@ -125,8 +128,14 @@ const AddToWaitlist: React.FC = () => {
                     </td>
                     <td className="px-4 py-2">{installation.name}</td>
                     <td className="px-4 py-2 text-left">-</td>
-                    <td onClick={()=> setCreating(true)} className="px-4 py-3 text-right text-blue-500 cursor-pointer">
-                    &gt;
+                    <td
+                      onClick={() => {
+                        setSelectedInstallation(paginatedInstallations[index]);
+                        setCreating(true);
+                      }}
+                      className="px-4 py-3 text-right text-blue-500 cursor-pointer"
+                    >
+                      &gt;
                     </td>
                   </tr>
                 ))}
@@ -157,7 +166,15 @@ const AddToWaitlist: React.FC = () => {
                     />
                     <span className="font-medium">#{installation.xrgiID}</span>
                   </div>
-                  <div onClick={()=> setCreating(true)}  className="text-blue-500 cursor-pointer">&gt;</div>
+                  <div
+                    onClick={() => {
+                      setSelectedInstallation(paginatedInstallations[index]);
+                      setCreating(true);
+                    }}
+                    className="text-blue-500 cursor-pointer"
+                  >
+                    &gt;
+                  </div>
                 </div>
 
                 <div className="grid grid-cols-1 gap-2">
@@ -186,19 +203,19 @@ const AddToWaitlist: React.FC = () => {
               </div>
             ))}
           </div>
-      {/* Pagination Component */}
-      <Pagination
-        maxVisible={maxVisible}
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageChange={goToPage}
-        itemsPerPage={itemsPerPage}
-        onItemsPerPageChange={handleItemsPerPageChange}
-        darkMode={darkMode}
-      />
+          {/* Pagination Component */}
+          <Pagination
+            maxVisible={maxVisible}
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={goToPage}
+            itemsPerPage={itemsPerPage}
+            onItemsPerPageChange={handleItemsPerPageChange}
+            darkMode={darkMode}
+          />
         </>
       ) : (
-        <ParkingSystemForm onCancel={() => setCreating(false)} />
+        <ParkingSystemForm onCancel={() => setCreating(false)} Installation={selectedInstallation} />
       )}
     </div>
   );

@@ -7,12 +7,16 @@ import { useRouter } from "next/navigation";
 import { get_Facility, InstallationData } from "@/helper/facilityHelper";
 import Pagination from "@/component/Pagination";
 import ECPowerLoader from "@/component/loader";
+import { useAlerts } from "@/component/alert";
+
 
 const RegistrationOfTests: React.FC = () => {
   const router = useRouter();
+  const { addAlert, AlertList } = useAlerts();
   const { darkMode } = useTheme();
   const [creating, setCreating] = useState(false);
   const [installations, setInstallations] = useState<InstallationData[]>([]);
+  const [selectedInstallations, setSelectedInstallations] = useState<InstallationData[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [paginatedInstallations, setPaginatedInstallations] = useState<InstallationData[]>([]);
@@ -67,6 +71,21 @@ const RegistrationOfTests: React.FC = () => {
       setCurrentPage(1);
     };
 
+    const handleCreateTest = () => {
+      const selected = installations.filter((inst) => inst.selected);
+      if (selected.length !== 1) {
+        addAlert({
+          type: "warning",
+          message: "Please select exactly one installation to create a test.",
+          showIcon:true
+        });
+        return;
+      }
+      setSelectedInstallations(selected);
+      setCreating(true);
+    };
+    
+
     if (loading) {
       return <ECPowerLoader size="md" isVisible={true} />;
     }
@@ -80,13 +99,14 @@ const RegistrationOfTests: React.FC = () => {
       {!creating ? (
         <>
           <div className="flex flex-col md:flex-row md:justify-between md:items-center my-4">
+          <AlertList/>
             <div className="flex items-center">
               <Gauge className="text-blue-500 mr-2 text-xl" />
               <h1 className="text-2xl font-medium">List of tests</h1>
             </div>
             <div className="flex items-center mt-4 md:mt-0 space-x-2 mr-4">
               <button
-                onClick={() => setCreating(true)}
+                onClick={handleCreateTest}
                 className="flex items-center text-sm text-blue-500 hover:text-blue-700 transition-colors cursor-pointer"
               >
                 <FilePlus2 className="w-5 h-5 mr-1" />
@@ -225,7 +245,7 @@ const RegistrationOfTests: React.FC = () => {
           />
         </>
       ) : (
-        <CreateTest onCancel={() => setCreating(false)} />
+        <CreateTest onCancel={() => setCreating(false)} Installation={selectedInstallations[0]} />
       )}
     </div>
   );

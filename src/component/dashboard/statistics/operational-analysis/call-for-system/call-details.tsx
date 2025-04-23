@@ -10,6 +10,7 @@ import HeatDistributor from "./modals/heat-distributor";
 import Motor from "./modals/motor";
 import HPC from "./modals/HPC";
 import PMH from "./modals/PMH";
+import { InstallationData } from "@/helper/facilityHelper";
 
 interface CallDetails {
   id: string;
@@ -54,12 +55,14 @@ interface CallDetailsProps {
   details: CallDetails;
   onBackClick: () => void;
   darkMode: boolean;
+  selectedInstallation:InstallationData;
 }
 
 export default function CallDetails({
   details,
   onBackClick,
   darkMode,
+  selectedInstallation
 }: CallDetailsProps) {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
@@ -163,7 +166,7 @@ export default function CallDetails({
             darkMode ? "text-gray-400" : "text-gray-700"
           }`}
         >
-          {details.id} - {details.system}
+          {selectedInstallation.xrgiID} - {selectedInstallation.name}
         </p>
       </div>
 

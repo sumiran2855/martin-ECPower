@@ -9,8 +9,14 @@ import BarChart from "./Barchart";
 import ConfigRow from "./configRow";
 import ServiceLogEntry from "./serviceLog";
 import { useState } from "react";
+import { InstallationData } from "@/helper/facilityHelper";
 
-const XRGIDashboard = () => {
+interface ParkingSystemFormProps {
+  onCancel: (event: React.MouseEvent<any>) => void;
+  Installation?: InstallationData | null;
+}
+
+const XRGIUnits: React.FC<ParkingSystemFormProps> = ({ onCancel, Installation }) => {
   const { darkMode } = useTheme();
   const [isOpen, setIsOpen] = useState(false);
   const [selected, setSelected] = useState('Last 7 days');
@@ -36,9 +42,9 @@ const XRGIDashboard = () => {
       }`}
     >
       <div className="bg-blue-50 dark:bg-blue-900 p-3 rounded-md mb-4 flex flex-col md:flex-row items-start md:items-center">
-        <Server className="text-blue-900 dark:text-blue-100 mx-2" />{" "}
+        <Server className="text-blue-900 dark:text-blue-100 mx-2" onClick={onCancel}/>{" "}
         <h1 className="text-lg font-semibold text-blue-900 dark:text-blue-100">
-          1979599994 XRGI-25 CAR8 test
+          {Installation?.xrgiID} / {Installation?.name}
         </h1>
       </div>
 
@@ -360,4 +366,4 @@ const XRGIDashboard = () => {
   );
 };
 
-export default XRGIDashboard;
+export default XRGIUnits;

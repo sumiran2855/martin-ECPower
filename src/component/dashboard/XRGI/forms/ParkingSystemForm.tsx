@@ -3,17 +3,18 @@ import { useState } from "react";
 import { ChevronDown, NotebookPen } from "lucide-react";
 import { useTheme } from "@/app/dashboard/layout";
 import DatePicker from "@/component/DatePicker";
+import { InstallationData } from "@/helper/facilityHelper";
 
 interface ParkingSystemFormProps {
   onCancel: () => void;
-  onSave?: () => void;
-  testId?: string;
+  onSave?:()=> void;
+  Installation: InstallationData | null;
 }
 
 const ParkingSystemForm: React.FC<ParkingSystemFormProps> = ({
   onCancel,
   onSave,
-  testId = "1979599994 XRGI-25 CARB test / OR35041",
+  Installation
 }) => {
   const { darkMode } = useTheme();
   const [reason, setReason] = useState("Waiting for parts");
@@ -57,7 +58,7 @@ const ParkingSystemForm: React.FC<ParkingSystemFormProps> = ({
               darkMode ? "text-gray-200" : "text-gray-800"
             } text-base font-medium `}
           >
-            {testId}
+            {Installation?.xrgiID} / {Installation?.name}
           </h2>
         </div>
 

@@ -1,6 +1,13 @@
 import { useTheme } from "@/app/dashboard/layout";
+import { InstallationData } from "@/helper/facilityHelper";
 
-export default function Preview() {
+interface CreateTestFormProps {
+  Installation: InstallationData | null;
+}
+
+const Preview: React.FC<CreateTestFormProps> = ({
+  Installation
+})=> {
   const { darkMode } = useTheme();
   return (
     <div
@@ -23,7 +30,7 @@ export default function Preview() {
           <div>
             <div className="flex justify-between my-2">
               <span className="font-medium">XRGI® :</span>
-              <span>1979599994</span>
+              <span>{Installation?.xrgiID}</span>
             </div>
             <div className="flex justify-between my-2">
               <span className="font-medium">Creation date:</span>
@@ -44,7 +51,7 @@ export default function Preview() {
           <div>
             <div className="flex justify-between my-2">
               <span className="font-medium">XRGI® type :</span>
-              <span>XRGI® 25</span>
+              <span>{Installation?.name}</span>
             </div>
             <div className="flex justify-between my-2">
               <span className="font-medium">Date of delivery:</span>
@@ -122,3 +129,5 @@ export default function Preview() {
     </div>
   );
 }
+
+export default Preview;

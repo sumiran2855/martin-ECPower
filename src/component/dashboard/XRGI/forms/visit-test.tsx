@@ -1,18 +1,19 @@
 "use client";
 import { useTheme } from "@/app/dashboard/layout";
+import { InstallationData } from "@/helper/facilityHelper";
 import { NotebookPen } from "lucide-react";
 import React, { useState } from "react";
 
 interface CreateTestFormProps {
   onCancel: () => void;
   onSave?: () => void;
-  testId?: string;
+  Installation: InstallationData | null | undefined;
 }
 
 const RegistrationVisitTest: React.FC<CreateTestFormProps> = ({
   onCancel,
   onSave,
-  testId = "1979599994 XRGI-25 CARB test / OR35041",
+  Installation
 }) => {
   const [description, setDescription] = useState("");
   const { darkMode } = useTheme();
@@ -40,7 +41,7 @@ const RegistrationVisitTest: React.FC<CreateTestFormProps> = ({
       </p>
 
       <div className={`${darkMode ? 'bg-gray-800': 'bg-white'}  p-4 sm:p-6 rounded-lg border border-gray-200 mb-6 shadow`}>
-        <p className={`${darkMode ? 'text-gray-200': 'text-gray-800'} text-base font-medium`}>{testId}</p>
+        <p className={`${darkMode ? 'text-gray-200': 'text-gray-800'} text-base font-medium`}>{Installation?.xrgiID} / {Installation?.name}</p>
         <div className="mt-6">
           <label className={`${darkMode ? 'text-gray-200': 'text-gray-700'} block mb-1 text-sm font-medium`}>
             Description <span className="text-red-500">*</span>

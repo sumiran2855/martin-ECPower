@@ -7,8 +7,15 @@ import CreatingDateTab from "./tabs/creating-date";
 import ItemUsageTab from "./tabs/item-usage";
 import ResourcesTab from "./tabs/resources";
 import Preview from "./tabs/preview";
+import { InstallationData } from "@/helper/facilityHelper";
 
-export default function CreateReport() {
+interface CreateTestFormProps {
+  Installation: InstallationData | null;
+}
+
+const CreateReport: React.FC<CreateTestFormProps> = ({
+  Installation
+})=> {
   const { darkMode } = useTheme();
   const [activeTab, setActiveTab] = useState("creationDate");
 
@@ -44,8 +51,10 @@ export default function CreateReport() {
         {activeTab === "creationDate" && <CreatingDateTab />}
         {activeTab === "itemUsage" && <ItemUsageTab />}
         {activeTab === "resources" && <ResourcesTab />}
-        {activeTab === "preview" && <Preview />}
+        {activeTab === "preview" && <Preview Installation={Installation} />}
       </div>
     </div>
   );
 }
+
+export default CreateReport;
