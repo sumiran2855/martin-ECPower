@@ -3,7 +3,12 @@ import DatePicker from "@/component/DatePicker";
 import { ChevronDown } from "lucide-react";
 import { useState } from "react";
 
-export default function CreatingDateTab() {
+interface CreatingDateTabProps {
+  onNext: () => void;
+  onPrevious: () => void;
+}
+
+export default function CreatingDateTab({ onNext, onPrevious }: CreatingDateTabProps) {
   const { darkMode } = useTheme();
   const [serviceType, setServiceType] = useState("");
   const [creationDate, setCreationDate] = useState("08-02-25 00:00");
@@ -111,13 +116,14 @@ export default function CreatingDateTab() {
         {/* Navigation Buttons */}
         <div className="flex justify-between">
           <button
+            onClick={onPrevious}
             className="border border-gray-300 rounded-md px-6 py-2 text-gray-300 font-medium hover:bg-gray cursor-pointer"
             disabled
           >
             Previous Step
           </button>
           <button
-            //   onClick={handleNext}
+            onClick={onNext}
             className={`${
               darkMode
                 ? "text-gray-200 hover:bg-gray-700"

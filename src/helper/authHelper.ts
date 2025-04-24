@@ -38,7 +38,7 @@ class AuthHelper {
         method,
         headers: this.getHeaders(token, IdToken),
         body: body ? JSON.stringify(body) : undefined,
-    });
+      });
       const contentType = response.headers.get("content-type");
       if (
         contentType &&
@@ -67,3 +67,10 @@ class AuthHelper {
 }
 
 export default new AuthHelper();
+
+
+export const getAuthTokens = () => {
+  const token = localStorage.getItem("token") || "";
+  const idToken = localStorage.getItem("IdToken") || "";
+  return { token, idToken };
+};

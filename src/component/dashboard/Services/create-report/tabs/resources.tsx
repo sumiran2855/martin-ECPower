@@ -4,7 +4,12 @@ import { ChevronDown, LockKeyhole } from "lucide-react";
 
 type WorkType = "Maintenance" | "Repair" | "Installation" | "Inspection";
 
-export default function ResourcesTab() {
+interface CreatingDateTabProps {
+  onNext: () => void;
+  onPrevious: () => void;
+}
+
+export default function ResourcesTab({ onNext, onPrevious }: CreatingDateTabProps) {
   const { darkMode } = useTheme();
   const [date] = useState("04-02-2025");
   const [technician, setTechnician] = useState("");
@@ -143,6 +148,7 @@ export default function ResourcesTab() {
       {/* Navigation buttons */}
       <div className="flex justify-between mt-8">
         <button
+          onClick={onPrevious}
           className={`${
             darkMode
               ? "text-gray-200 hover:bg-gray-700"
@@ -152,7 +158,7 @@ export default function ResourcesTab() {
           Previous Step
         </button>
         <button
-          //   onClick={handleNext}
+          onClick={onNext}
           className={`${
             darkMode
               ? "text-gray-200 hover:bg-gray-700"

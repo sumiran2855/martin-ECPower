@@ -4,22 +4,57 @@ import { ChevronDown, NotebookPen } from "lucide-react";
 import { useTheme } from "@/app/dashboard/layout";
 import DatePicker from "@/component/DatePicker";
 import { InstallationData } from "@/helper/facilityHelper";
+import { getAuthTokens } from "@/helper/authHelper";
+import { useAlerts } from "@/component/alert";
+import { CreateWaitlist } from "@/controller/waitlist-controller";
+import ECPowerLoader from "@/component/loader";
 
 interface ParkingSystemFormProps {
   onCancel: () => void;
-  onSave?:()=> void;
   Installation: InstallationData | null;
 }
 
 const ParkingSystemForm: React.FC<ParkingSystemFormProps> = ({
   onCancel,
-  onSave,
   Installation
 }) => {
   const { darkMode } = useTheme();
   const [reason, setReason] = useState("Waiting for parts");
   const [cancelDate, setCancelDate] = useState("08-02-25 00:00");
   const [description, setDescription] = useState("");
+  const [loading, setLoading] = useState(false);
+  const { addAlert, AlertList } = useAlerts();
+  
+  const handleCreateWaitlist = async () => {
+    const { token, idToken } = getAuthTokens();
+    if (!description.trim()) return ;
+    if (!reason) return;
+    if (!Installation?.xrgiID || !Installation?.userID) return;
+    try {
+      setLoading(true);
+      const payload = {
+        xrgiID: Installation.xrgiID,
+        reason: reason,
+        cancellationDate: cancelDate,
+        description: description.trim(),
+        customerID: Installation.userID,
+      };
+      const result = await CreateWaitlist(token, idToken, payload);
+      if (result) {
+        addAlert({type: "success",message: "register waitlist successfully",showIcon: true,});
+      }
+      setDescription("");
+    } catch (err) {
+        addAlert({type: "error",message: "Error creating waitlist",showIcon: true,});
+        console.error("Error creating waitlist:", err);
+    } finally {
+        setLoading(false);
+      }
+    };
+  
+    if (loading) {
+      return <ECPowerLoader size="md" isVisible={true} />;
+    }
 
   const reasonOptions = [
     "Waiting for parts",
@@ -34,6 +69,7 @@ const ParkingSystemForm: React.FC<ParkingSystemFormProps> = ({
 
   return (
     <div className="w-full max-w-4xl mx-auto px-4 py-6">
+      <AlertList/>
       <div
         className={`${
           darkMode ? "text-gray-300" : "text-blue-900"
@@ -122,6 +158,7 @@ const ParkingSystemForm: React.FC<ParkingSystemFormProps> = ({
             rows={6}
             value={description}
             onChange={(e) => setDescription(e.target.value)}
+            placeholder="Enter description"
             className={`w-full px-4 py-2 border border-gray-300 rounded-md resize-none ${
               darkMode ? "bg-gray-800 text-gray-200" : "bg-white text-gray-700"
             }`}
@@ -140,7 +177,7 @@ const ParkingSystemForm: React.FC<ParkingSystemFormProps> = ({
             Cancel
           </button>
           <button
-            onClick={onSave}
+            onClick={handleCreateWaitlist}
             className="px-6 py-2 bg-blue-800 text-white rounded-md hover:bg-blue-900 transition-colors cursor-pointer"
           >
             Save

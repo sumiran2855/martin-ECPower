@@ -9,7 +9,12 @@ interface ItemUsage {
   unit?: string;
 }
 
-export default function ItemUsageTab() {
+interface CreatingDateTabProps {
+  onNext: () => void;
+  onPrevious: () => void;
+}
+
+export default function ItemUsageTab({ onNext, onPrevious }: CreatingDateTabProps) {
   const [itemUsages, setItemUsages] = useState<ItemUsage[]>([]);
   const [currentItem, setCurrentItem] = useState<ItemUsage>({
     partNumber: "",
@@ -184,6 +189,7 @@ export default function ItemUsageTab() {
       {/* Navigation buttons */}
       <div className="flex justify-between mt-8">
         <button
+          onClick={onPrevious}
           className={`${
             darkMode
               ? "text-gray-200 hover:bg-gray-700"
@@ -193,7 +199,7 @@ export default function ItemUsageTab() {
           Previous Step
         </button>
         <button
-          //   onClick={handleNext}
+          onClick={onNext}
           className={`${
             darkMode
               ? "text-gray-200 hover:bg-gray-700"

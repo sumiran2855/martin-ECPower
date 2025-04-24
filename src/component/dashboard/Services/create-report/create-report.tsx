@@ -19,6 +19,22 @@ const CreateReport: React.FC<CreateTestFormProps> = ({
   const { darkMode } = useTheme();
   const [activeTab, setActiveTab] = useState("creationDate");
 
+  const tabs = ["creationDate", "itemUsage", "resources", "preview"];
+  
+  const goToNextTab = () => {
+    const currentIndex = tabs.indexOf(activeTab);
+    if (currentIndex < tabs.length - 1) {
+      setActiveTab(tabs[currentIndex + 1]);
+    }
+  };
+
+  const goToPreviousTab = () => {
+    const currentIndex = tabs.indexOf(activeTab);
+    if (currentIndex > 0) {
+      setActiveTab(tabs[currentIndex - 1]);
+    }
+  };
+
   return (
     <div className="max-w-7xl mx-auto px-4 py-6">
       <div
@@ -48,10 +64,10 @@ const CreateReport: React.FC<CreateTestFormProps> = ({
           ))}
         </div>
 
-        {activeTab === "creationDate" && <CreatingDateTab />}
-        {activeTab === "itemUsage" && <ItemUsageTab />}
-        {activeTab === "resources" && <ResourcesTab />}
-        {activeTab === "preview" && <Preview Installation={Installation} />}
+        {activeTab === "creationDate" && <CreatingDateTab onNext={goToNextTab} onPrevious={goToPreviousTab} />}
+        {activeTab === "itemUsage" && <ItemUsageTab onNext={goToNextTab} onPrevious={goToPreviousTab} />}
+        {activeTab === "resources" && <ResourcesTab onNext={goToNextTab} onPrevious={goToPreviousTab} />}
+        {activeTab === "preview" && <Preview onNext={goToNextTab} onPrevious={goToPreviousTab} Installation={Installation} />}
       </div>
     </div>
   );

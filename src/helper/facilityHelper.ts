@@ -2,6 +2,7 @@ import { getFacility } from "@/controller/facility-controller";
 
 export interface InstallationData {
   xrgiID: string;
+  userID: string;
   name: string;
   address: string;
   postalCode: string;
@@ -17,6 +18,7 @@ export const get_Facility = async (): Promise<InstallationData[]> => {
     const data = await getFacility(token, IdToken);
     return data.map((facility: any) => ({
       xrgiID: facility.xrgiID || "",
+      userID:facility.userID || "",
       name: facility.modelNumber || "",
       address: facility.location.address || "",
       postalCode: facility.location.postalCode || "",

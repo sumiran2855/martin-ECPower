@@ -1,24 +1,58 @@
 "use client";
 import { useTheme } from "@/app/dashboard/layout";
+import { useAlerts } from "@/component/alert";
+import ECPowerLoader from "@/component/loader";
+import { CreateVisit } from "@/controller/visit-controller";
+import { getAuthTokens } from "@/helper/authHelper";
 import { InstallationData } from "@/helper/facilityHelper";
 import { NotebookPen } from "lucide-react";
 import React, { useState } from "react";
 
 interface CreateTestFormProps {
   onCancel: () => void;
-  onSave?: () => void;
   Installation: InstallationData | null | undefined;
 }
 
 const RegistrationVisitTest: React.FC<CreateTestFormProps> = ({
   onCancel,
-  onSave,
   Installation
 }) => {
   const [description, setDescription] = useState("");
+  const [loading, setLoading] = useState(false);
+  const { addAlert, AlertList } = useAlerts();
   const { darkMode } = useTheme();
+
+    const handleCreateTest = async () => {
+      const { token, idToken } = getAuthTokens();
+      if (!description.trim()) return ;
+      if (!Installation?.xrgiID || !Installation?.userID) return;
+      try {
+        setLoading(true);
+        const payload = {
+          xrgiID: Installation.xrgiID,
+          description: description.trim(),
+          customerID: Installation.userID,
+        };
+        const result = await CreateVisit(token, idToken, payload);
+        if (result) {
+          addAlert({type: "success",message: "register visit successfully",showIcon: true,});
+        }
+        setDescription("");
+      } catch (err) {
+        addAlert({type: "error",message: "Error creating visit",showIcon: true,});
+        console.error("Error creating visit:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (loading) {
+      return <ECPowerLoader size="md" isVisible={true} />;
+    }
+
   return (
     <div className=" p-4 sm:p-6">
+      <AlertList />
       <div className="flex items-center gap-2 mb-2">
         <div className="text-blue-500 flex-shrink-0">
           <NotebookPen />
@@ -68,7 +102,7 @@ const RegistrationVisitTest: React.FC<CreateTestFormProps> = ({
           Cancel
         </button>
         <button
-          onClick={onSave}
+          onClick={handleCreateTest}
           className="px-7 py-2 bg-blue-800 text-white rounded-md text-sm hover:bg-blue-900 transition-colors cursor-pointer"
         >
           Save

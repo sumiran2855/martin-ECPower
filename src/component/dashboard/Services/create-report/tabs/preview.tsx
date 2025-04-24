@@ -3,10 +3,13 @@ import { InstallationData } from "@/helper/facilityHelper";
 
 interface CreateTestFormProps {
   Installation: InstallationData | null;
+  onNext: () => void;
+  onPrevious: () => void;
 }
 
 const Preview: React.FC<CreateTestFormProps> = ({
-  Installation
+  Installation,
+  onPrevious
 })=> {
   const { darkMode } = useTheme();
   return (
@@ -119,8 +122,9 @@ const Preview: React.FC<CreateTestFormProps> = ({
 
       <div className="flex flex-col sm:flex-row gap-3">
         <button
+          onClick={onPrevious}
           className={`${darkMode ? "text-gray-200 hover:bg-gray-700" : "text-blue-900 hover:bg-gray-100" } border border-gray-300 rounded-md px-6 py-2  font-medium  cursor-pointer`}>
-          Close
+          Previous Step
         </button>
         <button className={`${darkMode ? "text-gray-100 bg-blue-800 hover:bg-blue-700" : "text-gray-100 bg-blue-900 hover:bg-blue-800" } border border-gray-300 rounded-md px-6 py-2 font-medium cursor-pointer`}>
           Create a report and close the service log.

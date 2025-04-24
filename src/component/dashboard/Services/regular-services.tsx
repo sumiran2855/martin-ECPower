@@ -172,7 +172,6 @@ const RegularServices: React.FC = () => {
                       -
                     </td>
                     <td
-                      onClick={() => setCreating(true)}
                       className="px-4 py-3 text-right text-blue-500 cursor-pointer"
                     >
                       &gt;
