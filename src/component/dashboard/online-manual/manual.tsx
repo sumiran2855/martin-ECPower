@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { useTheme } from "@/app/dashboard/layout";
 import { HelpCircle, ChevronLeft, ChevronRight, FilePen } from "lucide-react";
+import Edit_service_report from "./edit-service-report";
 
 interface ServiceCode {
   id: number;
@@ -14,6 +15,7 @@ export default function OnlineManual() {
   const { darkMode } = useTheme();
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [editing, setEditing] = useState(false);
 
   const serviceCodes: ServiceCode[] = [
     {
@@ -115,6 +117,8 @@ export default function OnlineManual() {
         darkMode ? "bg-gray-800 text-white" : "bg-white"
       } py-2 px-4 rounded-lg shadow-sm transition-colors duration-300`}
     >
+    {!editing ? (
+        <>
       <div className="p-4 flex items-center">
         <div className={`flex items-center ${darkMode ? 'text-blue-400' : 'text-blue-900'} my-4`}>
           <HelpCircle className="w-6 h-6 mr-2" />
@@ -153,9 +157,9 @@ export default function OnlineManual() {
                     {item.text}
                   </span>
                 </td>
-                <td className="p-4 text-left text-sm">
+                <td className="p-4 text-left text-sm" onClick={()=>setEditing(true)}>
                   <button className="text-blue-500 hover:text-blue-700">
-                    <FilePen className="w-5 h-5" />
+                    <FilePen className="w-5 h-5 cursor-pointer" />
                   </button>
                 </td>
               </tr>
@@ -233,6 +237,10 @@ export default function OnlineManual() {
           </select>
         </div>
       </div>
+      </>
+      ) : (
+        <Edit_service_report onClick={()=>setEditing(false)}/>
+      )}
     </div>
   );
 }
