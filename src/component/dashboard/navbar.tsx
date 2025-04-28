@@ -167,22 +167,14 @@ export default function Navbar({ toggleSidebar, sidebarOpen }: any) {
                     </p>
                   </div>
                   <Link
-                    href="#"
+                    href="/dashboard/properties"
+                    onClick={()=>setProfileDropdownOpen(false)}
                     className={`flex items-center px-4 py-2 text-sm ${
                       darkMode ? "hover:bg-gray-700 text-gray-200" : "hover:bg-gray-100 text-gray-700"
                     }`}
                   >
                     <User className="mr-2 h-4 w-4" />
                     Profile
-                  </Link>
-                  <Link
-                    href="#"
-                    className={`flex items-center px-4 py-2 text-sm ${
-                      darkMode ? "hover:bg-gray-700 text-gray-200" : "hover:bg-gray-100 text-gray-700"
-                    }`}
-                  >
-                    <Settings className="mr-2 h-4 w-4" />
-                    Settings
                   </Link>
                   <Link
                     onClick={handleLogout}
