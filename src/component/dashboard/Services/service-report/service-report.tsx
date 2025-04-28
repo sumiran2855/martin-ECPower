@@ -6,8 +6,13 @@ import ServiceReportTab from "./tabs/service-reports";
 import ItemUsageTab from "./tabs/item-usage";
 import UploadServiceReport from "./tabs/upload-service-report";
 import UploadReport from "./tabs/upload";
+import { InstallationData } from "@/helper/facilityHelper";
 
-export default function XRGIForm() {
+interface CreateTestFormProps {
+  Installation: InstallationData | null;
+}
+
+export default function ServiceReport({Installation}:CreateTestFormProps) {
   const { darkMode } = useTheme();
   const [activeTab, setActiveTab] = useState("serviceReports");
 

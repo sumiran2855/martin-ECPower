@@ -59,7 +59,7 @@ export default function UploadServiceReport({}) {
                 <th className="py-3 px-4 font-medium text-sm">Creation date</th>
                 <th className="py-3 px-4 font-medium text-sm">Service Report Number</th>
                 <th className="py-3 px-4 font-medium text-sm">Service Type</th>
-                <th className="py-3 px-4 font-medium text-sm">Handlinger</th>
+                <th className="py-3 px-4 font-medium text-sm">Actions</th>
               </tr>
             </thead>
             

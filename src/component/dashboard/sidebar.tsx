@@ -50,7 +50,7 @@ export default function Sidebar({
     {
       name: "Regular Service",
       icon: <BarChart2 size={20} />,
-      path: "/dashboard/service",
+      path: "/dashboard/service/service-report",
       subItems: [
         { name: "Service Report", path: "/dashboard/service/service-report" },
         { name: "Service Overview", path: "/dashboard/service/service-overview" },
