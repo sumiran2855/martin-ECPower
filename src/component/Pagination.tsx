@@ -108,7 +108,7 @@ const Pagination: React.FC<PaginationProps> = ({
         <button
           onClick={() => onPageChange(currentPage - 1)}
           disabled={currentPage === 1}
-          className="flex items-center px-2 py-1 border border-gray-300 dark:border-gray-600 rounded-md text-sm disabled:opacity-50"
+          className="flex items-center px-2 py-1 border border-gray-300 dark:border-gray-600 rounded-md text-sm disabled:opacity-50 cursor-pointer"
         >
           <ChevronLeft className="w-4 h-4 mr-1" /> Previous
         </button>
@@ -118,7 +118,7 @@ const Pagination: React.FC<PaginationProps> = ({
         <button
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
-          className="flex items-center px-2 py-1 border border-gray-300 dark:border-gray-600 rounded-md text-sm disabled:opacity-50"
+          className="flex items-center px-2 py-1 border border-gray-300 dark:border-gray-600 rounded-md text-sm disabled:opacity-50 cursor-pointer"
         >
           Next <ChevronRight className="w-4 h-4 ml-1" />
         </button>

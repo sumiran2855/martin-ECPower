@@ -8,6 +8,8 @@ export interface InstallationData {
   postalCode: string;
   city: string;
   selected: boolean;
+  email?: boolean;
+  sms?: boolean;
 }
 
 export const get_Facility = async (): Promise<InstallationData[]> => {
@@ -23,6 +25,8 @@ export const get_Facility = async (): Promise<InstallationData[]> => {
       address: facility.location.address || "",
       postalCode: facility.location.postalCode || "",
       city: facility.location.city || "",
+      email:facility.email || "",
+      sms:facility.sms || "",
       selected: false,
     }));
   } catch (error) {

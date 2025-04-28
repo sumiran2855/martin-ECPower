@@ -11,6 +11,7 @@ import {
   TableProperties,
   PanelsLeftBottom,
   ChevronDown,
+  User,
 } from "lucide-react";
 import { useTheme } from "@/app/dashboard/layout";
 import { useEffect, useState } from "react";
@@ -70,7 +71,17 @@ export default function Sidebar({
     {
       name: "Properties",
       icon: <TableProperties size={20} />,
-      path: "/properties",
+      path: "/dashboard/properties",
+    },
+    {
+      name: "User",
+      icon: <User size={20} />,
+      path: "/dashboard/user",
+      subItems: [
+        { name: "Create User", path: "/dashboard/user/create-user" },
+        { name: "Inactive Users", path: "/dashboard/user/Inactive-users" },
+        { name: "Not verified users", path: "/dashboard/user/unverified-users" },
+      ],
     },
   ];
 
