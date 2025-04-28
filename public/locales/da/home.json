@@ -1,0 +1,46 @@
+{
+  "sidebar": {
+    "home": "Hjem",
+    "xrgi": "XRGI®",
+    "unitList": "Enhedsliste",
+    "addToWaitlist": "Tilføj til venteliste",
+    "registrationOfTests": "Registrering af tests",
+    "registrationOfVisits": "Registrering af besøg",
+    "regularService": "ordinaert service",
+    "serviceReport": "Service rapport",
+    "serviceOverview": "Service oversigt",
+    "surveillance": "Overvågning",
+    "statistics": "Statistik",
+    "operationalAnalysis": "Driftsanalyse",
+    "alarmstopPerWeek": "Alarmstop per uge",
+    "getExtracts": "Hent udtræk",
+    "onlineManual": "Online manual",
+    "properties": "Egenskaber",
+    "user": "Bruger",
+    "createUser": "Opret bruger",
+    "inactiveUsers": "Inaktive brugere",
+    "notVerifiedUsers": "Ikke verificerede brugere"
+  },
+  "systemStatus": {
+    "system_status": "ANLÆGSSTATUS",
+    "ok": "Ok",
+    "full_stop": "Fuld stop",
+    "alarmstop": "Alarmstop",
+    "stopped_calling": "Stopper opkald",
+    "standby": "Standby",
+    "test_system": "Test system",
+    "under_installation": "Under installation",
+    "waiting_position": "Venteposition"
+  },
+  "dealer":{
+    "dealer":"forhandler"
+  },
+  "installation":{
+    "number": "Nummer",
+    "installation_name": "Installationsnavn",
+    "address": "Adresse",
+    "postal_code": "Postnr",
+    "city": "Bynavn",
+    "country": "Land"
+  }
+}

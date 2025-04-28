@@ -4,8 +4,10 @@ import { useTheme } from "@/app/dashboard/layout";
 import Pagination from "@/component/Pagination";
 import { get_Facility, InstallationData } from "@/helper/facilityHelper";
 import ECPowerLoader from "@/component/loader";
+import { useTranslation } from "react-i18next";
 
 const InstallationTable: React.FC = () => {
+  const { t } = useTranslation("home"); 
   const { darkMode } = useTheme();
   const [installations, setInstallations] = useState<InstallationData[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -78,14 +80,14 @@ const InstallationTable: React.FC = () => {
         <table className="w-full border-separate border-spacing-y-2">
           <thead>
             <tr className={darkMode ? "text-gray-300" : "text-gray-700"}>
-              <th className="text-left px-4 py-2 font-medium">Number</th>
+              <th className="text-left px-4 py-2 font-medium">{t('installation.number')}</th>
               <th className="text-left px-4 py-2 font-medium">
-                Installation Name
+              {t('installation.installation_name')}
               </th>
-              <th className="text-left px-4 py-2 font-medium">Address</th>
-              <th className="text-left px-4 py-2 font-medium">Postal Code</th>
-              <th className="text-left px-4 py-2 font-medium">City</th>
-              <th className="text-left px-4 py-2 font-medium">Country</th>
+              <th className="text-left px-4 py-2 font-medium">{t('installation.address')}</th>
+              <th className="text-left px-4 py-2 font-medium">{t('installation.postal_code')}</th>
+              <th className="text-left px-4 py-2 font-medium">{t('installation.city')}</th>
+              <th className="text-left px-4 py-2 font-medium">{t('installation.country')}</th>
             </tr>
           </thead>
           <tbody>
@@ -156,7 +158,7 @@ const InstallationTable: React.FC = () => {
                     darkMode ? "text-gray-400" : "text-gray-500"
                   }`}
                 >
-                  Installation Name
+                  {t('installation.installation_name')}
                 </span>
                 <p className="mt-1">{installation.name}</p>
               </div>
@@ -167,7 +169,7 @@ const InstallationTable: React.FC = () => {
                     darkMode ? "text-gray-400" : "text-gray-500"
                   }`}
                 >
-                  Address
+                  {t('installation.address')}
                 </span>
                 <p className="mt-1">{installation.address}</p>
               </div>
@@ -179,7 +181,7 @@ const InstallationTable: React.FC = () => {
                       darkMode ? "text-gray-400" : "text-gray-500"
                     }`}
                   >
-                    Postal Code
+                    {t('installation.postal_code')}
                   </span>
                   <p className="mt-1">{installation.postalCode}</p>
                 </div>
@@ -189,7 +191,7 @@ const InstallationTable: React.FC = () => {
                       darkMode ? "text-gray-400" : "text-gray-500"
                     }`}
                   >
-                    City
+                    {t('installation.city')}
                   </span>
                   <p className="mt-1">{installation.city}</p>
                 </div>

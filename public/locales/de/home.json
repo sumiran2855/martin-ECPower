@@ -1,0 +1,46 @@
+{
+  "sidebar": {
+    "home": "Startseite",
+    "xrgi": "XRGI®",
+    "unitList": "Einheit Liste",
+    "addToWaitlist": "Zur Warteliste hinzufügen",
+    "registrationOfTests": "Testregistrierung",
+    "registrationOfVisits": "Besuchsregistrierung",
+    "regularService": "Regelwartung",
+    "serviceReport": "Servicebericht",
+    "serviceOverview": "Serviceübersicht",
+    "surveillance": "Überwachung",
+    "statistics": "Statistiken",
+    "operationalAnalysis": "Betriebsanalyse",
+    "alarmstopPerWeek": "Alarmstopp pro Woche",
+    "getExtracts": "Extrakte holen",
+    "onlineManual": "Online-Handbuch",
+    "properties": "Eigenschaften",
+    "user": "Benutzer",
+    "createUser": "Benutzer erstellen",
+    "inactiveUsers": "Inaktive Benutzer",
+    "notVerifiedUsers": "Nicht verifizierte Benutzer"
+  },
+  "systemStatus": {
+    "system_status": "ANLAGENSTATUS",
+    "ok": "Ok",
+    "full_stop": "Voll Stoppe",
+    "alarmstop": "Alarmstopp",
+    "stopped_calling": "Anrufe gestoppt",
+    "standby": "Standby",
+    "test_system": "Testsystem",
+    "under_installation": "In Installation",
+    "waiting_position": "Warteschlange"
+  },
+  "dealer":{
+    "dealer":"Partner"
+  },
+  "installation":{
+    "number": "Nr.",
+    "installation_name": "Objekt-Name",
+    "address": "Adresse",
+    "postal_code": "Postleitzahl",
+    "city": "Stadt",
+    "country": "Land"  
+  }
+}

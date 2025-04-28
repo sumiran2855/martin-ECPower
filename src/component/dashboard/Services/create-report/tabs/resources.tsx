@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useTheme } from "@/app/dashboard/layout";
 import { ChevronDown, LockKeyhole } from "lucide-react";
 
-type WorkType = "Maintenance" | "Repair" | "Installation" | "Inspection";
+type WorkType = "Working time" | "Transport time" | "Driven Distance" ;
 
 interface CreatingDateTabProps {
   onNext: () => void;
@@ -17,10 +17,9 @@ export default function ResourcesTab({ onNext, onPrevious }: CreatingDateTabProp
   const [number, setNumber] = useState("");
 
   const workTypes: WorkType[] = [
-    "Maintenance",
-    "Repair",
-    "Installation",
-    "Inspection",
+    "Working time",
+    "Transport time",
+    "Driven Distance",
   ];
   return (
     <div

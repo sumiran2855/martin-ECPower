@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { useTheme } from "@/app/dashboard/layout";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 type MenuItem = {
   name: string;
@@ -28,59 +29,65 @@ export default function Sidebar({
   setSidebarOpen,
   isMobile,
 }: any) {
+  const { t } = useTranslation("home");
   const pathname = usePathname();
   const router = useRouter();
   const { darkMode } = useTheme();
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<string | null>(null);
+  const [mounted, setMounted] = useState(false); 
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const menuItems: MenuItem[] = [
-    { name: "Home", icon: <Home size={20} />, path: "/dashboard" },
+    { name: t("sidebar.home"), icon: <Home size={20} />, path: "/dashboard" },
     {
-      name: "XRGI®",
+      name: t("sidebar.xrgi"),
       icon: <PanelsLeftBottom />,
       path: "/dashboard/xrgi/unit-list", 
       subItems: [
-        { name: "Unit list", path: "/dashboard/xrgi/unit-list" },
-        { name: "Add to waitlist", path: "/dashboard/xrgi/add-to-waitlist" },
-        { name: "Registration of tests", path: "/dashboard/xrgi/registration-of-tests" },
-        { name: "Registration of visits", path: "/dashboard/xrgi/registration-of-visits" },
+        { name: t("sidebar.unitList"), path: "/dashboard/xrgi/unit-list" },
+        { name: t("sidebar.addToWaitlist"), path: "/dashboard/xrgi/add-to-waitlist" },
+        { name: t("sidebar.registrationOfTests"), path: "/dashboard/xrgi/registration-of-tests" },
+        { name: t("sidebar.registrationOfVisits"), path: "/dashboard/xrgi/registration-of-visits" },
       ],
     },
     {
-      name: "Regular Service",
+      name: t("sidebar.regularService"),
       icon: <BarChart2 size={20} />,
       path: "/dashboard/service/service-report",
       subItems: [
-        { name: "Service Report", path: "/dashboard/service/service-report" },
-        { name: "Service Overview", path: "/dashboard/service/service-overview" },
-        { name: "surveillance", path: "/dashboard/service/surveillance" },
+        { name: t("sidebar.serviceReport"), path: "/dashboard/service/service-report" },
+        { name: t("sidebar.serviceOverview"), path: "/dashboard/service/service-overview" },
+        { name: t("sidebar.surveillance"), path: "/dashboard/service/surveillance" },
       ],
     },
     {
-      name: "Statistics",
+      name: t("sidebar.statistics"),
       icon: <ChartSpline size={20} />,
       path: "/dashboard/statistics",
       subItems: [
-        { name: "Operational analysis", path: "/dashboard/statistics/operational-analysis" },
-        { name: "Alarmstop per week", path: "/dashboard/statistics/alarmstop-per-week" },
-        { name: "Get extracts", path: "/dashboard/statistics/get-extracts" },
+        { name: t("sidebar.operationalAnalysis"), path: "/dashboard/statistics/operational-analysis" },
+        { name: t("sidebar.alarmstopPerWeek"), path: "/dashboard/statistics/alarmstop-per-week" },
+        { name: t("sidebar.getExtracts"), path: "/dashboard/statistics/get-extracts" },
       ],
     },
-    { name: "Online manual", icon: <FileText size={20} />, path: "/dashboard/online-manual" },
+    { name: t("sidebar.onlineManual"), icon: <FileText size={20} />, path: "/dashboard/online-manual" },
     {
-      name: "Properties",
+      name: t("sidebar.properties"),
       icon: <TableProperties size={20} />,
       path: "/dashboard/properties",
     },
     {
-      name: "User",
+      name: t("sidebar.user"),
       icon: <User size={20} />,
       path: "/dashboard/user",
       subItems: [
-        { name: "Create User", path: "/dashboard/user/create-user" },
-        { name: "Inactive Users", path: "/dashboard/user/Inactive-users" },
-        { name: "Not verified users", path: "/dashboard/user/unverified-users" },
+        { name: t("sidebar.createUser"), path: "/dashboard/user/create-user" },
+        { name: t("sidebar.inactiveUsers"), path: "/dashboard/user/Inactive-users" },
+        { name: t("sidebar.notVerifiedUsers"), path: "/dashboard/user/unverified-users" },
       ],
     },
   ];
@@ -110,6 +117,8 @@ export default function Sidebar({
     setActiveTab(null);
     setOpenDropdown(null);
   }, [pathname]);
+
+  if (!mounted) return null;
 
   return (
     <>

@@ -1,0 +1,46 @@
+{
+  "sidebar": {
+    "home": "Home",
+    "xrgi": "XRGI®",
+    "unitList": "Unit list",
+    "addToWaitlist": "Add to waitlist",
+    "registrationOfTests": "Registration of tests",
+    "registrationOfVisits": "Registration of visits",
+    "regularService": "Regular Service",
+    "serviceReport": "Service Report",
+    "serviceOverview": "Service Overview",
+    "surveillance": "Surveillance",
+    "statistics": "Statistics",
+    "operationalAnalysis": "Operational analysis",
+    "alarmstopPerWeek": "Alarmstop per week",
+    "getExtracts": "Get extracts",
+    "onlineManual": "Online manual",
+    "properties": "Properties",
+    "user": "User",
+    "createUser": "Create User",
+    "inactiveUsers": "Inactive Users",
+    "notVerifiedUsers": "Not verified users"
+  },
+  "systemStatus":{
+    "system_status": "System Status",
+    "ok": "Ok",
+    "full_stop": "Full stop",
+    "alarmstop": "Alarmstop",
+    "stopped_calling": "Stopped calling",
+    "standby": "Standby",
+    "test_system": "Test system",
+    "under_installation": "Under installation",
+    "waiting_position": "Waiting position"
+  },
+  "dealer":{
+    "dealer":"Dealer"
+  },
+  "installation":{
+    "number": "Number",
+    "installation_name": "Installation Name",
+    "address": "Address",
+    "postal_code": "Postal Code",
+    "city": "City",
+    "country": "Country"
+  }
+}
