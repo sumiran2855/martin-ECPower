@@ -6,7 +6,6 @@ import { get_Facility, InstallationData } from "@/helper/facilityHelper";
 import Pagination from "@/component/Pagination";
 import ECPowerLoader from "@/component/loader";
 import { useAlerts } from "@/component/alert";
-import ServiceReport from "./service-report";
 
 const Surveillance: React.FC = () => {
   const { darkMode } = useTheme();
@@ -20,7 +19,6 @@ const Surveillance: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [selectAllEmail, setSelectAllEmail] = useState(false);
   const [selectAllSMS, setSelectAllSMS] = useState(false);
-  const [serviceReport, setServiceReport] = useState(false);
   const maxVisible = 10;
 
   useEffect(() => {
@@ -115,11 +113,6 @@ const Surveillance: React.FC = () => {
     setSelectedInstallations(selected);
   };
 
-  const handleRowClick = (installation: InstallationData) => {
-    setSelectedInstallations([installation]);
-    setServiceReport(true);
-  };
-
   if (loading) {
     return <ECPowerLoader size="md" isVisible={true} />;
   }
@@ -130,8 +123,6 @@ const Surveillance: React.FC = () => {
         darkMode ? "bg-gray-800 text-white" : "bg-white"
       } rounded-lg shadow transition-colors duration-300`}
     >
-            {!serviceReport ? (
-        <>
         <div className="p-4">
           <AlertList />
           <div className="flex items-center mb-2">
@@ -230,7 +221,6 @@ const Surveillance: React.FC = () => {
                     <td className="py-3">{installation.name}</td>
                     <td 
                       className="py-3 text-right text-blue-500 pr-4"
-                      onClick={() => handleRowClick(installation)}
                     >
                       <div className="flex justify-end">
                         &gt;
@@ -259,7 +249,6 @@ const Surveillance: React.FC = () => {
                     </p>
                   </div>
                   <div
-                    onClick={() => handleRowClick(installation)}
                     className="text-blue-500 cursor-pointer flex items-center"
                   >
                     &gt;
@@ -308,10 +297,6 @@ const Surveillance: React.FC = () => {
             darkMode={darkMode}
           />
         </div>
-        </>
-      ) : (
-        <ServiceReport Installation={selectedInstallations[0]} onCancel={()=>setServiceReport(false)}/>
-      )}
     </div>
   );
 };
