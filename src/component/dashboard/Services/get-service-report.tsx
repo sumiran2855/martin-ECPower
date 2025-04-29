@@ -16,8 +16,8 @@ export default function ServiceReport({ Installation,onCancel }: CreateTestFormP
   return (
     <div
       className={`${
-        darkMode ? "bg-gray-800 text-white" : "bg-gray-50"
-      } rounded-lg shadow transition-colors duration-300 p-6 max-w-full`}
+        darkMode ? "bg-gray-800 text-white" : "bg-white"
+      } transition-colors duration-300 p-6 max-w-full`}
     >
       <div className="flex items-center mb-4">
         <div className="p-2 rounded-md">
@@ -91,6 +91,7 @@ export default function ServiceReport({ Installation,onCancel }: CreateTestFormP
               <input
                 type="text"
                 value={date}
+                placeholder="Enter Date"
                 onChange={(e) => setDate(e.target.value)}
                 className={`w-full p-2 rounded focus:outline-none ${
                   darkMode ? "bg-gray-700 text-white" : "bg-white text-gray-800"
@@ -120,6 +121,7 @@ export default function ServiceReport({ Installation,onCancel }: CreateTestFormP
               <input
                 type="text"
                 value={time}
+                placeholder="Enter Time"
                 onChange={(e) => setTime(e.target.value)}
                 className={`w-full p-2 rounded border ${
                   darkMode

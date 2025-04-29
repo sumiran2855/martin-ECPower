@@ -131,7 +131,9 @@ const OperationalAnalysis: React.FC = () => {
                   <div className="flex items-center">
                     <input
                       type="checkbox"
-                      checked={installation.selected}
+                      // checked={installation.selected}
+                      checked={true}
+                      readOnly
                       onChange={(e) => {
                         e.stopPropagation();
                         toggleSelection(index);

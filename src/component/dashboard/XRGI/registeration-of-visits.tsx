@@ -114,7 +114,9 @@ const RegistrationOfVisites: React.FC = () => {
                       <div className="flex items-center">
                         <input
                           type="checkbox"
-                          checked={installation.selected}
+                          readOnly
+                          // checked={installation.selected}
+                          checked={true}
                           onChange={() => toggleSelection(index)}
                           className={`mr-3 h-5 w-5 rounded cursor-pointer ${
                             darkMode
@@ -154,7 +156,9 @@ const RegistrationOfVisites: React.FC = () => {
                   <div className="flex items-center">
                     <input
                       type="checkbox"
-                      checked={installation.selected}
+                      readOnly
+                      // checked={installation.selected}
+                      checked={true}
                       onChange={() => toggleSelection(index)}
                       className={`mr-3 h-5 w-5 rounded ${
                         darkMode

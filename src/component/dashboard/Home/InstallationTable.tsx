@@ -5,9 +5,11 @@ import Pagination from "@/component/Pagination";
 import { get_Facility, InstallationData } from "@/helper/facilityHelper";
 import ECPowerLoader from "@/component/loader";
 import { useTranslation } from "react-i18next";
+import { ChevronDown, ChevronUp } from "lucide-react";
+import EditModal from "./edit-installation";
 
 const InstallationTable: React.FC = () => {
-  const { t } = useTranslation("home"); 
+  const { t } = useTranslation("home");
   const { darkMode } = useTheme();
   const [installations, setInstallations] = useState<InstallationData[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -15,8 +17,16 @@ const InstallationTable: React.FC = () => {
   const [paginatedInstallations, setPaginatedInstallations] = useState<InstallationData[]>([]);
   const [totalPages, setTotalPages] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [expandedRows, setExpandedRows] = useState<Record<number, boolean>>({});
+  const [selectedInstallation, setSelectedInstallation] = useState<InstallationData | null>(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   
   const maxVisible = 5;
+
+  const dummyDetails = [
+    { status: "Active", xrgiId: "XR-123", xrgiType: "Type A", description: "Main unit", timeOfCall: "2025-04-15 10:30", noSeparationLayer: "Yes" },
+    { status: "Inactive", xrgiId: "XR-456", xrgiType: "Type B", description: "Secondary unit", timeOfCall: "2025-04-20 14:45", noSeparationLayer: "No" },
+  ];
 
   useEffect(() => {
     const getFacility = async () => {
@@ -54,6 +64,24 @@ const InstallationTable: React.FC = () => {
     setInstallations(updatedInstallations);
   };
 
+  const toggleRowExpansion = (index: number) => {
+    setExpandedRows(prev => ({
+      ...prev,
+      [index]: !prev[index]
+    }));
+  };
+
+  const openEditModal = (installation: InstallationData) => {
+    setSelectedInstallation(installation);
+    setIsEditModalOpen(true);
+  };
+  
+  // Function to close modal
+  const closeEditModal = () => {
+    setIsEditModalOpen(false);
+    setSelectedInstallation(null);
+  };
+
   const goToPage = (page: number) => {
     if (page >= 1 && page <= totalPages) {
       setCurrentPage(page);
@@ -80,46 +108,159 @@ const InstallationTable: React.FC = () => {
         <table className="w-full border-separate border-spacing-y-2">
           <thead>
             <tr className={darkMode ? "text-gray-300" : "text-gray-700"}>
-              <th className="text-left px-4 py-2 font-medium">{t('installation.number')}</th>
               <th className="text-left px-4 py-2 font-medium">
-              {t('installation.installation_name')}
+                {t("installation.number")}
               </th>
-              <th className="text-left px-4 py-2 font-medium">{t('installation.address')}</th>
-              <th className="text-left px-4 py-2 font-medium">{t('installation.postal_code')}</th>
-              <th className="text-left px-4 py-2 font-medium">{t('installation.city')}</th>
-              <th className="text-left px-4 py-2 font-medium">{t('installation.country')}</th>
+              <th className="text-left px-4 py-2 font-medium">
+                {t("installation.installation_name")}
+              </th>
+              <th className="text-left px-4 py-2 font-medium">
+                {t("installation.address")}
+              </th>
+              <th className="text-left px-4 py-2 font-medium">
+                {t("installation.postal_code")}
+              </th>
+              <th className="text-left px-4 py-2 font-medium">
+                {t("installation.city")}
+              </th>
+              <th className="text-left px-4 py-2 font-medium">
+                {t("installation.country")}
+              </th>
             </tr>
           </thead>
           <tbody>
             {paginatedInstallations.map((installation, index) => (
-              <tr
-                key={index}
-                className={`${darkMode ? "bg-gray-700" : "bg-white"} shadow-sm`}
-              >
-                <td className="px-4 py-4 rounded-l-lg">
-                  <div className="flex items-center">
-                    <input
-                      type="checkbox"
-                      checked={installation.selected}
-                      onChange={() => toggleSelection(index)}
-                      className={`mr-3 h-5 w-5 rounded cursor-pointer ${
-                        darkMode
-                          ? "bg-gray-600 border-gray-500"
-                          : "border-gray-300"
-                      }`}
-                    />
-                    {installation.xrgiID}
-                  </div>
-                </td>
-                <td className="px-4 py-4">{installation.name}</td>
-                <td className="px-4 py-4">{installation.address}</td>
-                <td className="px-4 py-4">{installation.postalCode}</td>
-                <td className="px-4 py-4">{installation.city}</td>
-                <td className="px-4 py-4 rounded-r-lg">
-                  {/* <img src="/flag.png" alt="Country Flag" className="w-8 h-6" /> */}
-                  -
-                </td>
-              </tr>
+              <React.Fragment key={index}>
+                <tr
+                  className={`${
+                    darkMode ? "bg-gray-700" : "bg-white"
+                  } shadow-sm cursor-pointer`}
+                >
+                  <td
+                    className="px-4 py-4 rounded-l-lg"
+                  >
+                    <div className="flex items-center">
+                      <input
+                        type="checkbox"
+                        readOnly
+                        // checked={installation.selected}
+                        checked={true}
+                        onClick={() => openEditModal(installation)}
+                        onChange={() => toggleSelection(index)}
+                        className={`mr-3 h-5 w-5 rounded cursor-pointer ${
+                          darkMode
+                            ? "bg-gray-600 border-gray-500"
+                            : "border-gray-300"
+                        }`}
+                      />
+                      {installation.xrgiID}
+                    </div>
+                  </td>
+                  <td
+                    className="px-4 py-4"
+                    onClick={() => toggleRowExpansion(index)}
+                  >
+                    {installation.name}
+                  </td>
+                  <td
+                    className="px-4 py-4"
+                    onClick={() => toggleRowExpansion(index)}
+                  >
+                    {installation.address}
+                  </td>
+                  <td
+                    className="px-4 py-4"
+                    onClick={() => toggleRowExpansion(index)}
+                  >
+                    {installation.postalCode}
+                  </td>
+                  <td
+                    className="px-4 py-4"
+                    onClick={() => toggleRowExpansion(index)}
+                  >
+                    {installation.city}
+                  </td>
+                  <td
+                    className="px-4 py-4 rounded-r-lg"
+                    onClick={() => toggleRowExpansion(index)}
+                  >
+                    -
+                  </td>
+                </tr>
+                {expandedRows[index] && (
+                  <tr>
+                    <td colSpan={7} className="p-0">
+                      <div
+                        className={`${
+                          darkMode ? "bg-gray-600" : "bg-gray-50"
+                        } px-8 py-4 rounded-lg`}
+                      >
+                        {dummyDetails && dummyDetails.length > 0 ? (
+                          <table className="w-full border-separate border-spacing-y-1">
+                            <thead>
+                              <tr
+                                className={
+                                  darkMode ? "text-gray-300" : "text-gray-700"
+                                }
+                              >
+                                <th className="text-left px-3 py-2 text-sm font-medium">
+                                  Status
+                                </th>
+                                <th className="text-left px-3 py-2 text-sm font-medium">
+                                  XRGI®-ID
+                                </th>
+                                <th className="text-left px-3 py-2 text-sm font-medium">
+                                  XRGI® type
+                                </th>
+                                <th className="text-left px-3 py-2 text-sm font-medium">
+                                  Description
+                                </th>
+                                <th className="text-left px-3 py-2 text-sm font-medium">
+                                  Time of call
+                                </th>
+                                <th className="text-left px-3 py-2 text-sm font-medium">
+                                  No separation layer
+                                </th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {dummyDetails.map((detail, detailIndex) => (
+                                <tr
+                                  key={detailIndex}
+                                  className={`${
+                                    darkMode ? "bg-gray-700" : "bg-white"
+                                  } shadow-sm`}
+                                >
+                                  <td className="px-3 py-3 rounded-l-lg">
+                                    {detail.status}
+                                  </td>
+                                  <td className="px-3 py-3">{detail.xrgiId}</td>
+                                  <td className="px-3 py-3">
+                                    {detail.xrgiType}
+                                  </td>
+                                  <td className="px-3 py-3">
+                                    {detail.description}
+                                  </td>
+                                  <td className="px-3 py-3">
+                                    {detail.timeOfCall}
+                                  </td>
+                                  <td className="px-3 py-3 rounded-r-lg">
+                                    {detail.noSeparationLayer}
+                                  </td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        ) : (
+                          <div className="text-center py-4">
+                            No data available for now
+                          </div>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                )}
+              </React.Fragment>
             ))}
           </tbody>
         </table>
@@ -128,75 +269,179 @@ const InstallationTable: React.FC = () => {
       {/* Mobile View */}
       <div className="md:hidden space-y-4">
         {paginatedInstallations.map((installation, index) => (
-          <div
-            key={index}
-            className={`${
-              darkMode ? "bg-gray-700" : "bg-white"
-            } p-4 rounded-lg shadow-sm`}
-          >
-            <div className="flex items-center justify-between mb-3">
-              <div className="flex items-center">
-                <input
-                  type="checkbox"
-                  checked={installation.selected}
-                  onChange={() => toggleSelection(index)}
-                  className={`mr-3 h-5 w-5 rounded ${
-                    darkMode ? "bg-gray-600 border-gray-500" : "border-gray-300"
-                  }`}
-                />
-                <span className="font-medium">#{installation.xrgiID}</span>
-              </div>
-              <div className="w-8 h-6">
-                <img src="/flag.png" alt="Country Flag" className="w-8 h-6" />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 gap-2">
-              <div>
-                <span
-                  className={`text-xs ${
-                    darkMode ? "text-gray-400" : "text-gray-500"
-                  }`}
+          <div key={index}>
+            <div
+              className={`${
+                darkMode ? "bg-gray-700" : "bg-white"
+              } p-4 rounded-lg shadow-sm`}
+            >
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center">
+                  <input
+                    type="checkbox"
+                    readOnly
+                    // checked={installation.selected}
+                    checked={true}
+                    onChange={() => toggleSelection(index)}
+                    onClick={() => openEditModal(installation)}
+                    className={`mr-3 h-5 w-5 rounded ${
+                      darkMode
+                        ? "bg-gray-600 border-gray-500"
+                        : "border-gray-300"
+                    }`}
+                  />
+                  <span className="font-medium">#{installation.xrgiID}</span>
+                </div>
+                <button
+                  onClick={() => toggleRowExpansion(index)}
+                  className="p-1 rounded-full hover:bg-gray-200 dark:hover:bg-gray-600"
                 >
-                  {t('installation.installation_name')}
-                </span>
-                <p className="mt-1">{installation.name}</p>
+                  {expandedRows[index] ? (
+                    <ChevronUp size={18} />
+                  ) : (
+                    <ChevronDown size={18} />
+                  )}
+                </button>
               </div>
 
-              <div>
-                <span
-                  className={`text-xs ${
-                    darkMode ? "text-gray-400" : "text-gray-500"
-                  }`}
-                >
-                  {t('installation.address')}
-                </span>
-                <p className="mt-1">{installation.address}</p>
-              </div>
-
-              <div className="flex space-x-4">
-                <div className="flex-1">
+              <div className="grid grid-cols-1 gap-2">
+                <div>
                   <span
                     className={`text-xs ${
                       darkMode ? "text-gray-400" : "text-gray-500"
                     }`}
                   >
-                    {t('installation.postal_code')}
+                    {t("installation.installation_name")}
                   </span>
-                  <p className="mt-1">{installation.postalCode}</p>
+                  <p className="mt-1">{installation.name}</p>
                 </div>
-                <div className="flex-1">
+
+                <div>
                   <span
                     className={`text-xs ${
                       darkMode ? "text-gray-400" : "text-gray-500"
                     }`}
                   >
-                    {t('installation.city')}
+                    {t("installation.address")}
                   </span>
-                  <p className="mt-1">{installation.city}</p>
+                  <p className="mt-1">{installation.address}</p>
+                </div>
+
+                <div className="flex space-x-4">
+                  <div className="flex-1">
+                    <span
+                      className={`text-xs ${
+                        darkMode ? "text-gray-400" : "text-gray-500"
+                      }`}
+                    >
+                      {t("installation.postal_code")}
+                    </span>
+                    <p className="mt-1">{installation.postalCode}</p>
+                  </div>
+                  <div className="flex-1">
+                    <span
+                      className={`text-xs ${
+                        darkMode ? "text-gray-400" : "text-gray-500"
+                      }`}
+                    >
+                      {t("installation.city")}
+                    </span>
+                    <p className="mt-1">{installation.city}</p>
+                  </div>
                 </div>
               </div>
             </div>
+
+            {expandedRows[index] && (
+              <div
+                className={`${
+                  darkMode ? "bg-gray-600" : "bg-gray-50"
+                } p-4 mt-1 rounded-lg shadow-sm`}
+              >
+                <h4 className="font-medium mb-3 text-sm">
+                  {t("installation.details") || "Details"}
+                </h4>
+                {dummyDetails && dummyDetails.length > 0 ? (
+                  <div className="space-y-3">
+                    {dummyDetails.map((detail, detailIndex) => (
+                      <div
+                        key={detailIndex}
+                        className={`${
+                          darkMode ? "bg-gray-700" : "bg-white"
+                        } p-3 rounded-lg shadow-sm`}
+                      >
+                        <div className="grid grid-cols-2 gap-2 text-sm">
+                          <div>
+                            <span
+                              className={`text-xs ${
+                                darkMode ? "text-gray-400" : "text-gray-500"
+                              }`}
+                            >
+                              Status
+                            </span>
+                            <p className="mt-1">{detail.status}</p>
+                          </div>
+                          <div>
+                            <span
+                              className={`text-xs ${
+                                darkMode ? "text-gray-400" : "text-gray-500"
+                              }`}
+                            >
+                              XRGI®-ID
+                            </span>
+                            <p className="mt-1">{detail.xrgiId}</p>
+                          </div>
+                          <div>
+                            <span
+                              className={`text-xs ${
+                                darkMode ? "text-gray-400" : "text-gray-500"
+                              }`}
+                            >
+                              XRGI® type
+                            </span>
+                            <p className="mt-1">{detail.xrgiType}</p>
+                          </div>
+                          <div>
+                            <span
+                              className={`text-xs ${
+                                darkMode ? "text-gray-400" : "text-gray-500"
+                              }`}
+                            >
+                              Description
+                            </span>
+                            <p className="mt-1">{detail.description}</p>
+                          </div>
+                          <div>
+                            <span
+                              className={`text-xs ${
+                                darkMode ? "text-gray-400" : "text-gray-500"
+                              }`}
+                            >
+                              Time of call
+                            </span>
+                            <p className="mt-1">{detail.timeOfCall}</p>
+                          </div>
+                          <div>
+                            <span
+                              className={`text-xs ${
+                                darkMode ? "text-gray-400" : "text-gray-500"
+                              }`}
+                            >
+                              No separation layer
+                            </span>
+                            <p className="mt-1">{detail.noSeparationLayer}</p>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-3 text-sm">
+                    No data available for now
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         ))}
       </div>
@@ -210,6 +455,12 @@ const InstallationTable: React.FC = () => {
         itemsPerPage={itemsPerPage}
         onItemsPerPageChange={handleItemsPerPageChange}
         darkMode={darkMode}
+      />
+
+      <EditModal
+        isOpen={isEditModalOpen}
+        onClose={closeEditModal}
+        installation={selectedInstallation}
       />
     </div>
   );

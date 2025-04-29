@@ -5,10 +5,36 @@ import { useTheme } from "@/app/dashboard/layout";
 import DealerItem from "@/component/cards/dealerItemCards";
 import { useTranslation } from "react-i18next";
 
-
 const Dealer: React.FC = () => {
   const { t } = useTranslation("home")
   const { darkMode } = useTheme();
+  
+  const dealerData = [
+    {
+      name: "EC power A/B",
+      isDealer: true,
+      children: [
+        { name: "EC power - Carb test 01", isDealer: false },
+        { name: "EC power - Carb test 02", isDealer: false },
+      ]
+    },
+    {
+      name: "EC power - D/C",
+      isDealer: true,
+      children: [
+        { name: "EC power - Carb test 03", isDealer: false },
+        { name: "EC power - Carb test 04", isDealer: false },
+      ]
+    },
+    {
+      name: "EC power - X/Y",
+      isDealer: true,
+      children: [
+        { name: "EC power - Carb test 05", isDealer: false },
+        { name: "EC power - Carb test 06", isDealer: false },
+      ]
+    }
+  ];
   
   return (
     <div className={`${darkMode ? 'bg-gray-800 text-white' : 'bg-white text-gray-800'} p-4 rounded-lg shadow-sm transition-colors duration-300`}>
@@ -17,12 +43,14 @@ const Dealer: React.FC = () => {
         <h1 className="text-xl font-semibold">{t("dealer.dealer")}</h1>
       </div>
       <div className={`border cursor-pointer ${darkMode ? 'border-gray-700' : 'border-gray-200'} rounded-lg max-h-72 overflow-y-auto scrollbar-thin ${darkMode ? 'scrollbar-thumb-gray-600 scrollbar-track-gray-800' : 'scrollbar-thumb-gray-300 scrollbar-track-gray-100'}`}>
-        <DealerItem name="EC power A/B" expanded isDealer />
-        <DealerItem name="EC power - Carb test 01" />
-        <DealerItem name="EC power - Carb test 02" />
-        <DealerItem name="EC power - Carb test 03" expanded isDealer />
-        <DealerItem name="EC power - Carb test 04" />
-        <DealerItem name="EC power - Carb test 04" />
+        {dealerData.map((dealer, index) => (
+          <DealerItem 
+            key={index}
+            name={dealer.name}
+            isDealer={dealer.isDealer}
+            children={dealer.children}
+          />
+        ))}
       </div>
     </div>
   );

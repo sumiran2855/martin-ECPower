@@ -115,8 +115,10 @@ const AddToWaitlist: React.FC = () => {
                       <div className="flex items-center">
                         <input
                           type="checkbox"
-                          checked={installation.selected}
+                          // checked={installation.selected}
+                          checked={true}
                           onChange={() => toggleSelection(index)}
+                          readOnly
                           className={`mr-3 h-5 w-5 rounded cursor-pointer ${
                             darkMode
                               ? "bg-gray-600 border-gray-500"
@@ -156,7 +158,9 @@ const AddToWaitlist: React.FC = () => {
                   <div className="flex items-center">
                     <input
                       type="checkbox"
-                      checked={installation.selected}
+                      readOnly
+                      // checked={installation.selected}
+                      checked={true}
                       onChange={() => toggleSelection(index)}
                       className={`mr-3 h-5 w-5 rounded ${
                         darkMode
