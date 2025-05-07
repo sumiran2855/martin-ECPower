@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { useTheme } from "@/app/dashboard/layout";
 import { FileText, SearchIcon, XIcon } from 'lucide-react';
+import { ServiceReport } from '../../type';
 
 interface ServiceReportData {
   deliveryDate: string;
@@ -9,17 +10,13 @@ interface ServiceReportData {
   reportNumber: string;
   serviceType: string;
 }
-export default function UploadServiceReport({}) {
+
+interface CreateTestFormProps {
+  serviceReportData: ServiceReport[] | null;
+}
+export default function UploadServiceReport({serviceReportData}:CreateTestFormProps) {
   const { darkMode } = useTheme();
   const [searchQuery, setSearchQuery] = useState('');
-  
-  // Sample data for the table
-  const serviceReports: ServiceReportData[] = Array(9).fill({
-    deliveryDate: '14-08-13 00:00',
-    creationDate: '16-08-22 00:00',
-    reportNumber: 'SA-1000001098-150',
-    serviceType: 'SERVICE'
-  });
   return (
     <div
       className={`${
@@ -64,15 +61,15 @@ export default function UploadServiceReport({}) {
             </thead>
             
             <tbody>
-              {serviceReports.map((report, index) => (
+              {serviceReportData?.map((report, index) => (
                 <tr 
                   key={index} 
                   className={`border-b ${
                     darkMode ? "border-gray-700 hover:bg-gray-700" : "border-gray-200 hover:bg-gray-50"}`}>
-                  <td className={`px-4 py-4 whitespace-nowrap text-sm ${darkMode ? "text-gray-200" : "text-gray-600"}`}>{report.deliveryDate}</td>
-                  <td className={`px-4 py-4 whitespace-nowrap text-sm ${darkMode ? "text-gray-200" : "text-gray-600"}`}>{report.creationDate}</td>
-                  <td className={`px-4 py-4 whitespace-nowrap text-sm ${darkMode ? "text-gray-200" : "text-gray-600"}`}>{report.reportNumber}</td>
-                  <td className={`px-4 py-4 whitespace-nowrap text-sm ${darkMode ? "text-gray-200" : "text-gray-600"}`}>{report.serviceType}</td>
+                  <td className={`px-4 py-4 whitespace-nowrap text-sm ${darkMode ? "text-gray-200" : "text-gray-600"}`}>{report.creatingDate.deliveryDate}</td>
+                  <td className={`px-4 py-4 whitespace-nowrap text-sm ${darkMode ? "text-gray-200" : "text-gray-600"}`}>{report.creatingDate.creationDate}</td>
+                  <td className={`px-4 py-4 whitespace-nowrap text-sm ${darkMode ? "text-gray-200" : "text-gray-600"}`}>{report.Service_Report_Number}</td>
+                  <td className={`px-4 py-4 whitespace-nowrap text-sm ${darkMode ? "text-gray-200" : "text-gray-600"}`}>{report.creatingDate.serviceType}</td>
                   <td className="py-4 px-4 flex justify-between">
                     <FileText size={20} className="text-blue-500 cursor-pointer" />
                     <XIcon size={20} className="text-gray-500 cursor-pointer" />

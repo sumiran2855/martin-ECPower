@@ -2,132 +2,33 @@
 import { useTheme } from "@/app/dashboard/layout";
 import { Search } from "lucide-react";
 import { useState } from "react";
-interface ItemUsageData {
-  xrgiId: string;
-  serviceReportNumber: string;
-  dateOfDelivery: string;
-  creationDate: string;
-  user: string;
-  partNumber: string;
-  itemText: string;
-  number: number;
-  unit: string;
+import { ServiceReport } from "../../type";
+
+interface CreateTestFormProps {
+  serviceReportData: ServiceReport[] | null;
 }
-export default function ItemUsageTab({}) {
+export default function ItemUsageTab({
+  serviceReportData,
+}: CreateTestFormProps) {
   const { darkMode } = useTheme();
   const [searchQuery, setSearchQuery] = useState("");
 
-  // Sample data based on the image
-  const itemUsageData: ItemUsageData[] = [
-    {
-      xrgiId: "1000001098",
-      serviceReportNumber: "SD-682562915",
-      dateOfDelivery: "28-04-23 00:00",
-      creationDate: "28-04-23 13:49",
-      user: "DK-App Tester 1",
-      partNumber: "01ELU1236",
-      itemText: "Kabelforskruning Ø11,5-18 M25",
-      number: 1,
-      unit: "Stk",
-    },
-    {
-      xrgiId: "1000001098",
-      serviceReportNumber: "SD-682562915",
-      dateOfDelivery: "28-04-23 00:00",
-      creationDate: "28-04-23 13:49",
-      user: "DK-App Tester 1",
-      partNumber: "01ELU1236",
-      itemText: "Kabelforskruning Ø11,5-18 M25",
-      number: 1,
-      unit: "Stk",
-    },
-    {
-      xrgiId: "1000001098",
-      serviceReportNumber: "SD-682562915",
-      dateOfDelivery: "28-04-23 00:00",
-      creationDate: "28-04-23 13:49",
-      user: "DK-App Tester 1",
-      partNumber: "01ELU1236",
-      itemText: "Kabelforskruning Ø11,5-18 M25",
-      number: 1,
-      unit: "Stk",
-    },
-    {
-      xrgiId: "1000001098",
-      serviceReportNumber: "SD-682562915",
-      dateOfDelivery: "28-04-23 00:00",
-      creationDate: "28-04-23 13:49",
-      user: "DK-App Tester 1",
-      partNumber: "01ELU1236",
-      itemText: "Kabelforskruning Ø11,5-18 M25",
-      number: 1,
-      unit: "Stk",
-    },
-    {
-      xrgiId: "1000001098",
-      serviceReportNumber: "SD-682562915",
-      dateOfDelivery: "28-04-23 00:00",
-      creationDate: "28-04-23 13:49",
-      user: "DK-App Tester 1",
-      partNumber: "01ELU1236",
-      itemText: "Kabelforskruning Ø11,5-18 M25",
-      number: 1,
-      unit: "Stk",
-    },
-    {
-      xrgiId: "1000001098",
-      serviceReportNumber: "SD-682562915",
-      dateOfDelivery: "28-04-23 00:00",
-      creationDate: "28-04-23 13:49",
-      user: "DK-App Tester 1",
-      partNumber: "01ELU1236",
-      itemText: "Kabelforskruning Ø11,5-18 M25",
-      number: 1,
-      unit: "Stk",
-    },
-    {
-      xrgiId: "1000001098",
-      serviceReportNumber: "SD-682562915",
-      dateOfDelivery: "28-04-23 00:00",
-      creationDate: "28-04-23 13:49",
-      user: "DK-App Tester 1",
-      partNumber: "01ELU1236",
-      itemText: "Kabelforskruning Ø11,5-18 M25",
-      number: 1,
-      unit: "Stk",
-    },
-    {
-      xrgiId: "1000001098",
-      serviceReportNumber: "SD-682562915",
-      dateOfDelivery: "28-04-23 00:00",
-      creationDate: "28-04-23 13:49",
-      user: "DK-App Tester 1",
-      partNumber: "01ELU1236",
-      itemText: "Kabelforskruning Ø11,5-18 M25",
-      number: 1,
-      unit: "Stk",
-    },
-    {
-      xrgiId: "1000001098",
-      serviceReportNumber: "SD-682562915",
-      dateOfDelivery: "28-04-23 00:00",
-      creationDate: "28-04-23 13:49",
-      user: "DK-App Tester 1",
-      partNumber: "01ELU1236",
-      itemText: "Kabelforskruning Ø11,5-18 M25",
-      number: 1,
-      unit: "Stk",
-    },
-  ];
   return (
     <div
       className={`${
         darkMode
           ? "bg-gray-800 border-1 border-white rounded-lg shadow-sm"
           : "bg-white rounded-lg shadow-sm"
-      } p-6`}>
+      } p-6`}
+    >
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
-        <h2 className={`${darkMode ? 'text-gray-200' : 'text-blue-900'} text-xl font-bold mb-4`}>Item Usage</h2>
+        <h2
+          className={`${
+            darkMode ? "text-gray-200" : "text-blue-900"
+          } text-xl font-bold mb-4`}
+        >
+          Item Usage
+        </h2>
         <div className="flex flex-col md:flex-row gap-4 w-full md:w-auto">
           <div className="relative w-full md:w-64">
             <input
@@ -168,9 +69,9 @@ export default function ItemUsageTab({}) {
               <th className={`px-4 py-3 text-left text-sm font-medium ${darkMode ? "text-gray-200" : "text-blue-900"}`}>
                 Creation date
               </th>
-              <th className={`px-4 py-3 text-left text-sm font-medium ${darkMode ? "text-gray-200" : "text-blue-900"}`}>
+              {/* <th className={`px-4 py-3 text-left text-sm font-medium ${darkMode ? "text-gray-200" : "text-blue-900"}`}>
                 User
-              </th>
+              </th> */}
               <th className={`px-4 py-3 text-left text-sm font-medium ${darkMode ? "text-gray-200" : "text-blue-900"}`}>
                 Part Number
               </th>
@@ -185,49 +86,113 @@ export default function ItemUsageTab({}) {
               </th>
             </tr>
           </thead>
+
           <tbody className="bg-white divide-y divide-gray-200">
-            {itemUsageData.map((item, index) => (
-              <tr
-                key={index}
-                className={`${
-                    darkMode
-                      ? index % 2 === 0
-                        ? "bg-gray-800"
-                        : "bg-gray-700"
-                      : index % 2 === 0
-                      ? "bg-white"
-                      : "bg-gray-50"
-                  } ${darkMode ? "hover:bg-gray-600" : "hover:bg-gray-100"}`}                  
-              >
-                <td className={`px-4 py-4 whitespace-nowrap text-sm ${darkMode ? "text-gray-200" : "text-gray-600"}`}>
-                  {item.xrgiId}
-                </td>
-                <td className={`px-4 py-4 whitespace-nowrap text-sm ${darkMode ? "text-gray-200" : "text-gray-600"}`}>
-                  {item.serviceReportNumber}
-                </td>
-                <td className={`px-4 py-4 whitespace-nowrap text-sm ${darkMode ? "text-gray-200" : "text-gray-600"}`}>
-                  {item.dateOfDelivery}
-                </td>
-                <td className={`px-4 py-4 whitespace-nowrap text-sm ${darkMode ? "text-gray-200" : "text-gray-600"}`}>
-                  {item.creationDate}
-                </td>
-                <td className={`px-4 py-4 whitespace-nowrap text-sm ${darkMode ? "text-gray-200" : "text-gray-600"}`}>
-                  {item.user}
-                </td>
-                <td className={`px-4 py-4 whitespace-nowrap text-sm ${darkMode ? "text-gray-200" : "text-gray-600"}`}>
-                  {item.partNumber}
-                </td>
-                <td className={`px-4 py-4 whitespace-nowrap text-sm ${darkMode ? "text-gray-200" : "text-gray-600"}`}>
-                  {item.itemText}
-                </td>
-                <td className={`px-4 py-4 whitespace-nowrap text-sm ${darkMode ? "text-gray-200" : "text-gray-600"}`}>
-                  {item.number}
-                </td>
-                <td className={`px-4 py-4 whitespace-nowrap text-sm ${darkMode ? "text-gray-200" : "text-gray-600"}`}>
-                  {item.unit}
+            {serviceReportData?.length ? (
+              serviceReportData.map((report, reportIndex) =>
+                report.itemUsages?.length ? (
+                  report.itemUsages.map((item, itemIndex) => (
+                    <tr
+                      key={`${reportIndex}-${itemIndex}`}
+                      className={`${
+                        darkMode
+                          ? (reportIndex + itemIndex) % 2 === 0
+                            ? "bg-gray-800"
+                            : "bg-gray-700"
+                          : (reportIndex + itemIndex) % 2 === 0
+                          ? "bg-white"
+                          : "bg-gray-50"
+                      } ${
+                        darkMode ? "hover:bg-gray-600" : "hover:bg-gray-100"
+                      }`}
+                    >
+                      <td
+                        className={`px-4 py-4 whitespace-nowrap text-sm ${
+                          darkMode ? "text-gray-200" : "text-gray-600"
+                        }`}
+                      >
+                        {report.xrgiID || "—"}
+                      </td>
+                      <td
+                        className={`px-4 py-4 whitespace-nowrap text-sm ${
+                          darkMode ? "text-gray-200" : "text-gray-600"
+                        }`}
+                      >
+                        {report.Service_Report_Number || "—"}
+                      </td>
+                      <td
+                        className={`px-4 py-4 whitespace-nowrap text-sm ${
+                          darkMode ? "text-gray-200" : "text-gray-600"
+                        }`}
+                      >
+                        {report.creatingDate?.deliveryDate || "—"}
+                      </td>
+                      <td
+                        className={`px-4 py-4 whitespace-nowrap text-sm ${
+                          darkMode ? "text-gray-200" : "text-gray-600"
+                        }`}
+                      >
+                        {report.creatingDate?.creationDate || "—"}
+                      </td>
+                      {/* <td
+                        className={`px-4 py-4 whitespace-nowrap text-sm ${
+                          darkMode ? "text-gray-200" : "text-gray-600"
+                        }`}
+                      >
+                        {"—"}
+                      </td> */}
+                      <td
+                        className={`px-4 py-4 whitespace-nowrap text-sm ${
+                          darkMode ? "text-gray-200" : "text-gray-600"
+                        }`}
+                      >
+                        {item.partNumber || "—"}
+                      </td>
+                      <td
+                        className={`px-4 py-4 whitespace-nowrap text-sm ${
+                          darkMode ? "text-gray-200" : "text-gray-600"
+                        }`}
+                      >
+                        {item.description || "—"}
+                      </td>
+                      <td
+                        className={`px-4 py-4 whitespace-nowrap text-sm ${
+                          darkMode ? "text-gray-200" : "text-gray-600"
+                        }`}
+                      >
+                        {item.quantity ?? "—"}
+                      </td>
+                      <td
+                        className={`px-4 py-4 whitespace-nowrap text-sm ${
+                          darkMode ? "text-gray-200" : "text-gray-600"
+                        }`}
+                      >
+                        {item.unit || "—"}
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr key={`empty-${reportIndex}`}>
+                    <td
+                      colSpan={9}
+                      className="text-center py-4 italic text-sm text-gray-500"
+                    >
+                      No item usage data for report #
+                      {report.Service_Report_Number}
+                    </td>
+                  </tr>
+                )
+              )
+            ) : (
+              <tr>
+                <td
+                  colSpan={9}
+                  className="text-center py-4 italic text-sm text-gray-500"
+                >
+                  No service report data available.
                 </td>
               </tr>
-            ))}
+            )}
           </tbody>
         </table>
       </div>

@@ -1,22 +1,57 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTheme } from "@/app/dashboard/layout";
 import ServiceReportTab from "./tabs/service-reports";
 import ItemUsageTab from "./tabs/item-usage";
 import UploadServiceReport from "./tabs/upload-service-report";
 import UploadReport from "./tabs/upload";
 import { InstallationData } from "@/helper/facilityHelper";
-import { ArrowLeft } from "lucide-react";
+import { getAuthTokens } from "@/helper/authHelper";
+import { getServiceReport } from "@/controller/service-controller";
+import ECPowerLoader from "@/component/loader";
+import type { ServiceReport } from "../type"
 
 interface CreateTestFormProps {
   setServiceDetail: (value: boolean) => void;
   Installation: InstallationData | null;
 }
 
-export default function ServiceReport({ Installation,setServiceDetail }: CreateTestFormProps) {
+export default function ServiceReport({
+  Installation,
+  setServiceDetail,
+}: CreateTestFormProps) {
+  const { token, idToken } = getAuthTokens();
   const { darkMode } = useTheme();
   const [activeTab, setActiveTab] = useState("serviceReports");
+  const [serviceReportData, setServiceReportData] = useState<ServiceReport[] | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchServiceReport = async () => {
+      if (Installation?.userID && token && idToken) {
+        setLoading(true);
+        try {
+          const data = await getServiceReport(
+            token,
+            idToken,
+            Installation.userID
+          );
+          setServiceReportData(data);
+        } catch (error) {
+          console.error("Failed to fetch service report:", error);
+        } finally {
+          setLoading(false);
+        }
+      }
+    };
+
+    fetchServiceReport();
+  }, [Installation, token, idToken]);
+
+  if (loading) {
+    return <ECPowerLoader size="md" isVisible={true} />;
+  }
 
   return (
     <div
@@ -42,10 +77,12 @@ export default function ServiceReport({ Installation,setServiceDetail }: CreateT
           ))}
         </div>
 
-        {activeTab === "serviceReports" && <ServiceReportTab />}
-        {activeTab === "itemUsage" && <ItemUsageTab />}
-        {activeTab === "uploadedServiceReport" && <UploadServiceReport />}
-        {activeTab === "upload" && <UploadReport setServiceDetail={setServiceDetail} />}
+        {activeTab === "serviceReports" && <ServiceReportTab serviceReportData={serviceReportData} Installation={Installation}/>}
+        {activeTab === "itemUsage" && <ItemUsageTab serviceReportData={serviceReportData}/>}
+        {activeTab === "uploadedServiceReport" && <UploadServiceReport serviceReportData={serviceReportData} />}
+        {activeTab === "upload" && (
+          <UploadReport setServiceDetail={setServiceDetail} />
+        )}
       </div>
     </div>
   );

@@ -6,13 +6,12 @@ import { useState } from "react";
 
 interface CreateTestFormProps {
   setServiceDetail: (value: boolean) => void;
-  // Installation: InstallationData | null;
 }
 
 export default function UploadReport({setServiceDetail}:CreateTestFormProps) {
   const { darkMode } = useTheme();
-  const [creationDate, setCreationDate] = useState("08-02-25 00:00");
-  const [deliveryDate, setDeliveryDate] = useState("08-02-25 00:00");
+  const [creationDate, setCreationDate] = useState("2025-02-07 00:00");
+  const [deliveryDate, setDeliveryDate] = useState("2025-02-09 00:00");
   const [serviceType, setServiceType] = useState("");
   const [file, setFile] = useState<string | null>("File document name.pdf");
 

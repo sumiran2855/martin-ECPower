@@ -16,6 +16,7 @@ const RegularServices: React.FC = () => {
   const [serviceDetail, setServiceDetail] = useState(false);
   const [installations, setInstallations] = useState<InstallationData[]>([]);
   const [selectedInstallations, setSelectedInstallations] = useState<InstallationData[]>([]);
+  const [selectedInstallation, setSelectedInstallation] = useState<InstallationData | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [paginatedInstallations, setPaginatedInstallations] = useState<InstallationData[]>([]);
@@ -84,7 +85,8 @@ const RegularServices: React.FC = () => {
     setCreating(true);
   };
 
-  const handleServiceReport = () => {
+  const handleServiceReport = (installation: InstallationData) => {
+    setSelectedInstallation(installation);
     setServiceDetail(true);
   }
 
@@ -108,7 +110,7 @@ const RegularServices: React.FC = () => {
       <div className={`${
         darkMode ? "bg-gray-800 text-white" : "bg-white"
       } py-2 px-4 rounded-lg shadow-sm transition-colors duration-300`}>
-        <ServiceReport Installation={selectedInstallations[0]} setServiceDetail={setServiceDetail}/>
+        <ServiceReport Installation={selectedInstallation} setServiceDetail={setServiceDetail}/>
       </div>
     );
   }
@@ -197,7 +199,7 @@ const RegularServices: React.FC = () => {
                   -
                 </td>
                 <td
-                  onClick={handleServiceReport}
+                  onClick={() => handleServiceReport(installation)}
                   className="px-4 py-3 text-right text-blue-500 cursor-pointer"
                 >
                   &gt;
@@ -232,7 +234,7 @@ const RegularServices: React.FC = () => {
                 <span className="font-medium">#{installation.xrgiID}</span>
               </div>
               <div
-                onClick={handleServiceReport}
+                onClick={() => handleServiceReport(installation)}
                 className="text-blue-500 cursor-pointer"
               >
                 &gt;
