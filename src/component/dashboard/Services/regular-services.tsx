@@ -98,7 +98,7 @@ const RegularServices: React.FC = () => {
       <div className={`${
         darkMode ? "bg-gray-800 text-white" : "bg-white"
       } py-2 px-4 rounded-lg shadow-sm transition-colors duration-300`}>
-        <CreateReport Installation={selectedInstallations[0]} />
+        <CreateReport Installation={selectedInstallations[0]} setCreating={setCreating} />
       </div>
     );
   }
@@ -108,7 +108,7 @@ const RegularServices: React.FC = () => {
       <div className={`${
         darkMode ? "bg-gray-800 text-white" : "bg-white"
       } py-2 px-4 rounded-lg shadow-sm transition-colors duration-300`}>
-        <ServiceReport Installation={selectedInstallations[0]}/>
+        <ServiceReport Installation={selectedInstallations[0]} setServiceDetail={setServiceDetail}/>
       </div>
     );
   }

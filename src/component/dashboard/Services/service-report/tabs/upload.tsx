@@ -1,9 +1,15 @@
 import { useTheme } from "@/app/dashboard/layout";
 import DatePicker from "@/component/DatePicker";
+import { InstallationData } from "@/helper/facilityHelper";
 import { ChevronDown, FileDiff, Upload, X } from "lucide-react";
 import { useState } from "react";
 
-export default function UploadReport() {
+interface CreateTestFormProps {
+  setServiceDetail: (value: boolean) => void;
+  // Installation: InstallationData | null;
+}
+
+export default function UploadReport({setServiceDetail}:CreateTestFormProps) {
   const { darkMode } = useTheme();
   const [creationDate, setCreationDate] = useState("08-02-25 00:00");
   const [deliveryDate, setDeliveryDate] = useState("08-02-25 00:00");
@@ -148,20 +154,31 @@ export default function UploadReport() {
           </div>
         )}
 
-        <div className="flex mt-6 pt-4">
+        <div className="flex flex-col sm:flex-row justify-between items-center mt-6 pt-4 gap-4">
+          <div className="flex flex-col sm:flex-row w-full sm:w-auto gap-3">
+            <button
+              onClick={handleClearAll}
+              className={`px-4 py-2 rounded-md w-full sm:w-auto border cursor-pointer ${
+                darkMode
+                  ? "border-gray-600 text-gray-200 hover:bg-gray-700"
+                  : "border-gray-300 text-gray-700 hover:bg-gray-100"}`}>
+              Clear all
+            </button>
+            <button
+              className={`px-6 py-2 rounded-md w-full sm:w-auto cursor-pointer ${
+                darkMode
+                  ? "bg-blue-700 text-white hover:bg-blue-600"
+                  : "bg-blue-800 text-white hover:bg-blue-700"}`}>
+              Upload
+            </button>
+          </div>
           <button
-            onClick={handleClearAll}
-            className={`px-6 py-2 rounded-md mr-4 border cursor-pointer ${
+            onClick={()=>setServiceDetail(false)}
+            className={`px-6 py-2 rounded-md w-full sm:w-auto mt-3 sm:mt-0 cursor-pointer ${
               darkMode
-                ? "border-gray-600 text-gray-200 hover:bg-gray-700"
-                : "border-gray-300 text-gray-700 hover:bg-gray-100"}`}>
-            Clear all
-          </button>
-          <button
-            className={`px-8 py-2 rounded-md cursor-pointer ${ darkMode
                 ? "bg-blue-700 text-white hover:bg-blue-600"
                 : "bg-blue-800 text-white hover:bg-blue-700"}`}>
-            Upload
+            Cancel
           </button>
         </div>
       </div>

@@ -22,10 +22,10 @@ const DatePicker: React.FC<DatePickerProps> = ({
     if (!selectedDate) return new Date();
     
     const [datePart, timePart] = selectedDate.split(" ");
-    const [day, month, year] = datePart.split("-");
+    const [year, month, day] = datePart.split("-");
     const [hours, minutes] = timePart ? timePart.split(":") : ["00", "00"];
     
-    return new Date(`20${year}-${month}-${day}T${hours}:${minutes}:00`);
+    return new Date(`${year}-${month}-${day}T${hours}:${minutes}:00`);
   };
 
   const selectedDateObj = parseSelectedDate();
@@ -51,13 +51,13 @@ const DatePicker: React.FC<DatePickerProps> = ({
   }, [selectedDate]);
 
   const formatDateForDisplay = (date: Date): string => {
-    const day = date.getDate().toString().padStart(2, "0");
+    const year = date.getFullYear().toString();
     const month = (date.getMonth() + 1).toString().padStart(2, "0");
-    const year = date.getFullYear().toString().slice(-2); 
+    const day = date.getDate().toString().padStart(2, "0");
     const hours = date.getHours().toString().padStart(2, "0");
     const minutes = date.getMinutes().toString().padStart(2, "0");
-    
-    return `${day}-${month}-${year} ${hours}:${minutes}`;
+  
+    return `${year}-${month}-${day} ${hours}:${minutes}`;
   };
 
   const handleDateClick = (date: Date) => {

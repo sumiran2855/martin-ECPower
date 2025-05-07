@@ -7,17 +7,21 @@ import ItemUsageTab from "./tabs/item-usage";
 import UploadServiceReport from "./tabs/upload-service-report";
 import UploadReport from "./tabs/upload";
 import { InstallationData } from "@/helper/facilityHelper";
+import { ArrowLeft } from "lucide-react";
 
 interface CreateTestFormProps {
+  setServiceDetail: (value: boolean) => void;
   Installation: InstallationData | null;
 }
 
-export default function ServiceReport({Installation}:CreateTestFormProps) {
+export default function ServiceReport({ Installation,setServiceDetail }: CreateTestFormProps) {
   const { darkMode } = useTheme();
   const [activeTab, setActiveTab] = useState("serviceReports");
 
   return (
-    <div className={`${darkMode ? 'bg-gray-800' : 'bg-gray-50'} rounded-lg shadow`}>
+    <div
+      className={`${darkMode ? "bg-gray-800" : "bg-gray-50"} rounded-lg shadow`}
+    >
       <div className="max-w-7xl mx-auto px-4 py-6">
         <div className="flex ml-5 flex-wrap gap-2">
           {[
@@ -38,20 +42,10 @@ export default function ServiceReport({Installation}:CreateTestFormProps) {
           ))}
         </div>
 
-
-          {activeTab === "serviceReports" && (
-            <ServiceReportTab/>
-          )}
-          {activeTab === "itemUsage" && (
-            <ItemUsageTab/>
-          )}
-          {activeTab === "uploadedServiceReport" && (
-            <UploadServiceReport/>
-          )}
-          {activeTab === "upload" && (
-            <UploadReport/>
-          )}
-
+        {activeTab === "serviceReports" && <ServiceReportTab />}
+        {activeTab === "itemUsage" && <ItemUsageTab />}
+        {activeTab === "uploadedServiceReport" && <UploadServiceReport />}
+        {activeTab === "upload" && <UploadReport setServiceDetail={setServiceDetail} />}
       </div>
     </div>
   );
