@@ -8,7 +8,6 @@ const EditUsers: React.FC<Props> = ({ onCancel }) => {
   const { darkMode } = useTheme();
   const [displayOnPlanningBoard, setDisplayOnPlanningBoard] = useState(true);
   const [systemKey, setSystemKey] = useState("209912");
-  const [username, setUsername] = useState("kf");
   const [company, setCompany] = useState("CARB TEST");
   const [name, setName] = useState("Kristin");
   const [lastName, setLastName] = useState("Fox");
@@ -54,29 +53,6 @@ const EditUsers: React.FC<Props> = ({ onCancel }) => {
                 </span>
               </div>
             </div>
-
-            <div>
-              <label className={`block text-xs uppercase mb-1 ${ darkMode ? "text-gray-400" : "text-gray-500" }`}>
-                USERNAME
-              </label>
-              <div className="relative">
-                <input
-                  type="text"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  disabled
-                  className={`w-full p-2 border rounded-md ${
-                    darkMode
-                      ? "bg-gray-700 border-gray-600"
-                      : "bg-white border-gray-300"
-                  } pr-10`}
-                />
-                <span className="absolute right-3 top-2.5">
-                  <LockKeyhole className="h-5 w-5 text-gray-400" />
-                </span>
-              </div>
-            </div>
-
             <div>
               <label className={`block text-xs uppercase mb-1 ${ darkMode ? "text-gray-400" : "text-gray-500" }`}>
                 COMPANY
@@ -97,7 +73,7 @@ const EditUsers: React.FC<Props> = ({ onCancel }) => {
 
             <div>
               <label className={`block text-xs uppercase mb-1 ${ darkMode ? "text-gray-400" : "text-gray-500" }`}>
-                NAME <span className="text-red-500">*</span>
+                FIRST NAME <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
@@ -119,9 +95,12 @@ const EditUsers: React.FC<Props> = ({ onCancel }) => {
                       : "bg-white border-gray-300"
                   }`}
                 >
-                  <option>Standard</option>
-                  <option>Admin</option>
-                  <option>Manager</option>
+                  <option>Customer</option>
+                  <option>EC_POWER_ADMIN</option>
+                  <option>Partner</option>
+                  <option>ServiceTechnician</option>
+                  <option>customerAdmin</option>
+                  <option>customerReadOnly</option>
                 </select>
                 <span className="absolute right-3 top-2.5 pointer-events-none">
                   <ChevronDown className="h-5 w-5 text-gray-400" />

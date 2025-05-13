@@ -20,7 +20,7 @@ const DealerItem: React.FC<DealerItemProps> = ({ name, isDealer = false, childre
   const { darkMode } = useTheme();
   const [isExpanded, setIsExpanded] = useState(false);
   const hasChildren = children && children.length > 0;
-  
+
   const toggleExpand = () => {
     if (hasChildren) {
       setIsExpanded(!isExpanded);
@@ -45,7 +45,12 @@ const DealerItem: React.FC<DealerItemProps> = ({ name, isDealer = false, childre
         <div className={`w-8 h-8 flex items-center justify-center rounded-full ${darkMode ? 'bg-blue-900 text-blue-300' : 'bg-blue-100 text-blue-600'}`}>
           {isDealer ? <FaHandshake className="text-base" /> : <HiUserCircle className="text-base" />}
         </div>
-        <span className={`${darkMode ? 'text-gray-300' : 'text-gray-700'} ml-3 truncate flex-1`}>{name}</span>
+        <span className={`${darkMode ? 'text-gray-300' : 'text-gray-700'} ml-3 truncate flex-1`}>
+          {name} 
+          <span className="ml-2 inline-flex items-center justify-center px-2 py-0.5 text-xs font-medium rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+            [ {children.length} ]
+          </span>
+        </span>
       </div>
       
       {isExpanded && hasChildren && (

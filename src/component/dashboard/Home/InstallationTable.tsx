@@ -76,7 +76,6 @@ const InstallationTable: React.FC = () => {
     setIsEditModalOpen(true);
   };
   
-  // Function to close modal
   const closeEditModal = () => {
     setIsEditModalOpen(false);
     setSelectedInstallation(null);
@@ -107,86 +106,49 @@ const InstallationTable: React.FC = () => {
       <div className="w-full overflow-x-auto hidden md:block">
         <table className="w-full border-separate border-spacing-y-2">
           <thead>
-            <tr className={darkMode ? "text-gray-300" : "text-gray-700"}>
-              <th className="text-left px-4 py-2 font-medium">
-                {t("installation.number")}
-              </th>
-              <th className="text-left px-4 py-2 font-medium">
-                {t("installation.installation_name")}
-              </th>
-              <th className="text-left px-4 py-2 font-medium">
-                {t("installation.address")}
-              </th>
-              <th className="text-left px-4 py-2 font-medium">
-                {t("installation.postal_code")}
-              </th>
-              <th className="text-left px-4 py-2 font-medium">
-                {t("installation.city")}
-              </th>
-              <th className="text-left px-4 py-2 font-medium">
-                {t("installation.country")}
-              </th>
-            </tr>
+              <tr className={darkMode ? "text-gray-300" : "text-gray-700"}>
+                <th className="text-left px-4 py-2 font-medium">{t("installation.number")}</th>
+                <th className="text-left px-4 py-2 font-medium">{t("installation.installation_name")}</th>
+                <th className="text-left px-4 py-2 font-medium">{t("installation.address")}</th>
+                <th className="text-left px-4 py-2 font-medium">{t("installation.postal_code")}</th>
+                <th className="text-left px-4 py-2 font-medium">{t("installation.city")}</th>
+                <th className="text-left px-4 py-2 font-medium">{t("installation.country")}</th>
+              </tr>
           </thead>
           <tbody>
             {paginatedInstallations.map((installation, index) => (
               <React.Fragment key={index}>
-                <tr
-                  className={`${
-                    darkMode ? "bg-gray-700" : "bg-white"
-                  } shadow-sm cursor-pointer`}
-                >
-                  <td
-                    className="px-4 py-4 rounded-l-lg"
-                  >
-                    <div className="flex items-center">
-                      <input
-                        type="checkbox"
-                        readOnly
-                        // checked={installation.selected}
-                        checked={true}
-                        onClick={() => openEditModal(installation)}
-                        onChange={() => toggleSelection(index)}
-                        className={`mr-3 h-5 w-5 rounded cursor-pointer ${
-                          darkMode
-                            ? "bg-gray-600 border-gray-500"
-                            : "border-gray-300"
-                        }`}
-                      />
-                      {installation.xrgiID}
-                    </div>
+              <tr className={`${darkMode ? "bg-gray-700" : "bg-white"} shadow-sm cursor-pointer`}>
+                  <td className="px-4 py-4 rounded-l-lg">
+                      <div className="flex items-center">
+                          <input
+                              type="checkbox"
+                              readOnly
+                              // checked={installation.selected}
+                              checked={true}
+                              onClick={() => openEditModal(installation)}
+                              onChange={() => toggleSelection(index)}
+                              className={`mr-3 h-5 w-5 rounded cursor-pointer ${darkMode ? "bg-gray-600 border-gray-500" : "border-gray-300"}`}
+                          />
+                          {installation.xrgiID}
+                      </div>
                   </td>
-                  <td
-                    className="px-4 py-4"
-                    onClick={() => toggleRowExpansion(index)}
-                  >
-                    {installation.name}
+                  <td className="px-4 py-4" onClick={() => toggleRowExpansion(index)}>
+                      {installation.name}
                   </td>
-                  <td
-                    className="px-4 py-4"
-                    onClick={() => toggleRowExpansion(index)}
-                  >
-                    {installation.address}
+                  <td className="px-4 py-4" onClick={() => toggleRowExpansion(index)}>
+                      {installation.address}
                   </td>
-                  <td
-                    className="px-4 py-4"
-                    onClick={() => toggleRowExpansion(index)}
-                  >
-                    {installation.postalCode}
+                  <td className="px-4 py-4" onClick={() => toggleRowExpansion(index)}>
+                      {installation.postalCode}
                   </td>
-                  <td
-                    className="px-4 py-4"
-                    onClick={() => toggleRowExpansion(index)}
-                  >
-                    {installation.city}
+                  <td className="px-4 py-4" onClick={() => toggleRowExpansion(index)}>
+                      {installation.city}
                   </td>
-                  <td
-                    className="px-4 py-4 rounded-r-lg"
-                    onClick={() => toggleRowExpansion(index)}
-                  >
-                    -
+                  <td className="px-4 py-4 rounded-r-lg" onClick={() => toggleRowExpansion(index)}>
+                      -
                   </td>
-                </tr>
+              </tr>
                 {expandedRows[index] && (
                   <tr>
                     <td colSpan={7} className="p-0">
@@ -197,59 +159,28 @@ const InstallationTable: React.FC = () => {
                       >
                         {dummyDetails && dummyDetails.length > 0 ? (
                           <table className="w-full border-separate border-spacing-y-1">
-                            <thead>
-                              <tr
-                                className={
-                                  darkMode ? "text-gray-300" : "text-gray-700"
-                                }
-                              >
-                                <th className="text-left px-3 py-2 text-sm font-medium">
-                                  Status
-                                </th>
-                                <th className="text-left px-3 py-2 text-sm font-medium">
-                                  XRGI®-ID
-                                </th>
-                                <th className="text-left px-3 py-2 text-sm font-medium">
-                                  XRGI® type
-                                </th>
-                                <th className="text-left px-3 py-2 text-sm font-medium">
-                                  Description
-                                </th>
-                                <th className="text-left px-3 py-2 text-sm font-medium">
-                                  Time of call
-                                </th>
-                                <th className="text-left px-3 py-2 text-sm font-medium">
-                                  No separation layer
-                                </th>
+                          <thead>
+                            <tr className={darkMode ? "text-gray-300" : "text-gray-700"}>
+                              <th className="text-left px-3 py-2 text-sm font-medium">Status</th>
+                              <th className="text-left px-3 py-2 text-sm font-medium">XRGI®-ID</th>
+                              <th className="text-left px-3 py-2 text-sm font-medium">XRGI® type</th>
+                              <th className="text-left px-3 py-2 text-sm font-medium">Description</th>
+                              <th className="text-left px-3 py-2 text-sm font-medium">Time of call</th>
+                              <th className="text-left px-3 py-2 text-sm font-medium">No separation layer</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {dummyDetails.map((detail, detailIndex) => (
+                              <tr key={detailIndex} className={`${darkMode ? "bg-gray-700" : "bg-white"} shadow-sm`}>
+                                <td className="px-3 py-3 rounded-l-lg">{detail.status}</td>
+                                <td className="px-3 py-3">{detail.xrgiId}</td>
+                                <td className="px-3 py-3">{detail.xrgiType}</td>
+                                <td className="px-3 py-3">{detail.description}</td>
+                                <td className="px-3 py-3">{detail.timeOfCall}</td>
+                                <td className="px-3 py-3 rounded-r-lg">{detail.noSeparationLayer}</td>
                               </tr>
-                            </thead>
-                            <tbody>
-                              {dummyDetails.map((detail, detailIndex) => (
-                                <tr
-                                  key={detailIndex}
-                                  className={`${
-                                    darkMode ? "bg-gray-700" : "bg-white"
-                                  } shadow-sm`}
-                                >
-                                  <td className="px-3 py-3 rounded-l-lg">
-                                    {detail.status}
-                                  </td>
-                                  <td className="px-3 py-3">{detail.xrgiId}</td>
-                                  <td className="px-3 py-3">
-                                    {detail.xrgiType}
-                                  </td>
-                                  <td className="px-3 py-3">
-                                    {detail.description}
-                                  </td>
-                                  <td className="px-3 py-3">
-                                    {detail.timeOfCall}
-                                  </td>
-                                  <td className="px-3 py-3 rounded-r-lg">
-                                    {detail.noSeparationLayer}
-                                  </td>
-                                </tr>
-                              ))}
-                            </tbody>
+                            ))}
+                          </tbody>;
                           </table>
                         ) : (
                           <div className="text-center py-4">

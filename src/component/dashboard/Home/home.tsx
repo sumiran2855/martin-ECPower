@@ -3,11 +3,8 @@ import React from "react";
 import SystemStatusCard from "./systemStatus";
 import Dealer from "./dealer";
 import InstallationTable from "./InstallationTable";
-import { useTheme } from "@/app/dashboard/layout";
 
 const Dashboard: React.FC = () => {
-  const { darkMode } = useTheme();
-
   return (
     <div>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
