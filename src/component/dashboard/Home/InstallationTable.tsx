@@ -2,49 +2,75 @@
 import React, { useState, useEffect } from "react";
 import { useTheme } from "@/app/dashboard/layout";
 import Pagination from "@/component/Pagination";
-import { get_Facility, InstallationData } from "@/helper/facilityHelper";
 import ECPowerLoader from "@/component/loader";
 import { useTranslation } from "react-i18next";
 import { ChevronDown, ChevronUp } from "lucide-react";
+import { getAllCustomer, getFacilityById} from "@/controller/dealer-controller";
 import EditModal from "./edit-installation";
+import { CustomerData, FacilityData } from "./type";
 
-const InstallationTable: React.FC = () => {
+const CustomerTable: React.FC = () => {
   const { t } = useTranslation("home");
   const { darkMode } = useTheme();
-  const [installations, setInstallations] = useState<InstallationData[]>([]);
+  const [customers, setCustomers] = useState<CustomerData[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(5);
-  const [paginatedInstallations, setPaginatedInstallations] = useState<InstallationData[]>([]);
+  const [paginatedCustomers, setPaginatedCustomers] = useState<CustomerData[]>([]);
   const [totalPages, setTotalPages] = useState(0);
   const [loading, setLoading] = useState(false);
   const [expandedRows, setExpandedRows] = useState<Record<number, boolean>>({});
-  const [selectedInstallation, setSelectedInstallation] = useState<InstallationData | null>(null);
+  const [selectedCustomer, setSelectedCustomer] = useState<CustomerData | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  
+  const [facilityData, setFacilityData] = useState<Record<string, FacilityData[]>>({});
   const maxVisible = 5;
 
-  const dummyDetails = [
-    { status: "Active", xrgiId: "XR-123", xrgiType: "Type A", description: "Main unit", timeOfCall: "2025-04-15 10:30", noSeparationLayer: "Yes" },
-    { status: "Inactive", xrgiId: "XR-456", xrgiType: "Type B", description: "Secondary unit", timeOfCall: "2025-04-20 14:45", noSeparationLayer: "No" },
-  ];
-
   useEffect(() => {
-    const getFacility = async () => {
+    const getCustomers = async () => {
       try {
         setLoading(true);
-        const facilities = await get_Facility();
-        setInstallations(facilities);
+        const token = localStorage.getItem("token") || "";
+        const idToken = localStorage.getItem("idToken") || "";
+        const customerData = await getAllCustomer(token, idToken);
+        setCustomers(customerData || []);
+
+        const facilityMap: Record<string, FacilityData[]> = {};
+
+        if (customerData && customerData.length > 0) {
+          for (const customer of customerData) {
+            if (customer.id) {
+              try {
+                const facility = await getFacilityById(
+                  customer.id,
+                  token,
+                  idToken
+                );
+                if (facility) {
+                  facilityMap[customer.id] = Array.isArray(facility)
+                    ? facility
+                    : [facility];
+                }
+              } catch (error) {
+                console.error(
+                  `Error fetching facility for customer ${customer.id}:`,
+                  error
+                );
+              }
+            }
+          }
+        }
+
+        setFacilityData(facilityMap);
       } catch (error) {
-        console.error("Error fetching facilities:", error);
+        console.error("Error fetching customers:", error);
       } finally {
         setLoading(false);
       }
     };
-    getFacility();
+    getCustomers();
   }, []);
 
   useEffect(() => {
-    const calculatedTotalPages = Math.ceil(installations.length / itemsPerPage);
+    const calculatedTotalPages = Math.ceil(customers.length / itemsPerPage);
     setTotalPages(calculatedTotalPages);
 
     if (currentPage > calculatedTotalPages) {
@@ -53,32 +79,32 @@ const InstallationTable: React.FC = () => {
 
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
-    setPaginatedInstallations(installations.slice(startIndex, endIndex));
-  }, [currentPage, itemsPerPage, installations]);
+    setPaginatedCustomers(customers.slice(startIndex, endIndex));
+  }, [currentPage, itemsPerPage, customers]);
 
   const toggleSelection = (index: number) => {
     const globalIndex = (currentPage - 1) * itemsPerPage + index;
-    const updatedInstallations = [...installations];
-    updatedInstallations[globalIndex].selected =
-      !updatedInstallations[globalIndex].selected;
-    setInstallations(updatedInstallations);
+    const updatedCustomers = [...customers];
+    updatedCustomers[globalIndex].selected =
+      !updatedCustomers[globalIndex].selected;
+    setCustomers(updatedCustomers);
   };
 
   const toggleRowExpansion = (index: number) => {
-    setExpandedRows(prev => ({
+    setExpandedRows((prev) => ({
       ...prev,
-      [index]: !prev[index]
+      [index]: !prev[index],
     }));
   };
 
-  const openEditModal = (installation: InstallationData) => {
-    setSelectedInstallation(installation);
+  const openEditModal = (customer: CustomerData) => {
+    setSelectedCustomer(customer);
     setIsEditModalOpen(true);
   };
-  
+
   const closeEditModal = () => {
     setIsEditModalOpen(false);
-    setSelectedInstallation(null);
+    setSelectedCustomer(null);
   };
 
   const goToPage = (page: number) => {
@@ -91,7 +117,7 @@ const InstallationTable: React.FC = () => {
     setItemsPerPage(value);
     setCurrentPage(1);
   };
-  
+
   if (loading) {
     return <ECPowerLoader size="md" isVisible={true} />;
   }
@@ -106,49 +132,79 @@ const InstallationTable: React.FC = () => {
       <div className="w-full overflow-x-auto hidden md:block">
         <table className="w-full border-separate border-spacing-y-2">
           <thead>
-              <tr className={darkMode ? "text-gray-300" : "text-gray-700"}>
-                <th className="text-left px-4 py-2 font-medium">{t("installation.number")}</th>
-                <th className="text-left px-4 py-2 font-medium">{t("installation.installation_name")}</th>
-                <th className="text-left px-4 py-2 font-medium">{t("installation.address")}</th>
-                <th className="text-left px-4 py-2 font-medium">{t("installation.postal_code")}</th>
-                <th className="text-left px-4 py-2 font-medium">{t("installation.city")}</th>
-                <th className="text-left px-4 py-2 font-medium">{t("installation.country")}</th>
-              </tr>
+            <tr className={darkMode ? "text-gray-300" : "text-gray-700"}>
+              <th className="text-left px-4 py-2 font-medium">
+                {t("installation.number")}
+              </th>
+              <th className="text-left px-4 py-2 font-medium">
+                {t("installation.installation_name")}
+              </th>
+              <th className="text-left px-4 py-2 font-medium">
+                {t("installation.address")}
+              </th>
+              <th className="text-left px-4 py-2 font-medium">
+                {t("installation.postal_code")}
+              </th>
+              <th className="text-left px-4 py-2 font-medium">
+                {t("installation.city")}
+              </th>
+              <th className="text-left px-4 py-2 font-medium">
+                {t("installation.country")}
+              </th>
+            </tr>
           </thead>
           <tbody>
-            {paginatedInstallations.map((installation, index) => (
+            {paginatedCustomers.map((customer, index) => (
               <React.Fragment key={index}>
-              <tr className={`${darkMode ? "bg-gray-700" : "bg-white"} shadow-sm cursor-pointer`}>
+                <tr className={`${ darkMode ? "bg-gray-700" : "bg-white" } shadow-sm cursor-pointer`} >
                   <td className="px-4 py-4 rounded-l-lg">
-                      <div className="flex items-center">
-                          <input
-                              type="checkbox"
-                              readOnly
-                              // checked={installation.selected}
-                              checked={true}
-                              onClick={() => openEditModal(installation)}
-                              onChange={() => toggleSelection(index)}
-                              className={`mr-3 h-5 w-5 rounded cursor-pointer ${darkMode ? "bg-gray-600 border-gray-500" : "border-gray-300"}`}
-                          />
-                          {installation.xrgiID}
-                      </div>
+                    <div className="flex items-center">
+                      <input
+                        type="checkbox"
+                        readOnly
+                        checked={customer.selected || false}
+                        onClick={() => openEditModal(customer)}
+                        onChange={() => toggleSelection(index)}
+                        className={`mr-3 h-5 w-5 rounded cursor-pointer ${
+                          darkMode
+                            ? "bg-gray-600 border-gray-500"
+                            : "border-gray-300"
+                        }`}
+                      />
+                      {customer.companyInfo?.cvrNumber || "-"}
+                    </div>
                   </td>
-                  <td className="px-4 py-4" onClick={() => toggleRowExpansion(index)}>
-                      {installation.name}
+                  <td
+                    className="px-4 py-4"
+                    onClick={() => toggleRowExpansion(index)}
+                  >
+                    {customer.companyInfo?.companyName || "-"}
                   </td>
-                  <td className="px-4 py-4" onClick={() => toggleRowExpansion(index)}>
-                      {installation.address}
+                  <td
+                    className="px-4 py-4"
+                    onClick={() => toggleRowExpansion(index)}
+                  >
+                    {customer.companyInfo?.address || "-"}
                   </td>
-                  <td className="px-4 py-4" onClick={() => toggleRowExpansion(index)}>
-                      {installation.postalCode}
+                  <td
+                    className="px-4 py-4"
+                    onClick={() => toggleRowExpansion(index)}
+                  >
+                    {customer.companyInfo?.postal_code || "-"}
                   </td>
-                  <td className="px-4 py-4" onClick={() => toggleRowExpansion(index)}>
-                      {installation.city}
+                  <td
+                    className="px-4 py-4"
+                    onClick={() => toggleRowExpansion(index)}
+                  >
+                    {customer.companyInfo?.city || "-"}
                   </td>
-                  <td className="px-4 py-4 rounded-r-lg" onClick={() => toggleRowExpansion(index)}>
-                      -
+                  <td
+                    className="px-4 py-4 rounded-r-lg"
+                    onClick={() => toggleRowExpansion(index)}
+                  >
+                    {"-"}
                   </td>
-              </tr>
+                </tr>
                 {expandedRows[index] && (
                   <tr>
                     <td colSpan={7} className="p-0">
@@ -157,34 +213,62 @@ const InstallationTable: React.FC = () => {
                           darkMode ? "bg-gray-600" : "bg-gray-50"
                         } px-8 py-4 rounded-lg`}
                       >
-                        {dummyDetails && dummyDetails.length > 0 ? (
+                        {customer.id &&
+                        facilityData[customer.id] &&
+                        facilityData[customer.id].length > 0 ? (
                           <table className="w-full border-separate border-spacing-y-1">
-                          <thead>
-                            <tr className={darkMode ? "text-gray-300" : "text-gray-700"}>
-                              <th className="text-left px-3 py-2 text-sm font-medium">Status</th>
-                              <th className="text-left px-3 py-2 text-sm font-medium">XRGI®-ID</th>
-                              <th className="text-left px-3 py-2 text-sm font-medium">XRGI® type</th>
-                              <th className="text-left px-3 py-2 text-sm font-medium">Description</th>
-                              <th className="text-left px-3 py-2 text-sm font-medium">Time of call</th>
-                              <th className="text-left px-3 py-2 text-sm font-medium">No separation layer</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {dummyDetails.map((detail, detailIndex) => (
-                              <tr key={detailIndex} className={`${darkMode ? "bg-gray-700" : "bg-white"} shadow-sm`}>
-                                <td className="px-3 py-3 rounded-l-lg">{detail.status}</td>
-                                <td className="px-3 py-3">{detail.xrgiId}</td>
-                                <td className="px-3 py-3">{detail.xrgiType}</td>
-                                <td className="px-3 py-3">{detail.description}</td>
-                                <td className="px-3 py-3">{detail.timeOfCall}</td>
-                                <td className="px-3 py-3 rounded-r-lg">{detail.noSeparationLayer}</td>
+                            <thead>
+                              <tr className={ darkMode ? "text-gray-300" : "text-gray-700" } >
+                                <th className="text-left px-3 py-2 text-sm font-medium">
+                                  XRGI_ID
+                                </th>
+                                <th className="text-left px-3 py-2 text-sm font-medium">
+                                  Model Number
+                                </th>
+                                <th className="text-left px-3 py-2 text-sm font-medium">
+                                  Address
+                                </th>
+                                <th className="text-left px-3 py-2 text-sm font-medium">
+                                  City
+                                </th>
+                                <th className="text-left px-3 py-2 text-sm font-medium">
+                                  Postal Code
+                                </th>
+                                <th className="text-left px-3 py-2 text-sm font-medium">
+                                  Status
+                                </th>
                               </tr>
-                            ))}
-                          </tbody>;
+                            </thead>
+                            <tbody>
+                              {facilityData[customer.id].map(
+                                (facility, facilityIndex) => (
+                                  <tr key={facilityIndex} className={`${ darkMode ? "bg-gray-700" : "bg-white"} shadow-sm`} >
+                                    <td className="px-3 py-3 rounded-l-lg">
+                                      {facility.xrgiID || "-"}
+                                    </td>
+                                    <td className="px-3 py-3">
+                                      {facility.modelNumber || "-"}
+                                    </td>
+                                    <td className="px-3 py-3">
+                                      {facility.location?.address || "-"}
+                                    </td>
+                                    <td className="px-3 py-3">
+                                      {facility.location?.city || "-"}
+                                    </td>
+                                    <td className="px-3 py-3">
+                                      {facility.location?.postalCode || "-"}
+                                    </td>
+                                    <td className="px-3 py-3 rounded-r-lg">
+                                      {facility.status || "-"}
+                                    </td>
+                                  </tr>
+                                )
+                              )}
+                            </tbody>
                           </table>
                         ) : (
                           <div className="text-center py-4">
-                            No data available for now
+                            No facility data available
                           </div>
                         )}
                       </div>
@@ -199,29 +283,26 @@ const InstallationTable: React.FC = () => {
 
       {/* Mobile View */}
       <div className="md:hidden space-y-4">
-        {paginatedInstallations.map((installation, index) => (
+        {paginatedCustomers.map((customer, index) => (
           <div key={index}>
-            <div
-              className={`${
-                darkMode ? "bg-gray-700" : "bg-white"
-              } p-4 rounded-lg shadow-sm`}
-            >
+            <div className={`${ darkMode ? "bg-gray-700" : "bg-white"} p-4 rounded-lg shadow-sm`}>
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center">
                   <input
                     type="checkbox"
                     readOnly
-                    // checked={installation.selected}
-                    checked={true}
+                    checked={customer.selected || false}
                     onChange={() => toggleSelection(index)}
-                    onClick={() => openEditModal(installation)}
+                    onClick={() => openEditModal(customer)}
                     className={`mr-3 h-5 w-5 rounded ${
                       darkMode
                         ? "bg-gray-600 border-gray-500"
                         : "border-gray-300"
                     }`}
                   />
-                  <span className="font-medium">#{installation.xrgiID}</span>
+                  <span className="font-medium">
+                    #{customer.companyInfo?.cvrNumber || "-"}
+                  </span>
                 </div>
                 <button
                   onClick={() => toggleRowExpansion(index)}
@@ -242,9 +323,11 @@ const InstallationTable: React.FC = () => {
                       darkMode ? "text-gray-400" : "text-gray-500"
                     }`}
                   >
-                    {t("installation.installation_name")}
+                    {t("customer.company_name") || "Company Name"}
                   </span>
-                  <p className="mt-1">{installation.name}</p>
+                  <p className="mt-1">
+                    {customer.companyInfo?.companyName || "-"}
+                  </p>
                 </div>
 
                 <div>
@@ -253,9 +336,9 @@ const InstallationTable: React.FC = () => {
                       darkMode ? "text-gray-400" : "text-gray-500"
                     }`}
                   >
-                    {t("installation.address")}
+                    {t("customer.address") || "Address"}
                   </span>
-                  <p className="mt-1">{installation.address}</p>
+                  <p className="mt-1">{customer.companyInfo?.address || "-"}</p>
                 </div>
 
                 <div className="flex space-x-4">
@@ -265,9 +348,11 @@ const InstallationTable: React.FC = () => {
                         darkMode ? "text-gray-400" : "text-gray-500"
                       }`}
                     >
-                      {t("installation.postal_code")}
+                      {t("customer.postal_code") || "Postal Code"}
                     </span>
-                    <p className="mt-1">{installation.postalCode}</p>
+                    <p className="mt-1">
+                      {customer.companyInfo?.postal_code || "-"}
+                    </p>
                   </div>
                   <div className="flex-1">
                     <span
@@ -275,10 +360,21 @@ const InstallationTable: React.FC = () => {
                         darkMode ? "text-gray-400" : "text-gray-500"
                       }`}
                     >
-                      {t("installation.city")}
+                      {t("customer.city") || "City"}
                     </span>
-                    <p className="mt-1">{installation.city}</p>
+                    <p className="mt-1">{customer.companyInfo?.city || "-"}</p>
                   </div>
+                </div>
+
+                <div>
+                  <span
+                    className={`text-xs ${
+                      darkMode ? "text-gray-400" : "text-gray-500"
+                    }`}
+                  >
+                    {t("customer.email") || "Email"}
+                  </span>
+                  <p className="mt-1">{customer.companyInfo?.email || "-"}</p>
                 </div>
               </div>
             </div>
@@ -290,85 +386,97 @@ const InstallationTable: React.FC = () => {
                 } p-4 mt-1 rounded-lg shadow-sm`}
               >
                 <h4 className="font-medium mb-3 text-sm">
-                  {t("installation.details") || "Details"}
+                  {t("customer.facilities") || "Facility Details"}
                 </h4>
-                {dummyDetails && dummyDetails.length > 0 ? (
+                {customer.id &&
+                facilityData[customer.id] &&
+                facilityData[customer.id].length > 0 ? (
                   <div className="space-y-3">
-                    {dummyDetails.map((detail, detailIndex) => (
-                      <div
-                        key={detailIndex}
-                        className={`${
-                          darkMode ? "bg-gray-700" : "bg-white"
-                        } p-3 rounded-lg shadow-sm`}
-                      >
-                        <div className="grid grid-cols-2 gap-2 text-sm">
-                          <div>
-                            <span
-                              className={`text-xs ${
-                                darkMode ? "text-gray-400" : "text-gray-500"
-                              }`}
-                            >
-                              Status
-                            </span>
-                            <p className="mt-1">{detail.status}</p>
-                          </div>
-                          <div>
-                            <span
-                              className={`text-xs ${
-                                darkMode ? "text-gray-400" : "text-gray-500"
-                              }`}
-                            >
-                              XRGI®-ID
-                            </span>
-                            <p className="mt-1">{detail.xrgiId}</p>
-                          </div>
-                          <div>
-                            <span
-                              className={`text-xs ${
-                                darkMode ? "text-gray-400" : "text-gray-500"
-                              }`}
-                            >
-                              XRGI® type
-                            </span>
-                            <p className="mt-1">{detail.xrgiType}</p>
-                          </div>
-                          <div>
-                            <span
-                              className={`text-xs ${
-                                darkMode ? "text-gray-400" : "text-gray-500"
-                              }`}
-                            >
-                              Description
-                            </span>
-                            <p className="mt-1">{detail.description}</p>
-                          </div>
-                          <div>
-                            <span
-                              className={`text-xs ${
-                                darkMode ? "text-gray-400" : "text-gray-500"
-                              }`}
-                            >
-                              Time of call
-                            </span>
-                            <p className="mt-1">{detail.timeOfCall}</p>
-                          </div>
-                          <div>
-                            <span
-                              className={`text-xs ${
-                                darkMode ? "text-gray-400" : "text-gray-500"
-                              }`}
-                            >
-                              No separation layer
-                            </span>
-                            <p className="mt-1">{detail.noSeparationLayer}</p>
+                    {facilityData[customer.id].map(
+                      (facility, facilityIndex) => (
+                        <div
+                          key={facilityIndex}
+                          className={`${
+                            darkMode ? "bg-gray-700" : "bg-white"
+                          } p-3 rounded-lg shadow-sm`}
+                        >
+                          <div className="grid grid-cols-2 gap-2 text-sm">
+                            <div>
+                              <span
+                                className={`text-xs ${
+                                  darkMode ? "text-gray-400" : "text-gray-500"
+                                }`}
+                              >
+                                XRGI ID
+                              </span>
+                              <p className="mt-1">{facility.xrgiID || "-"}</p>
+                            </div>
+                            <div>
+                              <span
+                                className={`text-xs ${
+                                  darkMode ? "text-gray-400" : "text-gray-500"
+                                }`}
+                              >
+                                Model Number
+                              </span>
+                              <p className="mt-1">
+                                {facility.modelNumber || "-"}
+                              </p>
+                            </div>
+                            <div>
+                              <span
+                                className={`text-xs ${
+                                  darkMode ? "text-gray-400" : "text-gray-500"
+                                }`}
+                              >
+                                Address
+                              </span>
+                              <p className="mt-1">
+                                {facility.location?.address || "-"}
+                              </p>
+                            </div>
+                            <div>
+                              <span
+                                className={`text-xs ${
+                                  darkMode ? "text-gray-400" : "text-gray-500"
+                                }`}
+                              >
+                                City
+                              </span>
+                              <p className="mt-1">
+                                {facility.location?.city || "-"}
+                              </p>
+                            </div>
+                            <div>
+                              <span
+                                className={`text-xs ${
+                                  darkMode ? "text-gray-400" : "text-gray-500"
+                                }`}
+                              >
+                                Postal Code
+                              </span>
+                              <p className="mt-1">
+                                {facility.location?.postalCode || "-"}
+                              </p>
+                            </div>
+                            <div>
+                              <span
+                                className={`text-xs ${
+                                  darkMode ? "text-gray-400" : "text-gray-500"
+                                }`}
+                              >
+                                Status
+                              </span>
+                              <p className="mt-1">{facility.status || "-"}</p>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    ))}
+                      )
+                    )}
                   </div>
                 ) : (
                   <div className="text-center py-3 text-sm">
-                    No data available for now
+                    No facility data available
                   </div>
                 )}
               </div>
@@ -391,10 +499,10 @@ const InstallationTable: React.FC = () => {
       <EditModal
         isOpen={isEditModalOpen}
         onClose={closeEditModal}
-        installation={selectedInstallation}
+        installation={selectedCustomer}
       />
     </div>
   );
 };
 
-export default InstallationTable;
+export default CustomerTable;

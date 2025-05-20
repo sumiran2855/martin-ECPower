@@ -1,16 +1,26 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { X } from 'lucide-react';
-import { InstallationData } from '@/helper/facilityHelper';
 import { useTheme } from '@/app/dashboard/layout';
+import { CustomerData } from './type';
+import { getAllDealer } from '@/controller/dealer-controller';
+import { getAuthTokens } from '@/helper/authHelper';
 
 interface EditModalProps {
     isOpen: boolean;
     onClose: () => void;
-    installation: InstallationData | null;
+    installation: CustomerData | null;
   }
 
+  interface Dealer {
+  id: string;
+  dealer_name: string;
+  [key: string]: any; 
+}
+
 export default function EditModal({ isOpen, onClose, installation }:EditModalProps) {
- const { darkMode} = useTheme();
+  const { darkMode} = useTheme();
+  const { token, idToken } = getAuthTokens();
+  const [dealers, setDealers] = useState<Dealer[] | null>([]);
   const [formData, setFormData] = useState({
     number: '12345',
     partner: 'Partner A',
@@ -32,23 +42,78 @@ export default function EditModal({ isOpen, onClose, installation }:EditModalPro
   const handleSubmit = (e:any) => {
     e.preventDefault();
     console.log('Submitted data:', formData);
-    // setIsOpen(false);
   };
+
+   const fetchDealers = async () => {
+     try {
+       // setLoading(true);
+
+       if (!token || !idToken) {
+         console.error("Auth tokens not available");
+         return;
+       }
+
+       const dealerData = await getAllDealer(token, idToken);
+       console.log("🚀 ~ fetchDealers ~ dealerData:", dealerData);
+
+       if (dealerData && Array.isArray(dealerData)) {
+         setDealers(dealerData as any);
+
+         if (dealerData.length > 0 && installation) {
+           setFormData((prev) => ({
+             ...prev,
+             partner: dealerData[0].id || "",
+           }));
+         }
+       }
+     } catch (error) {
+       console.error("Failed to fetch dealers:", error);
+     } finally {
+       // setLoading(false);
+     }
+   };
+
+    useEffect(() => {
+      if (isOpen) {
+        fetchDealers();
+      }
+    }, [isOpen]);
+
+    useEffect(() => {
+      if (installation) {
+        setFormData((prev) => ({
+          ...prev,
+          number: installation.companyInfo.cvrNumber || "",
+          installationName: installation.companyInfo.companyName || "",
+          address: installation.companyInfo.address || "",
+          postal: installation.companyInfo.postal_code || "",
+          city: installation.companyInfo.city || "",
+        }));
+      }
+    }, [installation]);
 
   return (
     <div className="flex flex-col items-center">
       {isOpen && (
         <div className="fixed inset-0 backdrop-blur-xs bg-opacity-40 flex items-center justify-center z-50">
-          <div 
+          <div
             className={`w-full max-w-lg rounded-lg shadow-xl p-4 ${
               darkMode ? "bg-gray-800 text-white" : "bg-white text-gray-800"
             } overflow-hidden transition-all transform`}
           >
-            <div className={`px-6 py-4 border-b ${darkMode ? "border-gray-700" : "border-gray-200"} flex justify-between items-center`}>
-              <h3 className="text-lg font-medium">Edit Installation item - {installation?.xrgiID}</h3>
-              <button 
+            <div
+              className={`px-6 py-4 border-b ${
+                darkMode ? "border-gray-700" : "border-gray-200"
+              } flex justify-between items-center`}
+            >
+              <h3 className="text-lg font-medium">
+                Edit Installation item - {installation?.companyInfo.cvrNumber}
+              </h3>
+              <button
                 onClick={onClose}
-                className={`rounded-full p-1 ${darkMode ? "hover:bg-gray-700" : "hover:bg-gray-100"} transition-colors`}
+                className={`rounded-full p-1 ${
+                  darkMode ? "hover:bg-gray-700" : "hover:bg-gray-100"
+                } transition-colors`}
               >
                 <X size={20} />
               </button>
@@ -58,24 +123,32 @@ export default function EditModal({ isOpen, onClose, installation }:EditModalPro
               <div className="px-6 py-4 max-h-[70vh] overflow-y-auto">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="col-span-1">
-                    <label className={`block text-sm font-medium ${darkMode ? "text-gray-300" : "text-gray-700"} mb-1`}>
+                    <label
+                      className={`block text-sm font-medium ${
+                        darkMode ? "text-gray-300" : "text-gray-700"
+                      } mb-1`}
+                    >
                       Number
                     </label>
                     <input
                       type="text"
                       name="number"
-                      value={installation?.xrgiID}
+                      value={installation?.companyInfo.cvrNumber}
                       onChange={handleInputChange}
                       className={`w-full rounded-md ${
-                        darkMode 
-                          ? "bg-gray-700 border-gray-600 text-white" 
+                        darkMode
+                          ? "bg-gray-700 border-gray-600 text-white"
                           : "bg-white border-gray-300 text-gray-900"
                       } border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500`}
                     />
                   </div>
 
                   <div className="col-span-1">
-                    <label className={`block text-sm font-medium ${darkMode ? "text-gray-300" : "text-gray-700"} mb-1`}>
+                    <label
+                      className={`block text-sm font-medium ${
+                        darkMode ? "text-gray-300" : "text-gray-700"
+                      } mb-1`}
+                    >
                       Dealer
                     </label>
                     <select
@@ -83,87 +156,109 @@ export default function EditModal({ isOpen, onClose, installation }:EditModalPro
                       value={formData.partner}
                       onChange={handleInputChange}
                       className={`w-full rounded-md ${
-                        darkMode 
-                          ? "bg-gray-700 border-gray-600 text-white" 
+                        darkMode
+                          ? "bg-gray-700 border-gray-600 text-white"
                           : "bg-white border-gray-300 text-gray-900"
                       } border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500`}
                     >
-                      {partners.map(partner => (
-                        <option key={partner} value={partner}>{partner}</option>
+                      {dealers!.map((dealer) => (
+                        <option key={dealer.id} value={dealer.id}>
+                          {dealer.dealer_name}
+                        </option>
                       ))}
                     </select>
                   </div>
 
                   <div className="col-span-full">
-                    <label className={`block text-sm font-medium ${darkMode ? "text-gray-300" : "text-gray-700"} mb-1`}>
+                    <label
+                      className={`block text-sm font-medium ${
+                        darkMode ? "text-gray-300" : "text-gray-700"
+                      } mb-1`}
+                    >
                       Installation Name
                     </label>
                     <input
                       type="text"
                       name="installationName"
-                      value={`${installation?.xrgiID} - ${installation?.name}`}
+                      value={`${installation?.companyInfo.companyName}`}
                       onChange={handleInputChange}
                       className={`w-full rounded-md ${
-                        darkMode 
-                          ? "bg-gray-700 border-gray-600 text-white" 
+                        darkMode
+                          ? "bg-gray-700 border-gray-600 text-white"
                           : "bg-white border-gray-300 text-gray-900"
                       } border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500`}
                     />
                   </div>
 
                   <div className="col-span-full">
-                    <label className={`block text-sm font-medium ${darkMode ? "text-gray-300" : "text-gray-700"} mb-1`}>
+                    <label
+                      className={`block text-sm font-medium ${
+                        darkMode ? "text-gray-300" : "text-gray-700"
+                      } mb-1`}
+                    >
                       Address
                     </label>
                     <input
                       type="text"
                       name="address"
-                      value={installation?.address}
+                      value={installation?.companyInfo.address}
                       onChange={handleInputChange}
                       className={`w-full rounded-md ${
-                        darkMode 
-                          ? "bg-gray-700 border-gray-600 text-white" 
+                        darkMode
+                          ? "bg-gray-700 border-gray-600 text-white"
                           : "bg-white border-gray-300 text-gray-900"
                       } border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500`}
                     />
                   </div>
 
                   <div className="col-span-1">
-                    <label className={`block text-sm font-medium ${darkMode ? "text-gray-300" : "text-gray-700"} mb-1`}>
+                    <label
+                      className={`block text-sm font-medium ${
+                        darkMode ? "text-gray-300" : "text-gray-700"
+                      } mb-1`}
+                    >
                       Postal Code
                     </label>
                     <input
                       type="text"
                       name="postal"
-                      value={installation?.postalCode}
+                      value={installation?.companyInfo.postal_code}
                       onChange={handleInputChange}
                       className={`w-full rounded-md ${
-                        darkMode 
-                          ? "bg-gray-700 border-gray-600 text-white" 
+                        darkMode
+                          ? "bg-gray-700 border-gray-600 text-white"
                           : "bg-white border-gray-300 text-gray-900"
                       } border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500`}
                     />
                   </div>
 
                   <div className="col-span-1">
-                    <label className={`block text-sm font-medium ${darkMode ? "text-gray-300" : "text-gray-700"} mb-1`}>
+                    <label
+                      className={`block text-sm font-medium ${
+                        darkMode ? "text-gray-300" : "text-gray-700"
+                      } mb-1`}
+                    >
                       City
                     </label>
                     <input
                       type="text"
                       name="city"
-                      value={installation?.city}
+                      value={installation?.companyInfo.city}
                       onChange={handleInputChange}
                       className={`w-full rounded-md ${
-                        darkMode 
-                          ? "bg-gray-700 border-gray-600 text-white" 
+                        darkMode
+                          ? "bg-gray-700 border-gray-600 text-white"
                           : "bg-white border-gray-300 text-gray-900"
                       } border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500`}
                     />
                   </div>
 
                   <div className="col-span-full">
-                    <label className={`block text-sm font-medium ${darkMode ? "text-gray-300" : "text-gray-700"} mb-1`}>
+                    <label
+                      className={`block text-sm font-medium ${
+                        darkMode ? "text-gray-300" : "text-gray-700"
+                      } mb-1`}
+                    >
                       Country
                     </label>
                     <select
@@ -171,26 +266,32 @@ export default function EditModal({ isOpen, onClose, installation }:EditModalPro
                       value={formData.country}
                       onChange={handleInputChange}
                       className={`w-full rounded-md ${
-                        darkMode 
-                          ? "bg-gray-700 border-gray-600 text-white" 
+                        darkMode
+                          ? "bg-gray-700 border-gray-600 text-white"
                           : "bg-white border-gray-300 text-gray-900"
                       } border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500`}
                     >
-                      {countries.map(country => (
-                        <option key={country} value={country}>{country}</option>
+                      {countries.map((country) => (
+                        <option key={country} value={country}>
+                          {country}
+                        </option>
                       ))}
                     </select>
                   </div>
                 </div>
               </div>
 
-              <div className={`px-6 py-4 border-t ${darkMode ? "border-gray-700" : "border-gray-200"} flex justify-end space-x-2`}>
+              <div
+                className={`px-6 py-4 border-t ${
+                  darkMode ? "border-gray-700" : "border-gray-200"
+                } flex justify-end space-x-2`}
+              >
                 <button
                   type="button"
                   onClick={onClose}
                   className={`px-4 py-2 rounded-md cursor-pointer ${
-                    darkMode 
-                      ? "bg-gray-700 hover:bg-gray-600 text-white" 
+                    darkMode
+                      ? "bg-gray-700 hover:bg-gray-600 text-white"
                       : "bg-gray-200 hover:bg-gray-300 text-gray-800"
                   } transition-colors`}
                 >
