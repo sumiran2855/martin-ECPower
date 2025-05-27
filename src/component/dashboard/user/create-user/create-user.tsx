@@ -1,10 +1,84 @@
+import { roleMap, language, company } from "@/component/dashboard/user/type";
 import { useTheme } from "@/app/dashboard/layout";
 import { useState } from "react";
 import Image from "next/image";
 import { ChevronDown } from "lucide-react";
+import { CreateUser } from "@/controller/user-controller";
+import { getAuthTokens } from "@/helper/authHelper";
+import { useAlerts } from "@/component/alert";
 
-const CreateAccount: React.FC = () => {
+
+export default function CreateAccount() {
   const { darkMode } = useTheme();
+  const { token, idToken } = getAuthTokens();
+  const { addAlert, AlertList } = useAlerts();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  // Get role options from roleMap keys
+  const roleOptions = Object.keys(roleMap);
+
+  const [formData, setFormData] = useState({
+      name: "",
+      email: "",
+      phoneNumber: "",
+      companyName: company[0],
+      role: roleOptions[0],
+      language: language[0],
+  });
+
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const resetForm = () => {
+    setFormData({
+      name: "",
+      email: "",
+      phoneNumber: "",
+      companyName: company[0],
+      role: roleOptions[0],
+      language: language[0],
+    });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setLoading(true);
+    
+    try{
+      const payload = {
+        name: formData.name.toUpperCase(),
+        email: formData.email,
+        phoneNumber: formData.phoneNumber,
+        companyName: formData.companyName,
+        role: roleMap[formData.role],
+        language: formData.language,
+      };
+      const result = await CreateUser(token, idToken, payload);
+      addAlert({
+        type: "success",
+        message: "User created successfully!",
+        showIcon: true,
+      });
+      console.log("User created successfully:", result);
+      resetForm();
+    } catch (error) {
+      console.error("Error creating create user:", error);
+      addAlert({
+        type: "error",
+        message: "Failed to create user. Please try again.",
+        showIcon: true,
+      });
+    } finally {
+      setIsSubmitting(false);
+      setLoading(false);
+    }
+  };
   
   return (
     <div className={`${darkMode ? "bg-gray-800 text-white" : "bg-gray-50"} rounded-lg shadow-sm transition-colors w-full p-8`}>
@@ -40,13 +114,16 @@ const CreateAccount: React.FC = () => {
             and receive text/email on error messages.
           </p>
           
-          <form className="w-full space-y-4">
+          <form className="w-full space-y-4" onSubmit={handleSubmit}>
             <div>
               <label className={`text-xs ${darkMode ? "text-gray-400" : "text-gray-500"}`}>
-                Choose a username
+                Name
               </label>
               <input 
-                type="text" 
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleInputChange}
                 className={`w-full p-3 mt-1 border rounded-md ${
                   darkMode ? "bg-gray-700 border-gray-600" : "bg-white border-gray-300"
                 }`} 
@@ -55,10 +132,27 @@ const CreateAccount: React.FC = () => {
             
             <div>
               <label className={`text-xs ${darkMode ? "text-gray-400" : "text-gray-500"}`}>
-                The users current email address
+                Email
               </label>
               <input 
                 type="email" 
+                name="email"
+                value={formData.email}
+                onChange={handleInputChange}
+                className={`w-full p-3 mt-1 border rounded-md ${
+                  darkMode ? "bg-gray-700 border-gray-600" : "bg-white border-gray-300"
+                }`} 
+              />
+            </div>
+            <div>
+              <label className={`text-xs ${darkMode ? "text-gray-400" : "text-gray-500"}`}>
+                Phone
+              </label>
+              <input 
+                type="tel"
+                name="phoneNumber"
+                value={formData.phoneNumber}
+                onChange={handleInputChange}
                 className={`w-full p-3 mt-1 border rounded-md ${
                   darkMode ? "bg-gray-700 border-gray-600" : "bg-white border-gray-300"
                 }`} 
@@ -67,18 +161,22 @@ const CreateAccount: React.FC = () => {
             
             <div>
               <label className={`text-xs ${darkMode ? "text-gray-400" : "text-gray-500"}`}>
-                User level
+                Role
               </label>
               <div className="relative mt-1">
-                <select 
+                <select
+                  name="role"
+                  value={formData.role}
+                  onChange={handleInputChange}
                   className={`w-full p-3 border rounded-md appearance-none cursor-pointer ${
                     darkMode ? "bg-gray-700 border-gray-600" : "bg-white border-gray-300"
                   }`}
                 >
-                  <option>Standard User</option>
-                  <option>Administrator</option>
-                  <option>service Technician</option>
-                  <option>Customer</option>
+                  {roleOptions.map((roleLabel: string) => (
+                    <option key={roleLabel} value={roleLabel}>
+                      {roleLabel}
+                    </option>
+                  ))}
                 </select>
                 <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
                 <ChevronDown className="h-5 w-5 text-gray-400" />
@@ -91,14 +189,19 @@ const CreateAccount: React.FC = () => {
                 Language
               </label>
               <div className="relative mt-1">
-                <select 
+                <select
+                  name="language"
+                  value={formData.language}
+                  onChange={handleInputChange}
                   className={`w-full p-3 border rounded-md appearance-none cursor-pointer ${
                     darkMode ? "bg-gray-700 border-gray-600" : "bg-white border-gray-300"
                   }`}
                 >
-                  <option>English</option>
-                  <option>German</option>
-                  <option>Danish</option>
+                  {language.map((language:string) => (
+                    <option key={language} value={language}>
+                      {language}
+                    </option>
+                  ))}
                 </select>
                 <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
                 <ChevronDown className="h-5 w-5 text-gray-400" />
@@ -111,13 +214,19 @@ const CreateAccount: React.FC = () => {
                 Company
               </label>
               <div className="relative mt-1">
-                <select 
+                <select
+                  name="companyName"
+                  value={formData.companyName}
+                  onChange={handleInputChange}
                   className={`w-full p-3 border rounded-md appearance-none cursor-pointer ${
                     darkMode ? "bg-gray-700 border-gray-600" : "bg-white border-gray-300"
                   }`}
                 >
-                  <option>80332 CARB-Test</option>
-                  <option>other</option>
+                  {company.map((company:string) => (
+                    <option key={company} value={company}>
+                      {company}
+                    </option>
+                  ))}
                 </select>
                 <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
                 <ChevronDown className="h-5 w-5 text-gray-400" />
@@ -140,6 +249,4 @@ const CreateAccount: React.FC = () => {
       </div>
     </div>
   );
-};
-
-export default CreateAccount;
+}
