@@ -31,8 +31,11 @@ const CustomerTable: React.FC = () => {
         const token = localStorage.getItem("token") || "";
         const idToken = localStorage.getItem("idToken") || "";
         const customerData = await getAllCustomer(token, idToken);
-        setCustomers(customerData || []);
-
+        const filteredCustomers = customerData 
+        ? customerData.filter((customer:any) => customer.group !== "ServiceTechnician")
+        : [];
+        
+        setCustomers(filteredCustomers || []);
         const facilityMap: Record<string, FacilityData[]> = {};
 
         if (customerData && customerData.length > 0) {

@@ -74,7 +74,6 @@ export default function login_page({ setForgotPassword }: any) {
         removeCookie("rememberedEmail");
         removeCookie("rememberedPassword");
       }
-      await new Promise(resolve => setTimeout(resolve, 1000));
       router.push("/dashboard");
       addAlert({
         type: "success",

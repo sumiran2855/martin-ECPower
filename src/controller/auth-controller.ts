@@ -12,6 +12,7 @@ export const login = async (email: string, password: string) => {
   });
 
   if (result.success) {
+    localStorage.clear();
     localStorage.setItem("token", result.data.token.accessToken);
     localStorage.setItem("IdToken", result.data.token.idToken);
     localStorage.setItem("i18nextLng", "en");

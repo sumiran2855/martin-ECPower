@@ -31,8 +31,7 @@ export default function EditModal({ isOpen, onClose, installation }:EditModalPro
     country: 'United States'
   });
 
-  const partners = ['Partner A', 'Partner B', 'Partner C', 'Partner D'];
-  const countries = ['United States', 'Canada', 'United Kingdom', 'Germany', 'France', 'Japan', 'Australia'];
+  const countries = ['India', 'United States', 'United Kingdom', 'Germany', 'France'];
 
   const handleInputChange = (e:any) => {
     const { name, value } = e.target;
@@ -46,15 +45,12 @@ export default function EditModal({ isOpen, onClose, installation }:EditModalPro
 
    const fetchDealers = async () => {
      try {
-       // setLoading(true);
-
        if (!token || !idToken) {
          console.error("Auth tokens not available");
          return;
        }
 
        const dealerData = await getAllDealer(token, idToken);
-       console.log("🚀 ~ fetchDealers ~ dealerData:", dealerData);
 
        if (dealerData && Array.isArray(dealerData)) {
          setDealers(dealerData as any);
@@ -68,8 +64,6 @@ export default function EditModal({ isOpen, onClose, installation }:EditModalPro
        }
      } catch (error) {
        console.error("Failed to fetch dealers:", error);
-     } finally {
-       // setLoading(false);
      }
    };
 

@@ -26,28 +26,31 @@ const Dealer: React.FC = () => {
     setIsAddModalOpen(false);
   };
 
-  useEffect(() => {
-    const fetchDealers = async () => {
-      try {
-        setLoading(true);
-        if (token && idToken) {
-          const dealerData = await getAllDealer(token, idToken);
-
-          const processedDealers = dealerData.map((dealer: DealerData) => ({
-            ...dealer,
-            children: dealer.customer_id ? [] : [],
-          }));
-          setDealers(processedDealers);
-        }
-      } catch (error) {
-        console.error("Failed to fetch dealers:", error);
-      } finally {
-        setLoading(false);
+  const fetchDealers = async () => {
+    try {
+      setLoading(true);
+      if (token && idToken) {
+        const dealerData = await getAllDealer(token, idToken);
+        const processedDealers = dealerData.map((dealer: DealerData) => ({
+          ...dealer,
+          children: dealer.customer_id ? [] : [],
+        }));
+        setDealers(processedDealers);
       }
-    };
+    } catch (error) {
+      console.error("Failed to fetch dealers:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchDealers();
   }, [token, idToken]);
+
+  const refreshDealers = () => {
+    fetchDealers();
+  };
 
   if (loading) {
     return <ECPowerLoader size="md" isVisible={true} />;
@@ -89,11 +92,7 @@ const Dealer: React.FC = () => {
             : "scrollbar-thumb-gray-300 scrollbar-track-gray-100"
         }`}
       >
-        {loading ? (
-          <div className="flex justify-center items-center p-4">
-            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-500"></div>
-          </div>
-        ) : dealers.length > 0 ? (
+        {dealers.length > 0 ? (
           dealers.map((dealer) => (
             <DealerItem
               key={dealer.id}
@@ -110,7 +109,11 @@ const Dealer: React.FC = () => {
           </div>
         )}
       </div>
-      <AddDealerModal isOpen={isAddModalOpen} onClose={closeAddModal} />
+      <AddDealerModal 
+        isOpen={isAddModalOpen} 
+        onClose={closeAddModal} 
+        onDealerAdded={refreshDealers} 
+      />
     </div>
   );
 };

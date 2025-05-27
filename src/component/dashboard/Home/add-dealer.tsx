@@ -10,11 +10,13 @@ import { countries } from "./type";
 interface AddDealerModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onDealerAdded: () => void; 
 }
 
 export default function AddDealerModal({
   isOpen,
   onClose,
+  onDealerAdded,
 }: AddDealerModalProps) {
   const { token, idToken } = getAuthTokens();
   const { addAlert, AlertList } = useAlerts();
@@ -39,8 +41,22 @@ export default function AddDealerModal({
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  const resetForm = () => {
+    setFormData({
+      name: "",
+      address: "",
+      postalCode: "",
+      city: "",
+      country: "United States",
+      mobile: "",
+      customer_id: "-",
+      parent_id: "-"
+    });
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSubmitting(true);
     setLoading(true);
 
     try {
@@ -57,14 +73,22 @@ export default function AddDealerModal({
       const result = await CreateDealer(token, idToken, payload);
       addAlert({
         type: "success",
-        message: "dealer created successfully..!",
+        message: "Dealer created successfully!",
         showIcon: true,
       });
       console.log("Dealer created successfully:", result);
+      resetForm();
+      onDealerAdded();
       onClose();
     } catch (error) {
       console.error("Error creating dealer:", error);
+      addAlert({
+        type: "error",
+        message: "Failed to create dealer. Please try again.",
+        showIcon: true,
+      });
     } finally {
+      setIsSubmitting(false);
       setLoading(false);
     }
   };

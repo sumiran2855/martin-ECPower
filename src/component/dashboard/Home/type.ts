@@ -70,6 +70,7 @@ export interface CustomerData {
     city: string;
     postal_code: string;
     cvrNumber: string;
+    cvr_number: string;
     email: string;
     phone: string;
   };
