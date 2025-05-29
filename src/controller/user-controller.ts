@@ -33,7 +33,7 @@ export const getAllInactiveUsers = async (
     IdToken: string,
   ) => {
     const result = await AuthHelper.ApiRequest({
-      endpoint:  `${USER_API_ROUTES.GET_All_USER}?status=Inactive`,
+      endpoint:  `${USER_API_ROUTES.GET_All_USER}?status=InActive`,
       method: "GET",
       token: token,
       IdToken: IdToken,
