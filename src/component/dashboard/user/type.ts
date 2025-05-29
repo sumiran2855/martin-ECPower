@@ -1,8 +1,8 @@
 export const roleMap: Record<string, string> = {
-    "Standard User": "partner",
-    "Administrator": "EC_POWER_ADMIN",
-    "Service Technician": "ServiceTechnician",
-    "Customer": "Customer",
+    "Partner": "PARTNER",
+    "EC Power Admin": "EC_POWER_ADMIN",
+    "Service Technician": "TECHNICIAN",
+    "Customer": "CUSTOMER",
   };
   
 

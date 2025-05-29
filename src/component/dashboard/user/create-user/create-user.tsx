@@ -60,11 +60,18 @@ export default function CreateAccount() {
         language: formData.language,
       };
       const result = await CreateUser(token, idToken, payload);
+      const alertType = result?.success ? "success" : "error";
+      const alertMessage = result?.success 
+        ? "User created successfully!" 
+        : result?.message || "Failed to create user. Please try again.";
+
       addAlert({
-        type: "success",
-        message: "User created successfully!",
+        type: alertType,
+        message: alertMessage,
         showIcon: true,
       });
+
+      if (!result?.success) return;
       console.log("User created successfully:", result);
       resetForm();
     } catch (error) {
@@ -115,6 +122,7 @@ export default function CreateAccount() {
           </p>
           
           <form className="w-full space-y-4" onSubmit={handleSubmit}>
+            <AlertList />
             <div>
               <label className={`text-xs ${darkMode ? "text-gray-400" : "text-gray-500"}`}>
                 Name

@@ -18,12 +18,48 @@ export const CreateUser = async (
 
     if (!result || !result.success || !result.data) {
       console.error("Error in creating user:", result?.message || "Unknown error");
-      return null;
+      return result;
     }
 
-    return result.data;
+    return result;
   } catch (error) {
     console.error("Request failed:", error);
     return null;
   }
 };
+
+export const getAllInactiveUsers = async (
+    token: string,
+    IdToken: string,
+  ) => {
+    const result = await AuthHelper.ApiRequest({
+      endpoint:  `${USER_API_ROUTES.GET_All_USER}?status=Inactive`,
+      method: "GET",
+      token: token,
+      IdToken: IdToken,
+    });
+  
+    if (!result || !result.success || !result.data) {
+      console.log("No user data found or failed to fetch dealers.");
+    }
+  
+    return result.data;
+  };
+
+  export const getAllUnVerifiedUsers = async (
+    token: string,
+    IdToken: string,
+  ) => {
+    const result = await AuthHelper.ApiRequest({
+      endpoint: `${USER_API_ROUTES.GET_All_USER}?emailVerified=false`,
+      method: "GET",
+      token: token,
+      IdToken: IdToken,
+    });
+  
+    if (!result || !result.success || !result.data) {
+      console.log("No user data found or failed to fetch dealers.");
+    }
+  
+    return result.data;
+  };

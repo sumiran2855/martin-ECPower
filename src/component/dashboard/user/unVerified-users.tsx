@@ -2,14 +2,17 @@ import { useTheme } from "@/app/dashboard/layout";
 import { useEffect, useState } from "react";
 import { Search, User } from "lucide-react";
 import Pagination from "@/component/Pagination";
+import { getAllUnVerifiedUsers } from "@/controller/user-controller";
+
 
 interface User {
-  company: string;
+  companyName: string;
   name: string;
   email: string;
-  phone: string;
+  phoneNumber: string;
   admin: string;
   lastLogin: string;
+  status: string; 
   selected?: boolean;
 }
 
@@ -17,101 +20,39 @@ const UserList: React.FC = () => {
   const { darkMode } = useTheme();
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
-  const [users, setUsers] = useState<User[]>([
-    {
-      company: "CARB TEST",
-      name: "EC POWER IT",
-      email: "test@test.org",
-      phone: "004540316079",
-      admin: "20",
-      lastLogin: "02-11-24 15:14",
-    },
-    {
-      company: "CARB TEST",
-      name: "EC POWER IT",
-      email: "test@test.org",
-      phone: "004540316079",
-      admin: "20",
-      lastLogin: "02-11-24 15:14",
-    },
-    {
-      company: "CARB TEST",
-      name: "EC POWER IT",
-      email: "test@test.org",
-      phone: "004540316079",
-      admin: "20",
-      lastLogin: "02-11-24 15:14",
-    },
-    {
-      company: "CARB TEST",
-      name: "EC POWER IT",
-      email: "test@test.org",
-      phone: "004540316079",
-      admin: "20",
-      lastLogin: "02-11-24 15:14",
-    },
-    {
-      company: "CARB TEST",
-      name: "EC POWER IT",
-      email: "test@test.org",
-      phone: "004540316079",
-      admin: "20",
-      lastLogin: "02-11-24 15:14",
-    },
-    {
-      company: "CARB TEST",
-      name: "EC POWER IT",
-      email: "test@test.org",
-      phone: "004540316079",
-      admin: "20",
-      lastLogin: "02-11-24 15:14",
-    },
-    {
-      company: "CARB TEST",
-      name: "EC POWER IT",
-      email: "test@test.org",
-      phone: "004540316079",
-      admin: "20",
-      lastLogin: "02-11-24 15:14",
-    },
-    {
-      company: "CARB TEST",
-      name: "EC POWER IT",
-      email: "test@test.org",
-      phone: "004540316079",
-      admin: "20",
-      lastLogin: "02-11-24 15:14",
-    },
-    {
-      company: "CARB TEST",
-      name: "EC POWER IT",
-      email: "test@test.org",
-      phone: "004540316079",
-      admin: "20",
-      lastLogin: "02-11-24 15:14",
-    },
-    {
-      company: "CARB TEST",
-      name: "EC POWER IT",
-      email: "test@test.org",
-      phone: "004540316079",
-      admin: "20",
-      lastLogin: "02-11-24 15:14",
-    },
-    {
-      company: "CARB TEST",
-      name: "EC POWER IT",
-      email: "test@test.org",
-      phone: "004540316079",
-      admin: "20",
-      lastLogin: "02-11-24 15:14",
-    },
-  ]);
+  const [users, setUsers] = useState<User[]>([]);
   const [totalPages, setTotalPages] = useState(0);
   const [paginatedUsers, setPaginatedUsers] = useState<User[]>([]);
   const [EditUser, setEditUser] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const maxVisible = 10;
+
+  // Fetch unverified users dynamically
+  useEffect(() => {
+    const fetchUsers = async () => {
+      setLoading(true);
+      const token = localStorage.getItem("token");
+      const IdToken = localStorage.getItem("IdToken");
+      if (token && IdToken) {
+        try {
+          const userData = await getAllUnVerifiedUsers(token, IdToken);
+          const processedUsers = userData.map((user: User) => ({
+            ...user,
+            selected: false,
+          }));
+          setUsers(processedUsers);
+          setError(null);
+        } catch (error) {
+          setError("Failed to fetch users. Please try again later.");
+        } finally {
+          setLoading(false);
+        }
+      }
+    };
+    fetchUsers();
+  }, []);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -219,7 +160,7 @@ const UserList: React.FC = () => {
                 <td className="px-4 py-3 text-sm cursor-pointer">
                   {user.name}
                 </td>
-                <td className="px-4 py-3 text-sm">{user.company}</td>
+                <td className="px-4 py-3 text-sm">{user.companyName}</td>
                 <td className="px-4 py-3 text-sm">{user.email}</td>
                 <td className="px-4 py-3 text-sm text-center">
                   <button
