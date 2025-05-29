@@ -28,6 +28,25 @@ export const CreateUser = async (
   }
 };
 
+export const getAllUser = async (
+  token: string,
+  IdToken: string,
+) => {
+  const result = await AuthHelper.ApiRequest({
+    endpoint:  `${USER_API_ROUTES.GET_All_USER}`,
+    method: "GET",
+    token: token,
+    IdToken: IdToken,
+  });
+
+  if (!result || !result.success || !result.data) {
+    console.log("No user data found or failed to fetch dealers.");
+  }
+
+  return result.data;
+};
+
+
 export const getAllInactiveUsers = async (
     token: string,
     IdToken: string,

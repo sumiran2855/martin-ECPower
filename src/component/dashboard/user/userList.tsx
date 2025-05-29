@@ -3,14 +3,16 @@ import { useEffect, useState } from "react";
 import { ChevronRight, User } from "lucide-react";
 import Pagination from "@/component/Pagination";
 import EditUsers from "./edit-user";
+import { getAllUser } from "@/controller/user-controller";
 
 interface User {
-  company: string;
+  companyName: string;
   name: string;
   email: string;
-  phone: string;
+  phoneNumber: string;
   admin: string;
   lastLogin: string;
+  status: string; 
   selected?: boolean;
 }
 
@@ -18,100 +20,38 @@ const UserList: React.FC = () => {
   const { darkMode } = useTheme();
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
-  const [users, setUsers] = useState<User[]>([
-    {
-      company: "CARB TEST",
-      name: "EC POWER IT",
-      email: "test@test.org",
-      phone: "004540316079",
-      admin: "20",
-      lastLogin: "02-11-24 15:14",
-    },
-    {
-      company: "CARB TEST",
-      name: "EC POWER IT",
-      email: "test@test.org",
-      phone: "004540316079",
-      admin: "20",
-      lastLogin: "02-11-24 15:14",
-    },
-    {
-      company: "CARB TEST",
-      name: "EC POWER IT",
-      email: "test@test.org",
-      phone: "004540316079",
-      admin: "20",
-      lastLogin: "02-11-24 15:14",
-    },
-    {
-      company: "CARB TEST",
-      name: "EC POWER IT",
-      email: "test@test.org",
-      phone: "004540316079",
-      admin: "20",
-      lastLogin: "02-11-24 15:14",
-    },
-    {
-      company: "CARB TEST",
-      name: "EC POWER IT",
-      email: "test@test.org",
-      phone: "004540316079",
-      admin: "20",
-      lastLogin: "02-11-24 15:14",
-    },
-    {
-      company: "CARB TEST",
-      name: "EC POWER IT",
-      email: "test@test.org",
-      phone: "004540316079",
-      admin: "20",
-      lastLogin: "02-11-24 15:14",
-    },
-    {
-      company: "CARB TEST",
-      name: "EC POWER IT",
-      email: "test@test.org",
-      phone: "004540316079",
-      admin: "20",
-      lastLogin: "02-11-24 15:14",
-    },
-    {
-      company: "CARB TEST",
-      name: "EC POWER IT",
-      email: "test@test.org",
-      phone: "004540316079",
-      admin: "20",
-      lastLogin: "02-11-24 15:14",
-    },
-    {
-      company: "CARB TEST",
-      name: "EC POWER IT",
-      email: "test@test.org",
-      phone: "004540316079",
-      admin: "20",
-      lastLogin: "02-11-24 15:14",
-    },
-    {
-      company: "CARB TEST",
-      name: "EC POWER IT",
-      email: "test@test.org",
-      phone: "004540316079",
-      admin: "20",
-      lastLogin: "02-11-24 15:14",
-    },
-    {
-      company: "CARB TEST",
-      name: "EC POWER IT",
-      email: "test@test.org",
-      phone: "004540316079",
-      admin: "20",
-      lastLogin: "02-11-24 15:14",
-    },
-  ]);
+  const [users, setUsers] = useState<User[]>([]);
   const [totalPages, setTotalPages] = useState(0);
   const [paginatedUsers, setPaginatedUsers] = useState<User[]>([]);
   const [EditUser, setEditUser] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const maxVisible = 10;
+
+  // Fetch users dynamically from API
+  useEffect(() => {
+    const fetchUsers = async () => {
+      setLoading(true);
+      const token = localStorage.getItem("token");
+      const IdToken = localStorage.getItem("IdToken");
+      if (token && IdToken) {
+        try {
+          const userData = await getAllUser(token, IdToken);
+          const processedUsers = userData.map((user: User) => ({
+            ...user,
+            selected: false,
+          }));
+          setUsers(processedUsers);
+          setError(null);
+        } catch (error) {
+          setError("Failed to fetch users. Please try again later.");
+        } finally {
+          setLoading(false);
+        }
+      }
+    };
+    fetchUsers();
+  }, []);
 
   useEffect(() => {
     const calculatedTotalPages = Math.ceil(users.length / itemsPerPage);
@@ -207,12 +147,12 @@ const UserList: React.FC = () => {
                         : "border-gray-200 hover:bg-gray-50"
                     } border-b transition-colors`}
                   >
-                    <td className="px-4 py-3 text-sm">{user.company}</td>
+                    <td className="px-4 py-3 text-sm">{user.companyName}</td>
                     <td className="px-4 py-3 text-sm cursor-pointer">
                       {user.name}
                     </td>
                     <td className="px-4 py-3 text-sm">{user.email}</td>
-                    <td className="px-4 py-3 text-sm">{user.phone}</td>
+                    <td className="px-4 py-3 text-sm">{user.phoneNumber}</td>
                     <td className="px-4 py-3 text-sm">{user.admin}</td>
                     <td className="px-4 py-3 text-sm">{user.lastLogin}</td>
                     <td className="p-2">
